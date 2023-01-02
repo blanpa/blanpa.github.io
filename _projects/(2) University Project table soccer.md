@@ -1,9 +1,10 @@
 ---
 name: University Project table soccer
 tools: [Linux, Python]
-image: _projects/media/(1) University project conveyor belt/1.png
+image:[ _projects/media/(1) University project conveyor belt/1.png](https://github.com/blanpa/blanpa.github.io/blob/main/_projects/media/![image](https://user-images.githubusercontent.com/54003618/210230475-daa1585f-1817-4694-8465-4fbfd2c90791.png)
+(2)%20University%20Project%20table%20soccer/1.png?raw=true)
 description: University Project
-external_url: https://github.com/blanpa/blanpa.github.io/blob/050e2eb9a838a65a84ff9a39b0334eb6669fce6b/_projects/media/(2)%20University%20Project%20table%20soccer/1.png
+external_url: 
 ---
 
 # Description
