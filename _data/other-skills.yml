@@ -1,0 +1,11 @@
+- name: Solid Works
+  percentage: 95
+  color: info
+
+- name: PTC Creo
+  percentage: 95
+  color: info
+
+- name: Microsoft Office
+  percentage: 95
+  color: info
