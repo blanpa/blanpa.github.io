@@ -2,7 +2,7 @@
 name: University Project table soccer
 tools: [Linux, Python]
 image: https://raw.githubusercontent.com/blanpa/blanpa.github.io/main/_projects/media/(2)%20University%20Project%20table%20soccer/1.png
-(2)%20University%20Project%20table%20soccer/1.png?raw=true)
+
 description: University Project
 external_url: 
 ---
