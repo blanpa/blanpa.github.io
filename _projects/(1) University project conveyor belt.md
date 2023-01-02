@@ -1,7 +1,8 @@
 ---
 name: University project conveyor belt
 tools: [Linux, Raspberry Pi, Python, SPS]
-image: https://github.com/blanpa/blanpa.github.io/blob/50e2eb9a838a65a84ff9a39b0334eb6669fce6b/_projects/media/(1)%20University%20project%20conveyor%20belt/1.png
+image: https://github.com/blanpa/blanpa.github.io/blob/main/_projects/media/(1)%20University%20project%20conveyor%20belt/1.png?raw=true![image](https://user-images.githubusercontent.com/54003618/210230399-f3126483-6b26-4004-a32c-f7175a6f69a7.png)
+
 description: University Project
 external_url: 
 ---
