@@ -1,5 +1,5 @@
 - name: Python
-  percentage: 100
+  percentage: 90
   color: danger
 
 - name: SQL
@@ -7,9 +7,15 @@
   color: secondary
 
 - name: Linux
-  percentage: 80
+  percentage: 70
   color: secondary
 
 - name: Java
-  percentage: 80
+  percentage: 50
   color: secondary
+
+- name: Javascript
+  percentage: 50
+  color: secondary
+
+  

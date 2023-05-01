@@ -1,9 +1,29 @@
+- name: Node-Red
+  percentage: 80
+  color: info
+
+- name: MQTT
+  percentage: 80
+  color: info
+
+- name: Microsoft Visual Studio Code
+  percentage: 80
+  color: info
+
+- name: Apache Superset
+  percentage: 80
+  color: info
+
+- name: Git
+  percentage: 80
+  color: info
+
 - name: Solid Works
-  percentage: 95
+  percentage: 90
   color: info
 
 - name: PTC Creo
-  percentage: 95
+  percentage: 80
   color: info
 
 - name: Microsoft Office
