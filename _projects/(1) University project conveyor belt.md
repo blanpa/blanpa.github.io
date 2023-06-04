@@ -1,6 +1,6 @@
 ---
-name: University project conveyor belt
-tools: [Linux, Raspberry Pi, Python, SPS]
+name: Automatic conveyor belt
+tools: [Linux, Raspberry Pi, Python, SPS, University Project, Machine Learning]
 image: https://raw.githubusercontent.com/blanpa/blanpa.github.io/main/_projects/media/(1)%20University%20project%20conveyor%20belt/1.png
 
 description: University Project

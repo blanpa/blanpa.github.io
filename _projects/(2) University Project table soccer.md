@@ -1,6 +1,6 @@
 ---
-name: University Project table soccer
-tools: [Linux, Python]
+name: Table soccer
+tools: [Linux, Python, University Project, Raspberry Pi, Revolution Pi]
 image: https://raw.githubusercontent.com/blanpa/blanpa.github.io/main/_projects/media/(2)%20University%20Project%20table%20soccer/1.png
 
 description: University Project
