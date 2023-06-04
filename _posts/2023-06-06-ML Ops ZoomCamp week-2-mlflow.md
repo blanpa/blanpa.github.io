@@ -1,9 +1,9 @@
 ---
-title: Second Week of ML Ops ZoomCamp!
+title: Second Week of ML Ops ZoomCamp, mlflow!
 tags: [mlobs, zoomcamp]
 style: fill
 color: light
-description: 🚀 Second Week of ML Ops ZoomCamp! 📈
+description: 🚀 Second Week of ML Ops ZoomCamp, mlflow! 📈
 ---
 
  Just wanted to share an amazing experience I've had during the second week of the ML Ops ZoomCamp organized by DataTalksClub. This week, we dove deep into the world of experiment tracking, and it has been an eye-opening journey so far. 🌟
