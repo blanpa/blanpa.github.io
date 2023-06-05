@@ -1,9 +1,9 @@
 ---
-title: Second Week of ML Ops ZoomCamp, wandb!
+title: Second Week of ML Ops ZoomCamp, wandb
 tags: [mlobs, zoomcamp, wandb]
 style: fill
 color: light
-description: Second Week of ML Ops ZoomCamp, wandb!
+description: Second Week of ML Ops ZoomCamp, wandb
 ---
 
 I had the amazing opportunity to attend the #MLOpsZoomCamp workshop on WandB, and it was an absolute game-changer! 🚀✨
