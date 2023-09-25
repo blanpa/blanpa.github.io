@@ -3,7 +3,7 @@ title: 6th week of the MLOps Zoom Camp
 tags: [mlobs, zoomcamp]
 style: fill
 color: light
-description: 7th week of the MLOps Zoom Camp, Best Practices
+description: 2d week of the ml Zoom Camp
 ---
 
 Title: "Enhance Your Regression Analysis Skills with Machine Learning Zoomcamp's Latest Module"
