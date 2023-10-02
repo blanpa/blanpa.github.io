@@ -1,6 +1,6 @@
 ---
-title: 6th week of the MLOps Zoom Camp
-tags: [mlobs, zoomcamp]
+title: 2d week of the ml Zoom Camp
+tags: [ml, zoomcamp]
 style: fill
 color: light
 description: 2d week of the ml Zoom Camp
