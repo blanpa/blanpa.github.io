@@ -1,6 +1,6 @@
 ### Site Settings ###
 title               : Portfolio Blanpa
-description         : Hello there, I'm Blanpa. Data is my passion, especially data from the industrial manufacturing environment.
+description         : Hello there, I'm Blanpa. Data is my passion. Im a aspiring IIOT Software Developer with Industrial Engineering background. My goal is to increase efficiency and productivity by applying modern methods.
 baseurl             : ""                     # Change to empty quotes if you are hosting your site at <your-username>.github.io directly
 repository          : blanpa/blanpa.github.io  # Change to <your-username>/<your-username>.github.io (or remove it if you don't need remote projects)
 remote_theme        : YoussefRaafatNasry/portfolYOU
