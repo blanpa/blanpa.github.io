@@ -4,18 +4,12 @@
 
 - name: SQL
   percentage: 80
-  color: secondary
-
-- name: Linux
-  percentage: 70
-  color: secondary
-
-- name: Java
-  percentage: 50
-  color: secondary
+  color: danger
 
 - name: Javascript
   percentage: 50
-  color: secondary
+  color: danger
 
-  
+- name: Java
+  percentage: 50
+  color: danger

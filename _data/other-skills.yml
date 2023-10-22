@@ -1,3 +1,7 @@
+- name: Linux
+  percentage: 70
+  color: info
+
 - name: Node-Red
   percentage: 80
   color: info
@@ -14,12 +18,24 @@
   percentage: 80
   color: info
 
+- name: Grafana
+  percentage: 80
+  color: info
+
+- name: Docker Container
+  percentage: 80
+  color: info
+
+- name: Power BI
+  percentage: 60
+  color: info
+
 - name: Git
   percentage: 80
   color: info
 
 - name: Solid Works
-  percentage: 90
+  percentage: 80
   color: info
 
 - name: PTC Creo
