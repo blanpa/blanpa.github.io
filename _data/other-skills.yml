@@ -6,7 +6,7 @@
   percentage: 80
   color: info
 
-- name: MQTT
+- name: Javascript
   percentage: 80
   color: info
 
