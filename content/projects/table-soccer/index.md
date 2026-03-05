@@ -3,6 +3,7 @@ title: "Automated Table Soccer"
 description: "Industrial PLC-controlled table soccer with linear motors, CAN bus communication, and automated ball return"
 tags: ["Revolution Pi", "Python", "CAN Bus", "3D Printing"]
 weight: 7
+date: 2022-03-01
 ---
 
 ## Overview

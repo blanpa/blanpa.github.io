@@ -54,5 +54,10 @@
 @media (max-width: 768px) {
   .home-cards {
     flex-direction: column;
+    width: 90vw;
+  }
+  .home-card {
+    padding: 1.5rem 1.2rem;
+    min-height: auto;
   }
 }

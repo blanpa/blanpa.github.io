@@ -1,7 +1,7 @@
 ---
-title: data-engineering-zoomcamp-week-3
-tags: [data-engineering]
-description:
+title: "Data Engineering ZoomCamp — Week 3"
+tags: [data-engineering, zoomcamp]
+description: "Data warehousing with BigQuery and analytics engineering."
 date: 2023-02-14
 series: ["Data Engineering ZoomCamp"]
 ---

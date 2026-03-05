@@ -17,8 +17,3 @@
   name = "Tags"
   pageRef = "tags"
   weight = 40
-
-[[main]]
-  name = "Search"
-  pageRef = "search"
-  weight = 50

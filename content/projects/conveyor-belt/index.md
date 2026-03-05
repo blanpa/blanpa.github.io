@@ -3,6 +3,7 @@ title: "Conveyor Belt Sorting System"
 description: "PLC-controlled sorting system with inductive, capacitive, and color sensors — plus ML-based object classification via camera"
 tags: ["Raspberry Pi", "PLC", "Python", "Machine Learning"]
 weight: 6
+date: 2022-06-01
 ---
 
 ## Overview

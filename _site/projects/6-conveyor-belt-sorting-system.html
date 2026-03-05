@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by yousinix
+  Free for personal and commercial use under the MIT license
+  https://github.com/yousinix/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Conveyor Belt Sorting System">
+  <meta property="og:description" content="PLC-controlled sorting system with inductive, capacitive, and color sensors — plus ML-based object classification via camera">
+  <meta property="og:image" content="https://raw.githubusercontent.com/blanpa/blanpa.github.io/main/_projects/media/(1)%20University%20project%20conveyor%20belt/1.png">
+
+  <title>Conveyor Belt Sorting System</title>
+  <meta name="description" content="PLC-controlled sorting system with inductive, capacitive, and color sensors — plus ML-based object classification via camera">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/"><h5><b>Portfolio Blanpa</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link active" href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link " href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 markdown-body">
+  <h1 id="description">Description</h1>
+<p>The conveyor belt is at the center of the system. The sensors and pneumatic cylinders are attached to the side of one of the aluminum profiles. In the direction of travel, the capacitive sensor is mounted first, followed by the inductive sensor. The color sensor is mounted next, followed by the Rasp-berry Pi camera. All sensors are to remain permanently mounted on the conveyor belt in order to keep the conversion work to a minimum. The pneumatic cylinders are equipped with a pusher that allows the sorted parts to fall off to the side while the conveyor belt is running.</p>
+
+<p><strong>Control and electronics</strong></p>
+
+<p>o control all the sensors and actuators we need a controller. We have decided to use the Pixtend.</p>
+
+<p><a href="https://www.pixtend.de/pixtend-v2/">https://www.pixtend.de/pixtend-v2/</a></p>
+
+<p>The PiXtend is a programmable logic controller (PLC) based on the Raspberry Pi. Due to the wide range of digital and analog inputs &amp; outputs, it allows the connection of a wide variety of sensors and actuators from the industry. It also has various standard serial interfaces (RS232, RS485, CAN, Ethernet, WiFi and Bluetooth).</p>
+
+<p>So you can really do a lot with it.</p>
+
+<h2 id="test-setup-1">Test setup 1</h2>
+
+<p>In setup 1, we use the capacitive and the inductive sensor, as well as the two pneumatic cylinders. We always use the capacitive sensor as the starting point.</p>
+
+<p>The inductive sensor distinguishes between metal and non-metal parts, for metal parts it sends a HIGH signal.</p>
+
+<p>In the program we have defined it so that non-metal parts are ejected with the first pneumatic slider and metal parts are ejected with the 2nd pneumatic slider.</p>
+
+<div class="video">
+  <iframe src="https://www.youtube.com/embed/zK1IAr4HmpM" frameborder="0" allowfullscreen=""></iframe>
+</div>
+
+<h2 id="test-setup-2">Test setup 2</h2>
+
+<p>In setup 2, we use the capacitive as well as the color sensor, in which several different color classes can be trained. The color sensor has several outputs, one output per color class, i.e. a total of 4 outputs that can be easily read out.</p>
+
+<p>We have then trained with the color sensor 4 color classes once the conveyor belt (black), green 1, blue 2, red 3.</p>
+
+<p>In the program we have defined it in such a way that green at the 1., blue at the 2. pneumatic cylinder, red drive completely through.</p>
+
+<p>In the next experiment it will be a bit tricky. In order to distinguish between different objects using the webcam, we need a neural network that can classify different objects.</p>
+
+<div class="video">
+  <iframe src="https://www.youtube.com/embed/LOC4O2OxLF8" frameborder="0" allowfullscreen=""></iframe>
+</div>
+
+<h2 id="test-setup-3">Test setup 3</h2>
+
+<p>The object is detected by the capacitive sensor and stops at the camera. Then a picture is taken and thrown into the trained model and a prediction for one of the defined classes is obtained.</p>
+
+<p>We have defined this in the program so that:</p>
+
+<ul>
+  <li>Class 0 -&gt; conveyor belt: as reference</li>
+  <li>Class1 -&gt;Horseshoe: Sorted on the 1st pneumatic cylinder</li>
+  <li>Class 2 -&gt; Cross: Sorted on 2nd pneumatic cylinder</li>
+  <li>Class 3: -&gt;Cylinder: Moves through</li>
+</ul>
+
+<p>As you can see very well now that the ejection with the ejector does not work so well here, which can be improved in the next semester.</p>
+
+<div class="video">
+  <iframe src="https://www.youtube.com/embed/LAhTtD7sYsg" frameborder="0" allowfullscreen=""></iframe>
+</div>
+
+</div>
+  </main>
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>blanpa</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:blanpa@proton.me"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.kaggle.com/blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#20beff'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-kaggle fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://medium.com/@blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#00ab6c'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-medium fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/yousinix/portfolYOU">portfolYOU</a>
+  </small>
+
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="blanpa" data-description="Support me on Buy me a coffee!" data-message="Thank you for visiting." data-color="#007bff" data-position="Right" data-x_margin="16" data-y_margin="16"></script></body>
+
+</html>

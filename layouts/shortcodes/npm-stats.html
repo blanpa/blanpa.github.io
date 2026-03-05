@@ -1,0 +1,43 @@
+<div class="npm-stats-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Package</th>
+        <th>Description</th>
+        <th>Downloads</th>
+      </tr>
+    </thead>
+    <tbody id="npm-stats-body">
+      {{ range site.Data.npm_packages }}
+      <tr data-pkg="{{ .pkg }}">
+        <td><a href="https://www.npmjs.com/package/{{ .pkg }}" target="_blank" rel="noopener">{{ .pkg }}</a></td>
+        <td>{{ .desc }}</td>
+        <td class="npm-dl">—</td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+
+<script>
+(function () {
+  const rows = document.querySelectorAll("#npm-stats-body tr[data-pkg]");
+  rows.forEach(function (row) {
+    const pkg = row.dataset.pkg;
+    fetch("https://api.npmjs.org/downloads/point/last-month/" + pkg)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        const dl = data.downloads;
+        const cell = row.querySelector(".npm-dl");
+        if (dl !== undefined) {
+          cell.textContent = dl.toLocaleString("en") + " / mo";
+        } else {
+          cell.textContent = "n/a";
+        }
+      })
+      .catch(function () {
+        row.querySelector(".npm-dl").textContent = "n/a";
+      });
+  });
+})();
+</script>

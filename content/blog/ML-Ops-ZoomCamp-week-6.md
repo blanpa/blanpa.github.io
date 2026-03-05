@@ -1,7 +1,7 @@
 ---
 title: 6th week of the MLOps Zoom Camp
 tags: [mlobs, zoomcamp]
-description: 7th week of the MLOps Zoom Camp, Best Practices
+description: "6th week of the MLOps ZoomCamp — Best Practices"
 date: 2023-07-16
 series: ["MLOps ZoomCamp"]
 ---

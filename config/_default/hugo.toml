@@ -2,10 +2,14 @@ baseURL = "https://blanpa.github.io/"
 languageCode = "en"
 title = "blanpa"
 theme = "blowfish"
+enableRobotsTXT = true
 
 [taxonomies]
   tag = "tags"
   series = "series"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
 [markup.goldmark.renderer]
   unsafe = true

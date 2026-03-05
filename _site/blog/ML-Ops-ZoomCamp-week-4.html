@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<!--
+  portfolYOU Jekyll theme by yousinix
+  Free for personal and commercial use under the MIT license
+  https://github.com/yousinix/portfolYOU
+-->
+
+<html lang="en" class="h-100">
+
+<head>
+
+  
+  
+  
+
+  
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="4th week of the MLOps Zoom Camp">
+  <meta property="og:description" content="4th week of the MLOps Zoom Camp">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/54003618?v=4">
+
+  <title>4th week of the MLOps Zoom Camp</title>
+  <meta name="description" content="4th week of the MLOps Zoom Camp">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Theme style -->
+  <script src="/assets/js/theme.js"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+  <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+  <!-- Animate CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+
+<body class="h-100 d-flex flex-column">
+
+  <main class="flex-shrink-0 container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-themed">
+
+  <a class="navbar-brand" href="/"><h5><b>Portfolio Blanpa</b></h5></a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-1x fa-bars text-themed"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav ml-auto"><a class="nav-item nav-link " href="/projects/">Projects</a>
+
+      <a class="nav-item nav-link active" href="/blog/">Blog</a>
+
+      <a class="nav-item nav-link " href="/about/">About</a>
+
+      
+
+      <span id="theme-toggler" class="nav-item nav-link" role="button" onclick="toggleTheme()"></span>
+    </div>
+  </div>
+
+</nav>
+    <div class="col-lg-10 mx-auto mt-5 markdown-body">
+  <h1><b>4th week of the MLOps Zoom Camp</b></h1>
+
+<p class="post-metadata text-muted">
+  25 June 2023 -  
+  <b>2 mins read time</b>
+
+  <br>Tags: 
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#mlobs">
+      <span class="tag badge badge-pill text-primary border border-primary">mlobs</span>
+    </a>
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#zoomcamp">
+      <span class="tag badge badge-pill text-primary border border-primary">zoomcamp</span>
+    </a>
+    
+    <a class="text-decoration-none no-underline" href="/blog/tags#prefect">
+      <span class="tag badge badge-pill text-primary border border-primary">prefect</span>
+    </a>
+    </p>
+
+<p>🚀 Exciting developments in the 4th week of the MLOps Zoom Camp!</p>
+
+<p>https://github.com/DataTalksClub/mlops-zoomcamp/tree/main/04-deployment</p>
+
+<p>This week, we dived into the world of Deployment and explored various strategies to bring our trained models to life. Let’s do a quick recap of what we covered.</p>
+
+<p>In our previous sessions, we learned how to transform our training process into a well-defined workflow. Now, it’s time to understand how to deploy our resulting models effectively.</p>
+
+<p>During this week, we focused on two paradigms of deployment: Batch Deployment (Offline) and Online Deployment. Let’s take a closer look at each of them.</p>
+
+<p>1️⃣ Batch Deployment, Offline:
+This approach is suitable when we can afford to wait a bit for predictions. It involves setting up a database and a scoring job. Periodically, the scoring job pulls new data from the database and runs our trained model on it. The resulting predictions are then stored in a predictions database. An excellent example of batch deployment is the churn job, where we periodically predict the likelihood of customer churn.</p>
+
+<p>2️⃣ Online Deployment:
+When we need immediate predictions, we turn to online deployment options. Here, we have two primary methods:</p>
+
+<p>Web Service:
+In this scenario, our model is always available for prediction. For instance, think of our taxi duration prediction app. When the backend sends data to the model, it responds promptly with the predicted duration. The relationship between the client (backend) and the model is one-to-one, ensuring quick predictions for real-time applications.</p>
+
+<p>Streaming:
+Streaming deployment involves a producer(s) and consumers. The producer pushes data into a data stream, and the consumers consume the data for prediction. With streaming, we can have multiple consumers predicting different variables from the same data stream. For example, when a ride starts, the backend (producer) pushes the data into the stream, and consumer 1 predicts the duration, consumer 2 predicts the cost, consumer 3 predicts the tip, and so on.</p>
+
+<p>We also explored the possibility of combining these approaches. For instance, we can run a simple model as a web service with the backend. If the user agrees, we can push the data to the stream with an associated event, triggering a more accurate prediction model (e.g., consumer 1) to run and provide an enhanced duration prediction. This flexibility allows us to cater to specific use cases efficiently.</p>
+
+<p>Furthermore, consumers can push their predictions to a prediction stream, and a decision service can act upon them, enabling intelligent decision-making based on the predicted outcomes.</p>
+
+<p>Exciting times ahead as we continue our journey through the MLOps Zoom Camp! Stay tuned for more insights and practical hands-on experiences. Let’s keep pushing the boundaries of deployment to ensure our models make a real impact in the world.</p>
+
+<p>#MLOps #Deployment #DataScience #MachineLearning #ArtificialIntelligence</p>
+
+
+
+</div>
+  </main>
+  <footer class="mt-auto py-3 text-center">
+
+  <small class="text-muted mb-2">
+    <i class="fas fa-code"></i> with <i class="fas fa-heart"></i>
+    by <strong>blanpa</strong>
+  </small>
+
+  <div class="container-fluid justify-content-center"><a class="social mx-1"  href="mailto:blanpa@proton.me"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#db4437'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fas fa-envelope fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.github.com/blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#333333'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-github fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.kaggle.com/blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#20beff'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-kaggle fa-1x"></i>
+    </a><a class="social mx-1"  href="https://www.linkedin.com/in/blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#007bb5'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-linkedin-in fa-1x"></i>
+    </a><a class="social mx-1"  href="https://medium.com/@blanpa"
+       style="color: #6c757d"
+       onMouseOver="this.style.color='#00ab6c'"
+       onMouseOut="this.style.color='#6c757d'">
+      <i class="fab fa-medium fa-1x"></i>
+    </a>
+
+</div><small id="attribution">
+    theme <a href="https://github.com/yousinix/portfolYOU">portfolYOU</a>
+  </small>
+
+</footer>
+
+  
+  <!-- GitHub Buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- wow.js CDN & Activation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<script> new WOW().init(); </script>
+
+<!-- Initialize all tooltips -->
+<script>
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="blanpa" data-description="Support me on Buy me a coffee!" data-message="Thank you for visiting." data-color="#007bff" data-position="Right" data-x_margin="16" data-y_margin="16"></script></body>
+
+</html>

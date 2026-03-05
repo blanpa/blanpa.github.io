@@ -3,6 +3,7 @@ title: "NATS Messaging Suite"
 description: "Full-featured NATS integration for Node-RED with JetStream and KV store support"
 tags: ["Node-RED", "JavaScript", "NATS", "IIoT"]
 weight: 2
+date: 2024-07-01
 ---
 
 ## The Problem

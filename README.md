@@ -1,10 +1,17 @@
-# Portfolio Blanpa
+# blanpa.github.io
 
-Personal portfolio website of **blanpa** — IIoT Software Developer building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing.
+Personal portfolio website — IIoT Software Developer building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing.
 
-## About
+## Tech Stack
 
-This site showcases my projects, blog posts, and professional background in Industrial IoT. It is built with Jekyll and hosted on GitHub Pages.
+- [Hugo](https://gohugo.io/) with the [Blowfish](https://blowfish.page/) theme
+- Deployed via GitHub Actions to [GitHub Pages](https://blanpa.github.io)
+
+## Local Development
+
+```bash
+hugo server -D
+```
 
 ## Projects
 
@@ -13,20 +20,8 @@ This site showcases my projects, blog posts, and professional background in Indu
 - **node-red-contrib-i3x** — i3x gateway nodes for Node-RED
 - **node-red-contrib-clab-interfaces** — Containerlab interface nodes for Node-RED
 - **node-red-contrib-opcua-suite** — OPC-UA communication nodes for Node-RED
-- **Conveyor Belt Sorting System** — Automated sorting system project
-- **Automated Table Soccer** — Automated table soccer project
-
-## Tech Stack
-
-- [Jekyll](https://jekyllrb.com/) with the [portfolYOU](https://github.com/YoussefRaafatNasry/portfolYOU) remote theme
-- Hosted on [GitHub Pages](https://blanpa.github.io)
-
-## Local Development
-
-```bash
-bundle install
-bundle exec jekyll serve
-```
+- **Conveyor Belt Sorting System** — Automated sorting with PLC and image recognition
+- **Automated Table Soccer** — University project with 3D-printed components and Raspberry Pi
 
 ## License
 

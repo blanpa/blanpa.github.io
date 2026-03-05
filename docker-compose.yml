@@ -1,19 +1,9 @@
 services:
-  jekyll:
-    image: jekyll/jekyll:4
+  hugo:
+    image: hugomods/hugo:exts-0.145.0
     container_name: blanpa-dev
     ports:
-      - "4000:4000"
+      - "1314:1313"
     volumes:
-      - .:/srv/jekyll
-      - jekyll-bundle:/usr/local/bundle
-    environment:
-      - JEKYLL_ENV=development
-      - PAGES_REPO_NWO=blanpa/blanpa.github.io
-    command: >
-      bash -c "chmod a+w /srv/jekyll &&
-      bundle install &&
-      bundle exec jekyll serve --host 0.0.0.0 --force_polling --livereload --config _config.yml,_config_dev.yml"
-
-volumes:
-  jekyll-bundle:
+      - .:/src
+    command: hugo server --buildDrafts --bind 0.0.0.0

@@ -1,0 +1,10 @@
+- pkg: node-red-contrib-condition-monitoring
+  desc: Vibration analysis & predictive maintenance
+- pkg: node-red-contrib-nats-suite
+  desc: NATS messaging with JetStream support
+- pkg: node-red-contrib-opcua-suite
+  desc: OPC-UA industrial data exchange
+- pkg: node-red-contrib-clab-interfaces
+  desc: CompuLab IoT Gateway hardware interfaces
+- pkg: node-red-contrib-i3x
+  desc: i3x open manufacturing API integration

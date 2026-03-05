@@ -1,7 +1,7 @@
 ---
-title: data-engineering-zoomcamp-week-4
-tags: [data-engineering]
-description:
+title: "Data Engineering ZoomCamp — Week 4"
+tags: [data-engineering, zoomcamp]
+description: "Analytics engineering with dbt and data visualization."
 date: 2023-02-21
 series: ["Data Engineering ZoomCamp"]
 ---

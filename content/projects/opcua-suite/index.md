@@ -3,6 +3,7 @@ title: "OPC-UA Suite"
 description: "OPC-UA integration suite for Node-RED enabling standardized industrial data exchange"
 tags: ["Node-RED", "JavaScript", "OPC-UA", "IIoT"]
 weight: 5
+date: 2025-01-01
 ---
 
 ## The Problem

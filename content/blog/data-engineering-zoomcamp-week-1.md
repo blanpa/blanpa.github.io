@@ -1,7 +1,7 @@
 ---
-title: data-engineering-zoomcamp-week-1
-tags: [data-engineering]
-description:
+title: "Data Engineering ZoomCamp — Week 1"
+tags: [data-engineering, zoomcamp]
+description: "Docker, Terraform, GCP setup, and data ingestion into PostgreSQL."
 date: 2023-02-03
 series: ["Data Engineering ZoomCamp"]
 ---

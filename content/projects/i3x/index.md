@@ -3,6 +3,7 @@ title: "i3X Manufacturing API"
 description: "Node-RED integration for the i3X open manufacturing data standard by CESMII"
 tags: ["Node-RED", "JavaScript", "REST API", "IIoT"]
 weight: 3
+date: 2024-11-01
 ---
 
 ## The Problem

@@ -1,7 +1,7 @@
 ---
-title: data-engineering-zoomcamp-week-2
-tags: [data-engineering]
-description:
+title: "Data Engineering ZoomCamp — Week 2"
+tags: [data-engineering, zoomcamp]
+description: "Workflow orchestration and data pipeline automation."
 date: 2023-03-04
 series: ["Data Engineering ZoomCamp"]
 ---

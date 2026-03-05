@@ -1,7 +1,7 @@
 ---
-title: data-engineering-zoomcamp-week-6
-tags: [data-engineering]
-description:
+title: "Data Engineering ZoomCamp — Week 6"
+tags: [data-engineering, zoomcamp]
+description: "Stream processing with Apache Kafka."
 date: 2023-03-18
 series: ["Data Engineering ZoomCamp"]
 ---

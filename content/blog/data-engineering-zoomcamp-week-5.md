@@ -1,7 +1,7 @@
 ---
-title: data-engineering-zoomcamp-week-5
-tags: [data-engineering]
-description:
+title: "Data Engineering ZoomCamp — Week 5"
+tags: [data-engineering, zoomcamp]
+description: "Batch processing with Apache Spark."
 date: 2023-03-02
 series: ["Data Engineering ZoomCamp"]
 ---

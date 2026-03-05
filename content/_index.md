@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "blanpa"
 description: "IIoT Software Developer — Building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing."
 ---
 
@@ -12,7 +12,7 @@ description: "IIoT Software Developer — Building industrial connectivity solut
 
 <a href="/projects/" class="home-card">
   <h2>🔧 Latest Projects</h2>
-  <p>5 open-source Node-RED packages for industrial IoT — condition monitoring, messaging, OPC-UA, and more.</p>
+  <p>Open-source Node-RED packages and industrial automation projects — from condition monitoring to automated table soccer.</p>
 </a>
 
 <a href="/blog/" class="home-card">

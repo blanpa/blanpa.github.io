@@ -1,5 +1,5 @@
 ---
-title: 2d week of the ml Zoom Camp
+title: "ML ZoomCamp — Week 2: Regression"
 tags: [ml, zoomcamp]
 description: 2d week of the ml Zoom Camp
 date: 2023-09-25

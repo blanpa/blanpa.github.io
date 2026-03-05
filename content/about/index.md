@@ -1,5 +1,6 @@
 ---
 title: "About"
+description: "IIoT Software Developer with an Industrial Engineering background — building connectivity solutions from edge to cloud."
 layout: "simple"
 showTableOfContents: true
 ---
@@ -17,6 +18,7 @@ My focus areas include developing open-source Node-RED modules for industrial us
 - **Python** — Primary language for data engineering, ML, and automation
 - **JavaScript** — Node-RED modules, backend services
 - **SQL** — Data pipelines, analytics, reporting
+- **Go** — CLI tools, microservices
 - **Java** — Fundamentals, enterprise context
 
 ### Technologies
@@ -24,11 +26,21 @@ My focus areas include developing open-source Node-RED modules for industrial us
 - **Node-RED** — Core platform for IIoT flow-based programming
 - **Docker** — Containerized deployments, edge computing
 - **Linux / Embedded Linux** — Yocto, CompuLab, Revolution Pi
-- **NATS / Messaging** — Real-time industrial messaging, JetStream
+- **NATS / MQTT** — Real-time industrial messaging, JetStream
 - **OPC-UA** — Industrial data exchange standard
+- **REST / gRPC / WebSocket** — API protocols and real-time communication
+- **Siemens PLC (TIA Portal)** — S7 programming, industrial automation
 - **CAN / RS485 / Fieldbus** — Industrial communication protocols
-- **Git** — Version control, CI/CD
+- **Kubernetes / K3s** — Edge cluster orchestration
+- **Terraform / Ansible** — Infrastructure as Code
+- **Git / GitHub Actions / Jenkins** — Version control and CI/CD pipelines
 - **Grafana / Apache Superset** — Industrial dashboards and monitoring
+
+## Open Source
+
+I maintain several open-source Node-RED packages for industrial IoT on [npm](https://www.npmjs.com/~blanpa):
+
+{{< npm-stats >}}
 
 ## Experience
 
