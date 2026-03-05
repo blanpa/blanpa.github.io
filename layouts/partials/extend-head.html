@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let w, h, particles, time = 0, animId;
   let mouse = { x: -1000, y: -1000 };
+  var touchFadeFrames = 180;
 
   function resize() {
     w = canvas.width = window.innerWidth;
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         vx: (Math.random() - 0.5) * 0.4,
         vy: (Math.random() - 0.5) * 0.4,
         r: Math.random() * 4 + 1.5,
+        touched: 0,
       });
     }
   }
@@ -83,12 +85,26 @@ document.addEventListener("DOMContentLoaded", function () {
       const nearMouse = dm < mouseDist;
       const proximity = nearMouse ? 1 - dm / mouseDist : 0;
 
+      if (nearMouse && proximity > 0.3) {
+        p.touched = touchFadeFrames;
+      } else if (p.touched > 0) {
+        p.touched--;
+      }
+
+      var fade = p.touched / touchFadeFrames;
+      var sizeBoost = nearMouse ? proximity * 2 : fade * 1.5;
+
       ctx.beginPath();
-      ctx.arc(p.x, p.y, nearMouse ? p.r + proximity * 2 : p.r, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.r + sizeBoost, 0, Math.PI * 2);
       if (nearMouse) {
-        ctx.fillStyle = "rgba(0,220,180," + (0.75 + proximity * 0.25) + ")";
+        ctx.fillStyle = "rgba(0,200,165," + (0.6 + proximity * 0.2) + ")";
+      } else if (p.touched > 0) {
+        var cr = Math.floor(fade * 0 + (1 - fade) * parseInt(colStr.split(",")[0]));
+        var cg = Math.floor(fade * 200 + (1 - fade) * parseInt(colStr.split(",")[1]));
+        var cb = Math.floor(fade * 165 + (1 - fade) * parseInt(colStr.split(",")[2]));
+        ctx.fillStyle = "rgba(" + cr + "," + cg + "," + cb + "," + (0.6 + fade * 0.15) + ")";
       } else {
-        ctx.fillStyle = "rgba(" + colStr + ",0.75)";
+        ctx.fillStyle = "rgba(" + colStr + ",0.6)";
       }
       ctx.fill();
 
@@ -108,16 +124,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const ddy = p.y - p2.y;
         const dist = Math.sqrt(ddx * ddx + ddy * ddy);
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.25;
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = "rgba(" + colStr + "," + alpha + ")";
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
+          var lineAlpha = (1 - dist / maxDist) * 0.25;
+          if (p.touched > 0 && p2.touched > 0) {
+            var bothFade = Math.min(p.touched, p2.touched) / touchFadeFrames;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = "rgba(0,200,165," + (bothFade * 0.3) + ")";
+            ctx.lineWidth = 0.8 + bothFade * 0.7;
+            ctx.stroke();
+          } else {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = "rgba(" + colStr + "," + lineAlpha + ")";
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
         }
       }
     }
+
     animId = requestAnimationFrame(draw);
   }
 
