@@ -6,3 +6,5 @@ Gemfile.lock
 hugo-site/
 vendor/
 node_modules/
+_config_dev.yml
+docker-compose.yml
