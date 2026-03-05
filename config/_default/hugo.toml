@@ -1,0 +1,11 @@
+baseURL = "https://blanpa.github.io/"
+languageCode = "en"
+title = "blanpa"
+theme = "blowfish"
+
+[taxonomies]
+  tag = "tags"
+  series = "series"
+
+[markup.goldmark.renderer]
+  unsafe = true

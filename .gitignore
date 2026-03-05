@@ -1,10 +1,14 @@
+public/
+resources/_gen/
+.hugo_build.lock
+hugo-site/
 _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
 Gemfile.lock
-hugo-site/
 vendor/
 node_modules/
 _config_dev.yml
 docker-compose.yml
+*.log
