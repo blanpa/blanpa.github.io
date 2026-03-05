@@ -2,12 +2,12 @@
   percentage: 90
   color: danger
 
-- name: SQL
+- name: JavaScript
   percentage: 80
   color: danger
 
-- name: Javascript
-  percentage: 50
+- name: SQL
+  percentage: 80
   color: danger
 
 - name: Java

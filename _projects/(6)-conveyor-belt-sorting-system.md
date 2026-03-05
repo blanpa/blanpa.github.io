@@ -1,9 +1,9 @@
 ---
-name: Automatic conveyor belt
-tools: [Linux, Raspberry Pi, Python, SPS, University Project, Machine Learning]
+name: Conveyor Belt Sorting System
+tools: [Raspberry Pi, PiXtend PLC, Python, Machine Learning, Linux]
 image: https://raw.githubusercontent.com/blanpa/blanpa.github.io/main/_projects/media/(1)%20University%20project%20conveyor%20belt/1.png
 
-description: University Project
+description: PLC-controlled sorting system with inductive, capacitive, and color sensors — plus ML-based object classification via camera
 external_url: 
 ---
 # Description

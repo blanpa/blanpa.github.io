@@ -1,9 +1,9 @@
 ---
-name: Table soccer
-tools: [Linux, Python, University Project, Raspberry Pi, Revolution Pi]
+name: Automated Table Soccer
+tools: [Revolution Pi, Python, CAN Bus, Linux, 3D Printing]
 image: https://raw.githubusercontent.com/blanpa/blanpa.github.io/main/_projects/media/(2)%20University%20Project%20table%20soccer/1.png
 
-description: University Project
+description: Industrial PLC-controlled table soccer with linear motors, CAN bus communication, and automated ball return via light barriers
 external_url: 
 ---
 

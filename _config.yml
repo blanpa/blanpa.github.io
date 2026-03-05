@@ -1,6 +1,6 @@
 ### Site Settings ###
 title               : Portfolio Blanpa
-description         : Hello there, I'm Blanpa. Data is my passion. Im a aspiring IIOT Software Developer with Industrial Engineering background. My goal is to increase efficiency and productivity by applying modern methods.
+description         : IIoT Software Developer building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing. Industrial Engineering background with a passion for bridging shop floor and cloud.
 baseurl             : ""                     # Change to empty quotes if you are hosting your site at <your-username>.github.io directly
 repository          : blanpa/blanpa.github.io  # Change to <your-username>/<your-username>.github.io (or remove it if you don't need remote projects)
 remote_theme        : YoussefRaafatNasry/portfolYOU
@@ -53,13 +53,13 @@ collections:
 
 ### Disqus ###
 disqus:
-  shortname: your-short-name-disqus                     # Your website Shortname on disqus
+  shortname:                                             # Your website Shortname on disqus
 
 ### Analytics ###
 analytics:
   enabled: false                                        # Set true to enable analytics
   google:
-    tracking_id: your-google-tracking-id
+    tracking_id:
 
 ### Buy me a coffee ###
 # See https://www.buymeacoffee.com/
@@ -88,4 +88,6 @@ exclude:
   - README.md
   - CONTRIBUTING.md
   - LICENSE
+  - docker-compose.yml
+  - _config_dev.yml
   - "*.log"

@@ -1,0 +1,19 @@
+services:
+  jekyll:
+    image: jekyll/jekyll:4
+    container_name: blanpa-dev
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/srv/jekyll
+      - jekyll-bundle:/usr/local/bundle
+    environment:
+      - JEKYLL_ENV=development
+      - PAGES_REPO_NWO=blanpa/blanpa.github.io
+    command: >
+      bash -c "chmod a+w /srv/jekyll &&
+      bundle install &&
+      bundle exec jekyll serve --host 0.0.0.0 --force_polling --livereload --config _config.yml,_config_dev.yml"
+
+volumes:
+  jekyll-bundle:

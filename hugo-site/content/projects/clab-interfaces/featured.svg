@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="600" fill="url(#bg)"/>
+  <!-- Gateway box -->
+  <rect x="440" y="180" width="320" height="280" rx="16" fill="rgba(34,211,238,0.08)" stroke="#22d3ee" stroke-width="2"/>
+  <text x="600" y="220" fill="#22d3ee" font-family="system-ui, sans-serif" font-size="20" text-anchor="middle" font-weight="bold">IoT Gateway</text>
+  <!-- Interface rows inside gateway -->
+  <g font-family="monospace" font-size="14" fill="#94a3b8">
+    <rect x="470" y="240" width="260" height="32" rx="6" fill="rgba(255,255,255,0.05)"/>
+    <text x="490" y="262">GPIO</text><text x="700" y="262" fill="#22d3ee" text-anchor="end">Digital I/O</text>
+    <rect x="470" y="282" width="260" height="32" rx="6" fill="rgba(255,255,255,0.05)"/>
+    <text x="490" y="304">RS485</text><text x="700" y="304" fill="#f59e0b" text-anchor="end">Serial</text>
+    <rect x="470" y="324" width="260" height="32" rx="6" fill="rgba(255,255,255,0.05)"/>
+    <text x="490" y="346">CAN</text><text x="700" y="346" fill="#ef4444" text-anchor="end">Bus</text>
+    <rect x="470" y="366" width="260" height="32" rx="6" fill="rgba(255,255,255,0.05)"/>
+    <text x="490" y="388">LTE</text><text x="700" y="388" fill="#a78bfa" text-anchor="end">Cellular</text>
+    <rect x="470" y="408" width="260" height="32" rx="6" fill="rgba(255,255,255,0.05)"/>
+    <text x="490" y="430">GPS</text><text x="700" y="430" fill="#34d399" text-anchor="end">Position</text>
+  </g>
+  <!-- Left: Sensors -->
+  <g stroke="#22d3ee" stroke-width="1.5" opacity="0.3">
+    <line x1="200" y1="260" x2="440" y2="260"/>
+    <line x1="200" y1="300" x2="440" y2="300"/>
+    <line x1="200" y1="340" x2="440" y2="340"/>
+  </g>
+  <circle cx="200" cy="260" r="20" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="200" y="265" fill="#22d3ee" font-family="monospace" font-size="11" text-anchor="middle">4-20mA</text>
+  <circle cx="200" cy="300" r="20" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="200" y="305" fill="#f59e0b" font-family="monospace" font-size="11" text-anchor="middle">PT100</text>
+  <circle cx="200" cy="340" r="20" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="200" y="345" fill="#ef4444" font-family="monospace" font-size="11" text-anchor="middle">CAN</text>
+  <!-- Right: Node-RED -->
+  <g stroke="#22d3ee" stroke-width="1.5" opacity="0.3">
+    <line x1="760" y1="340" x2="920" y2="340"/>
+  </g>
+  <polygon points="915,330 935,340 915,350" fill="#22d3ee" opacity="0.4"/>
+  <rect x="940" y="300" width="180" height="80" rx="14" fill="#8F0000" opacity="0.8"/>
+  <text x="1030" y="348" fill="white" font-family="system-ui, sans-serif" font-size="22" text-anchor="middle" font-weight="bold">Node-RED</text>
+  <!-- Title -->
+  <text x="60" y="80" fill="white" font-family="system-ui, sans-serif" font-size="42" font-weight="bold">CompuLab Interfaces</text>
+  <text x="60" y="120" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="22">13 Node Categories · GPIO · CAN · LTE · GPS</text>
+  <!-- Badges -->
+  <rect x="60" y="500" width="120" height="36" rx="18" fill="#8F0000"/>
+  <text x="120" y="524" fill="white" font-family="system-ui, sans-serif" font-size="15" text-anchor="middle" font-weight="bold">Node-RED</text>
+  <rect x="195" y="500" width="130" height="36" rx="18" fill="rgba(255,255,255,0.1)"/>
+  <text x="260" y="524" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="15" text-anchor="middle">Embedded Linux</text>
+</svg>

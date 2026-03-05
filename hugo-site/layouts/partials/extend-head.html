@@ -1,0 +1,132 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const canvas = document.createElement("canvas");
+  canvas.id = "particles-bg";
+  document.body.prepend(canvas);
+  const ctx = canvas.getContext("2d");
+
+  let w, h, particles, mouse, time = 0;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  mouse = { x: w / 2, y: h / 2 };
+  document.addEventListener("mousemove", function (e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  function createParticles() {
+    const count = Math.floor((w * h) / 8000);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 3 + 1,
+      });
+    }
+  }
+
+  // Smooth color transition: grey → cyan → grey → red → grey ...
+  function getColor(t) {
+    // Full cycle every ~20 seconds (at 60fps: 1200 frames)
+    const cycle = (t % 1200) / 1200;
+    let r, g, b;
+    if (cycle < 0.25) {
+      // grey → cyan
+      const p = cycle / 0.25;
+      r = Math.floor(140 * (1 - p));
+      g = Math.floor(140 + 70 * p);
+      b = Math.floor(140 + 115 * p);
+    } else if (cycle < 0.5) {
+      // cyan → grey
+      const p = (cycle - 0.25) / 0.25;
+      r = Math.floor(140 * p);
+      g = Math.floor(210 - 70 * p);
+      b = Math.floor(255 - 115 * p);
+    } else if (cycle < 0.75) {
+      // grey → red
+      const p = (cycle - 0.5) / 0.25;
+      r = Math.floor(140 + 115 * p);
+      g = Math.floor(140 * (1 - p * 0.7));
+      b = Math.floor(140 * (1 - p * 0.7));
+    } else {
+      // red → grey
+      const p = (cycle - 0.75) / 0.25;
+      r = Math.floor(255 - 115 * p);
+      g = Math.floor(42 + 98 * p);
+      b = Math.floor(42 + 98 * p);
+    }
+    return r + "," + g + "," + b;
+  }
+
+  function draw() {
+    time++;
+    ctx.clearRect(0, 0, w, h);
+    const maxDist = 120;
+    const mouseDist = 200;
+    const colStr = getColor(time);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+
+      // Particle dot
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(" + colStr + ",0.5)";
+      ctx.fill();
+
+      // Mouse interaction - glow near cursor
+      const dx = mouse.x - p.x;
+      const dy = mouse.y - p.y;
+      const dm = Math.sqrt(dx * dx + dy * dy);
+      if (dm < mouseDist) {
+        const alpha = (1 - dm / mouseDist) * 0.3;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.strokeStyle = "rgba(" + colStr + "," + alpha + ")";
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      // Connect nearby particles
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const ddx = p.x - p2.x;
+        const ddy = p.y - p2.y;
+        const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.15;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = "rgba(" + colStr + "," + alpha + ")";
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  createParticles();
+  draw();
+  window.addEventListener("resize", function () {
+    resize();
+    createParticles();
+  });
+});
+</script>

@@ -1,20 +1,24 @@
-- name: Linux
-  percentage: 70
+- name: Node-RED
+  percentage: 90
   color: info
 
-- name: Node-Red
+- name: Docker
   percentage: 80
   color: info
 
-- name: Javascript
+- name: Linux / Embedded Linux
   percentage: 80
   color: info
 
-- name: Microsoft Visual Studio Code
+- name: NATS / Messaging
   percentage: 80
   color: info
 
-- name: Apache Superset
+- name: OPC-UA
+  percentage: 75
+  color: info
+
+- name: Git
   percentage: 80
   color: info
 
@@ -22,26 +26,14 @@
   percentage: 80
   color: info
 
-- name: Docker Container
+- name: Apache Superset
   percentage: 80
+  color: info
+
+- name: CAN / RS485 / Fieldbus
+  percentage: 70
   color: info
 
 - name: Power BI
   percentage: 60
-  color: info
-
-- name: Git
-  percentage: 80
-  color: info
-
-- name: Solid Works
-  percentage: 80
-  color: info
-
-- name: PTC Creo
-  percentage: 80
-  color: info
-
-- name: Microsoft Office
-  percentage: 95
   color: info

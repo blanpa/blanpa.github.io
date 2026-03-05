@@ -1,0 +1,163 @@
+[
+  
+    {
+      "title"    : "First Week Recap of ML Ops ZoomCamp",
+      "category" : "",
+      "tags"     : "mlobs, zoomcamp",
+      "url"      : "/blog/ML-Ops-ZoomCamp-week-1",
+      "date"     : "2024-05-22 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "6th week of the ML Zoom Camp",
+      "category" : "",
+      "tags"     : "ml, zoomcamp",
+      "url"      : "/blog/ML-ZoomCamp-week-6",
+      "date"     : "2023-10-22 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "5th week of the ML Zoom Camp",
+      "category" : "",
+      "tags"     : "ml, zoomcamp",
+      "url"      : "/blog/ML-ZoomCamp-week-5",
+      "date"     : "2023-10-15 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "4th week of the ML Zoom Camp",
+      "category" : "",
+      "tags"     : "ml, zoomcamp",
+      "url"      : "/blog/ML-ZoomCamp-week-4",
+      "date"     : "2023-10-09 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "Diving Deeper into Machine Learning, Week 3 of ML Zoomcamp",
+      "category" : "",
+      "tags"     : "ml, zoomcamp",
+      "url"      : "/blog/ML-ZoomCamp-week-3",
+      "date"     : "2023-10-02 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "2d week of the ml Zoom Camp",
+      "category" : "",
+      "tags"     : "ml, zoomcamp",
+      "url"      : "/blog/ML-ZoomCamp-week-2",
+      "date"     : "2023-09-25 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "1st week of the ML Zoom Camp",
+      "category" : "",
+      "tags"     : "ml, zoomcamp",
+      "url"      : "/blog/ML-ZoomCamp-week-1",
+      "date"     : "2023-09-18 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "6th week of the MLOps Zoom Camp",
+      "category" : "",
+      "tags"     : "mlobs, zoomcamp",
+      "url"      : "/blog/ML-Ops-ZoomCamp-week-6",
+      "date"     : "2023-07-16 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "5th week of the MLOps Zoom Camp",
+      "category" : "",
+      "tags"     : "mlobs, zoomcamp, grafana, Evidently",
+      "url"      : "/blog/ML-Ops-ZoomCamp-week-5",
+      "date"     : "2023-07-03 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "4th week of the MLOps Zoom Camp",
+      "category" : "",
+      "tags"     : "mlobs, zoomcamp, prefect",
+      "url"      : "/blog/ML-Ops-ZoomCamp-week-4",
+      "date"     : "2023-06-25 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "Third Week of ML Ops ZoomCamp, Orchestration with Prefect",
+      "category" : "",
+      "tags"     : "mlobs, zoomcamp, prefect",
+      "url"      : "/blog/ML-Ops-ZoomCamp-week-3",
+      "date"     : "2023-06-08 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "Second Week of ML Ops ZoomCamp, wandb",
+      "category" : "",
+      "tags"     : "mlobs, zoomcamp, wandb",
+      "url"      : "/blog/ML-Ops-ZoomCamp-week-2-wandb",
+      "date"     : "2023-06-06 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "Second Week of ML Ops ZoomCamp, mlflow",
+      "category" : "",
+      "tags"     : "mlobs, zoomcamp",
+      "url"      : "/blog/ML-Ops-ZoomCamp-week-2-mlflow",
+      "date"     : "2023-06-04 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "data-engineering-zoomcamp-week-6",
+      "category" : "",
+      "tags"     : "data-engineering",
+      "url"      : "/blog/data-engineering-zoomcamp-week-6",
+      "date"     : "2023-03-18 00:00:00 -0500"
+    } ,
+  
+    {
+      "title"    : "data-engineering-zoomcamp-week-2",
+      "category" : "",
+      "tags"     : "data-engineering",
+      "url"      : "/blog/data-engineering-zoomcamp-week-2",
+      "date"     : "2023-03-04 00:00:00 -0600"
+    } ,
+  
+    {
+      "title"    : "data-engineering-zoomcamp-week-5",
+      "category" : "",
+      "tags"     : "data-engineering",
+      "url"      : "/blog/data-engineering-zoomcamp-week-5",
+      "date"     : "2023-03-02 00:00:00 -0600"
+    } ,
+  
+    {
+      "title"    : "data-engineering-zoomcamp-week-4",
+      "category" : "",
+      "tags"     : "data-engineering",
+      "url"      : "/blog/data-engineering-zoomcamp-week-4",
+      "date"     : "2023-02-21 00:00:00 -0600"
+    } ,
+  
+    {
+      "title"    : "data-engineering-zoomcamp-week-3",
+      "category" : "",
+      "tags"     : "data-engineering",
+      "url"      : "/blog/data-engineering-zoomcamp-week-3",
+      "date"     : "2023-02-14 00:00:00 -0600"
+    } ,
+  
+    {
+      "title"    : "data-engineering-zoomcamp-week-1",
+      "category" : "",
+      "tags"     : "data-engineering",
+      "url"      : "/blog/data-engineering-zoomcamp-week-1",
+      "date"     : "2023-02-03 00:00:00 -0600"
+    } ,
+  
+    {
+      "title"    : "Do not go gentle into that good night",
+      "category" : "",
+      "tags"     : "Poetry",
+      "url"      : "/blog/do-not-go-gentle-into-that-good-night",
+      "date"     : "2016-04-17 00:00:00 -0500"
+    } 
+  
+]

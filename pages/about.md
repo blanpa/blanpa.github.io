@@ -9,11 +9,9 @@ weight: 3
 
 Hi I am **{{ site.author.name }}** :wave:,<br>
 
-Global challenges can only be overcome through cooperation and sustainable solutions. In this sense, my goal is to enable cooperation, manage projects and develop ideas that contribute to a sustainable economy.
+I am an IIoT Software Developer with an Industrial Engineering background. I build industrial connectivity solutions that bridge the gap between shop floor and cloud — from edge gateways and fieldbus protocols to real-time messaging and predictive maintenance.
 
-I have strong technical knowledge combined with business awareness and project management experience gained through my studies and internships.
-
-With my understanding of various technologies, I am able to articulate ideas and concepts and translate them into actionable plans. I contribute to project planning by understanding the relationships between roles in the team as well as between departments and by asking systematic questions, assessing difficulties and risks very well. 
+My focus areas include developing open-source Node-RED modules for industrial use cases such as condition monitoring, OPC-UA communication, NATS messaging, and IoT gateway integration. I combine strong technical knowledge in embedded systems, data engineering, and cloud infrastructure with hands-on project management experience.
 
 <div class="row">
 {% include about/skills.html title="Programming Skills" source=site.data.programming-skills %}
