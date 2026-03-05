@@ -90,4 +90,5 @@ exclude:
   - LICENSE
   - docker-compose.yml
   - _config_dev.yml
+  - hugo-site/
   - "*.log"
