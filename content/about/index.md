@@ -53,3 +53,14 @@ As an Industrial Internet of Things (IIoT) Software Developer, I specialize in c
 **2022 — 2023**
 
 Analyzed existing manufacturing processes, identified areas for improvement, and developed strategies to optimize efficiency, reduce costs, and enhance product quality. Led process validation activities, implemented Lean Manufacturing principles and Six Sigma methodologies, and collaborated with R&D teams to transfer new products from development to production.
+
+## Support My Work
+
+If you find my open-source projects useful, consider supporting me:
+
+{{< button href="https://ko-fi.com/blanpa" target="_blank" >}}
+Ko-fi
+{{< /button >}}
+{{< button href="https://github.com/sponsors/blanpa" target="_blank" >}}
+GitHub Sponsors
+{{< /button >}}

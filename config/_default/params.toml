@@ -72,7 +72,7 @@ smartTOC = true
 
 [buymeacoffee]
   identifier = "blanpa"
-  globalWidget = true
+  globalWidget = false
   globalWidgetMessage = ""
   globalWidgetColor = "#FFDD00"
   globalWidgetPosition = "right"
@@ -87,4 +87,6 @@ smartTOC = true
     { linkedin = "https://linkedin.com/in/blanpa" },
     { medium = "https://medium.com/@blanpa" },
     { email = "mailto:blanpa@proton.me" },
+    { ko-fi = "https://ko-fi.com/blanpa" },
+    { heart-empty = "https://github.com/sponsors/blanpa" },
   ]

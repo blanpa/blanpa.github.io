@@ -51,6 +51,62 @@
   line-height: 1.6;
 }
 
+#support-fab {
+  right: 28px !important;
+  bottom: 28px !important;
+}
+
+#support-fab-btn {
+  padding: 14px 28px !important;
+  font-size: 17px !important;
+  justify-content: center !important;
+  min-width: 180px !important;
+  gap: 0 !important;
+  background: linear-gradient(135deg, #00d4aa, #0099cc) !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+  font-size: 0 !important;
+  animation: fab-pulse 3s ease-in-out infinite;
+}
+
+#support-fab-btn::before {
+  content: "♥";
+  font-size: 24px;
+  margin-right: 4px;
+}
+
+#support-fab-btn::after {
+  content: "Support me";
+  font-size: 17px;
+}
+
+
+#support-fab-btn:hover {
+  background: linear-gradient(135deg, #00e6bb, #00aadd) !important;
+  transform: scale(1.05);
+}
+
+@keyframes fab-pulse {
+  0%, 100% { box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3); }
+  50% { box-shadow: 0 4px 25px rgba(0, 212, 170, 0.6); }
+}
+
+#support-options {
+  min-width: 240px !important;
+}
+
+#support-options a {
+  padding: 14px 24px !important;
+  font-size: 15px !important;
+  min-width: 240px !important;
+}
+
+#support-options a span {
+  font-size: 15px !important;
+}
+
 @media (max-width: 768px) {
   .home-cards {
     flex-direction: column;
