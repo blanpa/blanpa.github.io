@@ -2,6 +2,10 @@
   desc: Vibration analysis & predictive maintenance
 - pkg: node-red-contrib-nats-suite
   desc: NATS messaging with JetStream support
+- pkg: node-red-contrib-cip-suite
+  desc: Allen-Bradley PLC & EtherNet/IP communication
+- pkg: node-red-contrib-s7-suite
+  desc: Siemens S7 PLC communication
 - pkg: node-red-contrib-opcua-suite
   desc: OPC-UA industrial data exchange
 - pkg: node-red-contrib-clab-interfaces

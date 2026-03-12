@@ -1,23 +1,25 @@
 ---
-title: "Lessons Learned: Publishing 5 npm Packages for Industrial IoT"
+title: "Lessons Learned: Publishing 7 npm Packages for Industrial IoT"
 tags: [node-red, javascript, iiot]
-description: "What I learned building and maintaining open-source Node-RED packages — from first commit to 2,000+ downloads."
+description: "What I learned building and maintaining open-source Node-RED packages — from first commit to thousands of downloads."
 date: 2026-05-23
 series: ["IIoT"]
 ---
 
-Over the past two years, I've published five npm packages for Node-RED, all targeting the IIoT space. Some took off, some needed multiple rewrites, and all taught me things I couldn't have learned from tutorials alone. This post is the honest rundown: what worked, what didn't, and what I'd do differently.
+Over the past two years, I've published seven npm packages for Node-RED, all targeting the IIoT space. Some took off, some needed multiple rewrites, and all taught me things I couldn't have learned from tutorials alone. This post is the honest rundown: what worked, what didn't, and what I'd do differently.
 
 ---
 
-## The Five Packages
+## The Seven Packages
 
 | Package | Purpose | Tests | Downloads |
 |---------|---------|-------|-----------|
 | **node-red-contrib-condition-monitoring** | Vibration analysis, FFT, alarm thresholds | 135 | 2,100+ |
+| **node-red-contrib-cip-suite** | Allen-Bradley PLC & EtherNet/IP communication | — | — |
+| **node-red-contrib-s7-suite** | Siemens S7 PLC communication | — | — |
 | **node-red-contrib-nats-suite** | NATS messaging (pub/sub, request/reply, JetStream) | 48 | 900+ |
-| **node-red-contrib-opcua-suite** | OPC-UA client with browse, read, write, subscribe | 62 | 1,400+ |
-| **node-red-contrib-clab-interfaces** | Interfaces for the Siemens cLab platform | 28 | 350+ |
+| **node-red-contrib-opcua-suite** | OPC-UA client with browse, read, write, subscribe | 156 | 1,400+ |
+| **node-red-contrib-clab-interfaces** | CompuLab IoT Gateway hardware interfaces | 28 | 350+ |
 | **node-red-contrib-i3x** | CESMII i3x open manufacturing API | 41 | 600+ |
 
 Each one started the same way: I needed something for a project, couldn't find a good existing solution, and built it myself.
@@ -35,6 +37,8 @@ Monorepo (Lerna / npm workspaces):
   ┌──────────────────────────────────┐
   │  packages/                       │
   │  ├── condition-monitoring/       │
+  │  ├── cip-suite/                  │
+  │  ├── s7-suite/                   │
   │  ├── nats-suite/                 │
   │  ├── opcua-suite/                │
   │  ├── clab-interfaces/            │
@@ -54,8 +58,12 @@ Separate repos:
   │ Own CI, own issues  │  │ Own CI, own issues  │
   └─────────────────────┘  └─────────────────────┘
   ┌─────────────────────┐  ┌─────────────────────┐
-  │ opcua-suite         │  │ i3x                 │
-  │ v0.5.0              │  │ v0.3.0              │
+  │ opcua-suite         │  │ cip-suite           │
+  │ v0.5.0              │  │ v0.1.0              │
+  └─────────────────────┘  └─────────────────────┘
+  ┌─────────────────────┐  ┌─────────────────────┐
+  │ s7-suite            │  │ i3x                 │
+  │ v0.1.0              │  │ v0.3.0              │
   └─────────────────────┘  └─────────────────────┘
 
   ✓ Simple CI/CD per package
@@ -654,10 +662,10 @@ Key moments:
 
 | Package | Next Steps |
 |---------|------------|
-| **condition-monitoring** | Bearing defect frequency calculator, ISO 10816 presets |
+| **condition-monitoring** | Bearing defect frequency calculator, additional ISO standard presets |
 | **nats-suite** | KV store support, object store integration |
 | **opcua-suite** | Alarms & conditions, method call improvements |
-| **clab-interfaces** | Alignment with cLab v2 API changes |
+| **clab-interfaces** | Alignment with CompuLab v2 API changes |
 | **i3x** | Historical data aggregation, batch operations |
 
 The overarching theme: **do fewer things, better.** Every package has a feature request backlog longer than what I'll ever build. The discipline is saying no to complexity and yes to reliability.
@@ -675,4 +683,4 @@ The overarching theme: **do fewer things, better.** Every package has a feature 
 7. **Don't chase downloads.** Solve a real problem well, and users will find you.
 8. **Accept that most code will be rewritten.** v1 exists to teach you what v2 should be.
 
-Two years, five packages, 314 tests, and roughly 4,800 downloads later — the most valuable thing I've built isn't the code. It's the practice of building, shipping, and maintaining software that other people depend on. That practice transfers to every project, every team, every role. Start your own package. Today.
+Two years, seven packages, hundreds of tests, and thousands of downloads later — the most valuable thing I've built isn't the code. It's the practice of building, shipping, and maintaining software that other people depend on. That practice transfers to every project, every team, every role. Start your own package. Today.

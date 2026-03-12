@@ -2,7 +2,7 @@
 title: "S7 Communication Suite"
 description: "Node-RED nodes for Siemens S7 PLC communication with dual backend support"
 tags: ["Node-RED", "TypeScript", "Siemens", "IIoT"]
-weight: 3
+weight: 4
 date: 2026-03-01
 ---
 
@@ -26,7 +26,7 @@ A Node-RED package for Siemens S7 communication that lets you **choose your back
 
 Switch backends in the config node — your flows stay the same.
 
-## 5 Nodes
+## 6 Nodes
 
 ```
 ┌──────────┐     ┌──────────┐     ┌──────────┐
@@ -38,10 +38,10 @@ Switch backends in the config node — your flows stay the same.
       ┌──────┴──────┐
       │  s7-config  │──→ PLC Connection
       └─────────────┘
-             │
-      ┌──────┴──────┐
-      │  s7-browse  │──→ DB Discovery
-      └─────────────┘
+         │       │
+  ┌──────┴──┐ ┌──┴────────┐
+  │s7-browse│ │ s7-control │
+  └─────────┘ └────────────┘
 ```
 
 - **s7-config** — Manages PLC connections with backend selection and auto-reconnection
@@ -49,6 +49,7 @@ Switch backends in the config node — your flows stay the same.
 - **s7-write** — Write data to PLC memory with dynamic addressing
 - **s7-trigger** — Polling with edge detection and deadband filtering
 - **s7-browse** — Discover available data blocks with filtering
+- **s7-control** — CPU control operations (start, stop, cold start)
 
 ## Supported Controllers
 

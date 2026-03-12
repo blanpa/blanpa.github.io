@@ -22,8 +22,8 @@ CAN Bus Timeline:
 1986 ─── Bosch develops CAN for automotive
 1991 ─── Mercedes-Benz first production car with CAN
 1993 ─── ISO 11898 standard published
-2003 ─── CAN-FD (Flexible Data Rate) introduced
-2012 ─── CANopen widely adopted in industrial automation
+2012 ─── CAN-FD (Flexible Data Rate) introduced by Bosch
+2015 ─── CAN-FD standardized as ISO 11898-1:2015
 Today ── CAN is in cars, trucks, elevators, medical devices,
          industrial drives, agricultural equipment, and robots
 ```

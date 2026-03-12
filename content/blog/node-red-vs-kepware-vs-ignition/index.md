@@ -121,12 +121,12 @@ Ignition's unlimited client model is a game-changer. With Kepware or traditional
 | **OPC-DA** | Via wrapper | Native | Native |
 | **Modbus TCP/RTU** | Community node | Native driver | Native driver |
 | **Siemens S7** | node-red-contrib-s7 | Native driver (certified) | Native driver |
-| **Allen-Bradley** | Limited | Native driver (certified) | Native driver |
+| **Allen-Bradley** | node-red-contrib-cip-suite | Native driver (certified) | Native driver |
 | **MQTT** | Core node (excellent) | MQTT Client driver | MQTT Engine module |
 | **HTTP/REST** | Core node (excellent) | REST agent (limited) | Web Dev module |
 | **SQL Databases** | Community nodes | ODBC interface | Native JDBC |
 | **BACnet** | Community node | Native driver | Third-party module |
-| **EtherNet/IP** | Limited | Native driver | Native driver |
+| **EtherNet/IP** | node-red-contrib-cip-suite | Native driver | Native driver |
 | **PROFINET** | Not available | Native driver | Not available |
 
 Kepware wins on PLC connectivity breadth. If you need to talk to a legacy Allen-Bradley PLC-5 over DH+, Kepware has a driver for that. Node-RED can't compete here.
