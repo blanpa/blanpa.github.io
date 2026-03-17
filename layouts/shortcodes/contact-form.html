@@ -1,5 +1,5 @@
 {{ $formspreeId := .Get "id" | default "YOUR_FORMSPREE_ID" }}
-{{ $uid := delimit (shuffle (seq 1000 9999)) "" }}
+{{ $uid := .Page.File.UniqueID }}
 
 <form id="contact-form-{{ $uid }}" class="contact-form">
   <div class="form-group">
