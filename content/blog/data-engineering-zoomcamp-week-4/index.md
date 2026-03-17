@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: "Data Engineering ZoomCamp — Week 4"
 tags: [data-engineering, zoomcamp]
 description: "Analytics engineering with dbt and data visualization."

@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: Second Week of ML Ops ZoomCamp, mlflow
 tags: [mlobs, zoomcamp]
 description: Second Week of ML Ops ZoomCamp, mlflow

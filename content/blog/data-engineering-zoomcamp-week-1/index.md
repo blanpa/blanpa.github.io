@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: "Data Engineering ZoomCamp — Week 1"
 tags: [data-engineering, zoomcamp]
 description: "Docker, Terraform, GCP setup, and data ingestion into PostgreSQL."

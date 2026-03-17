@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: 6th week of the MLOps Zoom Camp
 tags: [mlobs, zoomcamp]
 description: "6th week of the MLOps ZoomCamp — Best Practices"

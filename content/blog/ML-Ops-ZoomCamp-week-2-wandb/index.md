@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: Second Week of ML Ops ZoomCamp, wandb
 tags: [mlobs, zoomcamp, wandb]
 description: Second Week of ML Ops ZoomCamp, wandb

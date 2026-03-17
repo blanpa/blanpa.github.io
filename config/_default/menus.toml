@@ -17,3 +17,13 @@
   name = "Tags"
   pageRef = "tags"
   weight = 40
+
+[[footer]]
+  name = "Legal Notice"
+  pageRef = "impressum"
+  weight = 10
+
+[[footer]]
+  name = "Privacy Policy"
+  pageRef = "datenschutz"
+  weight = 20

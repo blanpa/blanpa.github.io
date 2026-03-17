@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: First Week Recap of ML Ops ZoomCamp
 tags: [mlobs, zoomcamp]
 description: First Week Recap of ML Ops ZoomCamp

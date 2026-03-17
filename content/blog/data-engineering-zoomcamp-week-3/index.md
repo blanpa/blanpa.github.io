@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: "Data Engineering ZoomCamp — Week 3"
 tags: [data-engineering, zoomcamp]
 description: "Data warehousing with BigQuery and analytics engineering."

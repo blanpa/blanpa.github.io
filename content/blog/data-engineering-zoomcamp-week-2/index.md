@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: "Data Engineering ZoomCamp — Week 2"
 tags: [data-engineering, zoomcamp]
 description: "Workflow orchestration and data pipeline automation."

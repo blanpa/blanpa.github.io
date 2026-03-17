@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: "Data Engineering ZoomCamp — Week 5"
 tags: [data-engineering, zoomcamp]
 description: "Batch processing with Apache Spark."

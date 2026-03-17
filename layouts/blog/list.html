@@ -1,0 +1,116 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+
+  {{/* Hero */}}
+  {{ if site.Params.list.showHero | default false }}
+    {{ $heroStyle := print "hero/" site.Params.list.heroStyle ".html" }}
+    {{ if templates.Exists ( printf "partials/%s" $heroStyle ) }}
+      {{ partial $heroStyle . }}
+    {{ else }}
+      {{ partial "hero/basic.html" . }}
+    {{ end }}
+  {{ end }}
+
+  <header>
+    {{ if .Params.showBreadcrumbs | default (site.Params.list.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    {{ with .Description }}
+      <p class="mt-2 text-lg text-neutral-500 dark:text-neutral-400">{{ . }}</p>
+    {{ end }}
+  </header>
+
+  {{ $allPages := .Pages.ByDate.Reverse }}
+
+  {{ if gt (len $allPages) 0 }}
+    {{/* Featured — latest article */}}
+    {{ $featured := index $allPages 0 }}
+    {{ $rest := after 1 $allPages }}
+
+    {{ with $featured }}
+      {{ $disableImageOptimization := site.Store.Get "disableImageOptimization" }}
+      {{ $featuredURL := "" }}
+      {{ $images := .Resources.ByType "image" }}
+      {{ $img := "" }}
+      {{ range slice "*feature*" "*cover*" "*thumbnail*" }}
+        {{ if not $img }}{{ $img = $images.GetMatch . }}{{ end }}
+      {{ end }}
+      {{ with $img }}
+        {{ if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) }}
+          {{ $featuredURL = (.Resize "900x").RelPermalink }}
+        {{ else }}
+          {{ $featuredURL = .RelPermalink }}
+        {{ end }}
+      {{ end }}
+
+      <a href="{{ .RelPermalink }}" class="blog-featured">
+        {{ with $featuredURL }}
+          <div class="blog-featured__img">
+            <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+          </div>
+        {{ end }}
+        <div class="blog-featured__content">
+          <span class="blog-featured__badge">Latest</span>
+          <time class="blog-featured__date">{{ .Date.Format "January 2, 2006" }}</time>
+          <h2>{{ .Title }}</h2>
+          <p>{{ .Description }}</p>
+          {{ with .Params.tags }}
+            <div class="project-tags">
+              {{ range first 4 . }}
+                <span class="project-tag">{{ . }}</span>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </a>
+    {{ end }}
+
+    {{/* Rest — chronological list */}}
+    {{ if gt (len $rest) 0 }}
+      <div class="blog-feed">
+        {{ range $rest }}
+          {{ $disableImageOptimization := site.Store.Get "disableImageOptimization" }}
+          {{ $featuredURL := "" }}
+          {{ $images := .Resources.ByType "image" }}
+          {{ $img := "" }}
+          {{ range slice "*feature*" "*cover*" "*thumbnail*" }}
+            {{ if not $img }}{{ $img = $images.GetMatch . }}{{ end }}
+          {{ end }}
+          {{ with $img }}
+            {{ if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) }}
+              {{ $featuredURL = (.Resize "600x").RelPermalink }}
+            {{ else }}
+              {{ $featuredURL = .RelPermalink }}
+            {{ end }}
+          {{ end }}
+
+          <a href="{{ .RelPermalink }}" class="blog-feed-item">
+            {{ with $featuredURL }}
+              <div class="blog-feed-item__img">
+                <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+              </div>
+            {{ end }}
+            <div class="blog-feed-item__body">
+              <div class="blog-feed-item__meta">
+                <time>{{ .Date.Format "Jan 2, 2006" }}</time>
+                {{ with .Params.series }}
+                  <span class="blog-feed-item__series">{{ index . 0 }}</span>
+                {{ end }}
+              </div>
+              <h3>{{ .Title }}</h3>
+              <p>{{ .Description }}</p>
+              {{ with .Params.tags }}
+                <div class="project-tags">
+                  {{ range first 3 . }}
+                    <span class="project-tag">{{ . }}</span>
+                  {{ end }}
+                </div>
+              {{ end }}
+            </div>
+          </a>
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ end }}
+{{ end }}

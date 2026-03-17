@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: 4th week of the MLOps Zoom Camp
 tags: [mlobs, zoomcamp, prefect]
 description: 4th week of the MLOps Zoom Camp

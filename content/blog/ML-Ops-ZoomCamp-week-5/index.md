@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: 5th week of the MLOps Zoom Camp
 tags: [mlobs, zoomcamp, grafana, Evidently ]
 description: 5th week of the MLOps Zoom Camp

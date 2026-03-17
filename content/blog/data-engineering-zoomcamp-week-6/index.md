@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: "Data Engineering ZoomCamp — Week 6"
 tags: [data-engineering, zoomcamp]
 description: "Stream processing with Apache Kafka."

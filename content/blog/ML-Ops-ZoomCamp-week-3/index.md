@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: Third Week of ML Ops ZoomCamp, Orchestration with Prefect
 tags: [mlobs, zoomcamp, prefect]
 description: Third Week of ML Ops ZoomCamp, Orchestration with Prefect

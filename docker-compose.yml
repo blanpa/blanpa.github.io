@@ -1,6 +1,6 @@
 services:
   hugo:
-    image: hugomods/hugo:exts-0.145.0
+    image: hugomods/hugo:exts-0.154.5
     container_name: blanpa-dev
     ports:
       - "1314:1313"

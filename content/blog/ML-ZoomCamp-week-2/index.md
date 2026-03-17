@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: "ML ZoomCamp — Week 2: Regression"
 tags: [ml, zoomcamp]
 description: 2d week of the ml Zoom Camp

@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: 4th week of the ML Zoom Camp
 tags: [ml, zoomcamp]
 description: 4th week of the ML Zoom Camp

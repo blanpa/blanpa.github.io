@@ -1,4 +1,7 @@
 ---
+_build:
+  list: never
+  render: false
 title: Diving Deeper into Machine Learning, Week 3 of ML Zoomcamp
 tags: [ml, zoomcamp]
 description:  Diving Deeper into Machine Learning, Week 3 of ML Zoomcamp
