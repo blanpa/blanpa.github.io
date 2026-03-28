@@ -23,6 +23,27 @@
 
   {{ $allPages := .Pages.ByDate.Reverse }}
 
+  {{/* Tag filter chips */}}
+  {{ $tagMap := dict }}
+  {{ range $allPages }}
+    {{ range .Params.tags }}
+      {{ $key := . | urlize }}
+      {{ if isset $tagMap $key }}
+        {{ $tagMap = merge $tagMap (dict $key (add (index $tagMap $key) 1)) }}
+      {{ else }}
+        {{ $tagMap = merge $tagMap (dict $key 1) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if gt (len $tagMap) 0 }}
+    <nav class="blog-filter-chips" aria-label="Filter by tag">
+      <button class="blog-filter-chip is-active" data-filter="all">All</button>
+      {{ range $tag, $count := $tagMap }}
+        <button class="blog-filter-chip" data-filter="{{ $tag }}">{{ $tag }}<span class="blog-filter-chip__count">{{ $count }}</span></button>
+      {{ end }}
+    </nav>
+  {{ end }}
+
   {{ if gt (len $allPages) 0 }}
     {{/* Featured — latest article */}}
     {{ $featured := index $allPages 0 }}
@@ -44,7 +65,7 @@
         {{ end }}
       {{ end }}
 
-      <a href="{{ .RelPermalink }}" class="blog-featured">
+      <a href="{{ .RelPermalink }}" class="blog-featured" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
         {{ with $featuredURL }}
           <div class="blog-featured__img">
             <img src="{{ . }}" loading="lazy" decoding="async" alt="">
@@ -85,7 +106,7 @@
             {{ end }}
           {{ end }}
 
-          <a href="{{ .RelPermalink }}" class="blog-feed-item">
+          <a href="{{ .RelPermalink }}" class="blog-feed-item" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
             {{ with $featuredURL }}
               <div class="blog-feed-item__img">
                 <img src="{{ . }}" loading="lazy" decoding="async" alt="">
@@ -113,4 +134,29 @@
       </div>
     {{ end }}
   {{ end }}
+
+  <script>
+  (function() {
+    var chips = document.querySelectorAll('.blog-filter-chip');
+    if (!chips.length) return;
+    var items = document.querySelectorAll('[data-tags]');
+
+    chips.forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        chips.forEach(function(c) { c.classList.remove('is-active'); });
+        chip.classList.add('is-active');
+        var filter = chip.getAttribute('data-filter');
+
+        items.forEach(function(item) {
+          if (filter === 'all') {
+            item.style.display = '';
+          } else {
+            var tags = item.getAttribute('data-tags').split(',');
+            item.style.display = tags.indexOf(filter) !== -1 ? '' : 'none';
+          }
+        });
+      });
+    });
+  })();
+  </script>
 {{ end }}

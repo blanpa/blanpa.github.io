@@ -1,0 +1,39 @@
+<!--
+  TODO: Complete Giscus setup:
+  1. Enable GitHub Discussions on blanpa/blanpa.github.io
+  2. Install the Giscus app: https://github.com/apps/giscus
+  3. Create a "Blog Comments" discussion category
+  4. Go to https://giscus.app and enter your repo to get repo-id and category-id
+  5. Fill in data-repo-id and data-category-id below
+-->
+<script src="https://giscus.app/client.js"
+  data-repo="blanpa/blanpa.github.io"
+  data-repo-id=""
+  data-category="Blog Comments"
+  data-category-id=""
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="noborder_dark"
+  data-lang="en"
+  data-loading="lazy"
+  crossorigin="anonymous"
+  async>
+</script>
+<script>
+(function() {
+  const observer = new MutationObserver(function() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (iframe) {
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: isDark ? 'noborder_dark' : 'noborder_light' } } },
+        'https://giscus.app'
+      );
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>

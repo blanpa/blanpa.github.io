@@ -1450,3 +1450,75 @@
   background: rgba(255, 255, 255, 0.85) !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
+
+/* ==============================================
+   BLOG CATEGORY FILTER CHIPS
+   ============================================== */
+.blog-filter-chips {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.25rem 0 1.5rem;
+  margin: 1rem 0 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.blog-filter-chips::-webkit-scrollbar {
+  display: none;
+}
+.blog-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  user-select: none;
+}
+.blog-filter-chip:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+  background: rgba(0, 200, 165, 0.08);
+}
+.blog-filter-chip.is-active {
+  border-color: #00c8a5;
+  background: rgba(0, 200, 165, 0.15);
+  color: #00c8a5;
+}
+.blog-filter-chip__count {
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+:root:not(.dark) .blog-filter-chip {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.5);
+}
+:root:not(.dark) .blog-filter-chip:hover {
+  border-color: rgba(0, 160, 130, 0.4);
+  color: #008a70;
+  background: rgba(0, 160, 130, 0.08);
+}
+:root:not(.dark) .blog-filter-chip.is-active {
+  border-color: #008a70;
+  background: rgba(0, 160, 130, 0.12);
+  color: #008a70;
+}
+
+/* ==============================================
+   GISCUS COMMENTS
+   ============================================== */
+.giscus {
+  margin-top: 1rem;
+}
+.giscus-frame {
+  width: 100%;
+}

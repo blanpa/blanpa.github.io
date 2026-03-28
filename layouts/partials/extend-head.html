@@ -1,5 +1,19 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+  /* Email obfuscation — replace placeholder with real address at runtime */
+  var _e = atob("YmxhbnBhQHByb3Rvbi5tZQ==");
+  document.querySelectorAll('a[href*="mailto:"]').forEach(function(a) {
+    if (a.href.indexOf("contact@blanpa.dev") !== -1) {
+      a.href = "mailto:" + _e;
+      if (a.textContent.indexOf("contact@blanpa.dev") !== -1) {
+        a.textContent = _e;
+      }
+    }
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const canvas = document.createElement("canvas");

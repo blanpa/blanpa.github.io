@@ -40,6 +40,7 @@ smartTOC = true
   showTableOfContents = true
   showRelatedContent = true
   relatedContentLimit = 3
+  showComments = true
   showTaxonomies = true
   showWordCount = false
   showZenMode = false
@@ -86,7 +87,7 @@ smartTOC = true
     { github = "https://github.com/blanpa" },
     { linkedin = "https://linkedin.com/in/blanpa" },
     { medium = "https://medium.com/@blanpa" },
-    { email = "mailto:blanpa@proton.me" },
+    { email = "mailto:contact@blanpa.dev" },
     { ko-fi = "https://ko-fi.com/blanpa" },
     { heart-empty = "https://github.com/sponsors/blanpa" },
   ]
