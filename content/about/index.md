@@ -134,6 +134,7 @@ I maintain several open-source Node-RED packages for industrial IoT on [npm](htt
 
 {{< github repo="blanpa/node-red-contrib-condition-monitoring" >}}
 {{< github repo="blanpa/node-red-contrib-nats-suite" >}}
+{{< github repo="blanpa/node-red-contrib-kafka-suite" >}}
 {{< github repo="blanpa/node-red-contrib-cip-suite" >}}
 {{< github repo="blanpa/node-red-contrib-s7-suite" >}}
 {{< github repo="blanpa/node-red-contrib-opcua-suite" >}}

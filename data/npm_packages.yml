@@ -2,6 +2,8 @@
   desc: Vibration analysis & predictive maintenance
 - pkg: node-red-contrib-nats-suite
   desc: NATS messaging with JetStream support
+- pkg: node-red-contrib-kafka-suite
+  desc: Apache Kafka integration with Schema Registry
 - pkg: node-red-contrib-cip-suite
   desc: Allen-Bradley PLC & EtherNet/IP communication
 - pkg: node-red-contrib-s7-suite
