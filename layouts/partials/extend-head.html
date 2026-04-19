@@ -12,170 +12,108 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+<style>
+#blueprint-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #0a0e14;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.bg-orb--1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(0, 200, 165, 0.28), transparent 70%);
+  top: -15%; left: -10%;
+  animation: orb-float-1 25s ease-in-out infinite, orb-fade-in 2s ease-out forwards;
+}
+.bg-orb--2 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(100, 70, 230, 0.22), transparent 70%);
+  bottom: -15%; right: -10%;
+  animation: orb-float-2 30s ease-in-out infinite, orb-fade-in 2s ease-out 0.3s forwards;
+}
+.bg-orb--3 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0, 170, 220, 0.18), transparent 70%);
+  top: 35%; right: 15%;
+  animation: orb-float-3 22s ease-in-out infinite, orb-fade-in 2s ease-out 0.6s forwards;
+}
+
+#blueprint-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 450px at var(--mx, 50%) var(--my, 50%), rgba(0, 200, 165, 0.04), transparent 70%);
+  transition: background 0.4s ease;
+}
+
+@keyframes orb-fade-in {
+  to { opacity: 1; }
+}
+
+@keyframes orb-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(80px, 60px) scale(1.1); }
+  66%      { transform: translate(-40px, 30px) scale(0.95); }
+}
+@keyframes orb-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(-70px, -50px) scale(1.08); }
+  66%      { transform: translate(50px, -30px) scale(0.92); }
+}
+@keyframes orb-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(60px, -40px) scale(1.05); }
+  66%      { transform: translate(-50px, 50px) scale(0.97); }
+}
+
+html:not(.dark) #blueprint-bg {
+  background-color: #f5f7fa;
+}
+html:not(.dark) .bg-orb--1 {
+  background: radial-gradient(circle, rgba(0, 200, 165, 0.18), transparent 70%);
+}
+html:not(.dark) .bg-orb--2 {
+  background: radial-gradient(circle, rgba(100, 70, 230, 0.14), transparent 70%);
+}
+html:not(.dark) .bg-orb--3 {
+  background: radial-gradient(circle, rgba(0, 170, 220, 0.12), transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-orb { animation: orb-fade-in 1s ease-out forwards !important; }
+}
+</style>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+  var bg = document.createElement("div");
+  bg.id = "blueprint-bg";
+  bg.innerHTML = '<div class="bg-orb bg-orb--1"></div><div class="bg-orb bg-orb--2"></div><div class="bg-orb bg-orb--3"></div>';
+  document.body.prepend(bg);
+
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  const canvas = document.createElement("canvas");
-  canvas.id = "particles-bg";
-  document.body.prepend(canvas);
-  const ctx = canvas.getContext("2d");
-
-  let w, h, particles, time = 0, animId;
-  let mouse = { x: -1000, y: -1000 };
-  var touchFadeFrames = 180;
-
-  function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
-
+  var tx = 50, ty = 50, rafM = 0;
   document.addEventListener("mousemove", function (e) {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
-  function createParticles() {
-    const count = Math.floor((w * h) / 6000);
-    particles = [];
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 4 + 1.5,
-        touched: 0,
+    tx = (e.clientX / window.innerWidth) * 100;
+    ty = (e.clientY / window.innerHeight) * 100;
+    if (!rafM) {
+      rafM = requestAnimationFrame(function () {
+        bg.style.setProperty("--mx", tx + "%");
+        bg.style.setProperty("--my", ty + "%");
+        rafM = 0;
       });
     }
-  }
-
-  function getColor(t) {
-    const cycle = (t % 1200) / 1200;
-    let r, g, b;
-    if (cycle < 0.25) {
-      const p = cycle / 0.25;
-      r = Math.floor(140 * (1 - p));
-      g = Math.floor(140 + 70 * p);
-      b = Math.floor(140 + 115 * p);
-    } else if (cycle < 0.5) {
-      const p = (cycle - 0.25) / 0.25;
-      r = Math.floor(140 * p);
-      g = Math.floor(210 - 70 * p);
-      b = Math.floor(255 - 115 * p);
-    } else if (cycle < 0.75) {
-      const p = (cycle - 0.5) / 0.25;
-      r = Math.floor(140 + 115 * p);
-      g = Math.floor(140 * (1 - p * 0.7));
-      b = Math.floor(140 * (1 - p * 0.7));
-    } else {
-      const p = (cycle - 0.75) / 0.25;
-      r = Math.floor(255 - 115 * p);
-      g = Math.floor(42 + 98 * p);
-      b = Math.floor(42 + 98 * p);
-    }
-    return r + "," + g + "," + b;
-  }
-
-  function draw() {
-    time++;
-    ctx.clearRect(0, 0, w, h);
-    const maxDist = 120;
-    const mouseDist = 200;
-    const colStr = getColor(time);
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0) p.x = w;
-      if (p.x > w) p.x = 0;
-      if (p.y < 0) p.y = h;
-      if (p.y > h) p.y = 0;
-
-      const dx = mouse.x - p.x;
-      const dy = mouse.y - p.y;
-      const dm = Math.sqrt(dx * dx + dy * dy);
-      const nearMouse = dm < mouseDist;
-      const proximity = nearMouse ? 1 - dm / mouseDist : 0;
-
-      if (nearMouse && proximity > 0.3) {
-        p.touched = touchFadeFrames;
-      } else if (p.touched > 0) {
-        p.touched--;
-      }
-
-      var fade = p.touched / touchFadeFrames;
-      var sizeBoost = nearMouse ? proximity * 2 : fade * 1.5;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r + sizeBoost, 0, Math.PI * 2);
-      if (nearMouse) {
-        ctx.fillStyle = "rgba(0,200,165," + (0.6 + proximity * 0.2) + ")";
-      } else if (p.touched > 0) {
-        var cr = Math.floor(fade * 0 + (1 - fade) * parseInt(colStr.split(",")[0]));
-        var cg = Math.floor(fade * 200 + (1 - fade) * parseInt(colStr.split(",")[1]));
-        var cb = Math.floor(fade * 165 + (1 - fade) * parseInt(colStr.split(",")[2]));
-        ctx.fillStyle = "rgba(" + cr + "," + cg + "," + cb + "," + (0.6 + fade * 0.15) + ")";
-      } else {
-        ctx.fillStyle = "rgba(" + colStr + ",0.6)";
-      }
-      ctx.fill();
-
-      if (nearMouse) {
-        const alpha = proximity * 0.45;
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(mouse.x, mouse.y);
-        ctx.strokeStyle = "rgba(" + colStr + "," + alpha + ")";
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-
-      for (let j = i + 1; j < particles.length; j++) {
-        const p2 = particles[j];
-        const ddx = p.x - p2.x;
-        const ddy = p.y - p2.y;
-        const dist = Math.sqrt(ddx * ddx + ddy * ddy);
-        if (dist < maxDist) {
-          var lineAlpha = (1 - dist / maxDist) * 0.25;
-          if (p.touched > 0 && p2.touched > 0) {
-            var bothFade = Math.min(p.touched, p2.touched) / touchFadeFrames;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = "rgba(0,200,165," + (bothFade * 0.3) + ")";
-            ctx.lineWidth = 0.8 + bothFade * 0.7;
-            ctx.stroke();
-          } else {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = "rgba(" + colStr + "," + lineAlpha + ")";
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-    }
-
-    animId = requestAnimationFrame(draw);
-  }
-
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-      cancelAnimationFrame(animId);
-    } else {
-      animId = requestAnimationFrame(draw);
-    }
-  });
-
-  resize();
-  createParticles();
-  draw();
-  window.addEventListener("resize", function () {
-    resize();
-    createParticles();
-  });
+  }, { passive: true });
 });
 </script>

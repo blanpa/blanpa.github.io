@@ -239,7 +239,7 @@ npm install node-red-contrib-opcua
 
 Restart Node-RED after installation.
 
-Alternative: `node-red-opcua-suite` provides a slightly different node set with more configuration options. Both work well.
+Alternative: `node-red-contrib-opcua-suite` provides a slightly different node set with more configuration options. Both work well.
 
 ### 4.2 Configure the OPC-UA Client Node
 

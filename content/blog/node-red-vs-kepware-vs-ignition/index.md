@@ -120,7 +120,7 @@ Ignition's unlimited client model is a game-changer. With Kepware or traditional
 | **OPC-UA** | Community nodes (good) | Native server + client | Native server + client |
 | **OPC-DA** | Via wrapper | Native | Native |
 | **Modbus TCP/RTU** | Community node | Native driver | Native driver |
-| **Siemens S7** | node-red-contrib-s7 | Native driver (certified) | Native driver |
+| **Siemens S7** | node-red-contrib-s7-suite | Native driver (certified) | Native driver |
 | **Allen-Bradley** | node-red-contrib-cip-suite | Native driver (certified) | Native driver |
 | **MQTT** | Core node (excellent) | MQTT Client driver | MQTT Engine module |
 | **HTTP/REST** | Core node (excellent) | REST agent (limited) | Web Dev module |

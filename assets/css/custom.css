@@ -1,13 +1,3 @@
-#particles-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-}
-
 .home-cards {
   display: flex;
   gap: 1.5rem;
@@ -455,14 +445,14 @@
 }
 .project-tag {
   display: inline-block;
-  padding: 0.2rem 0.6rem;
-  font-size: 0.7rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   border-radius: 9999px;
   background: rgba(0, 200, 165, 0.15);
-  color: #00c8a5;
-  border: 1px solid rgba(0, 200, 165, 0.25);
+  color: #00d4ad;
+  border: 1px solid rgba(0, 200, 165, 0.3);
   text-transform: uppercase;
 }
 :root:not(.dark) .project-tag {
@@ -1426,29 +1416,75 @@
    GITHUB CARDS — style override
    ============================================== */
 .github-card-wrapper {
-  margin-bottom: 1rem;
+  margin: 1.5rem 0;
+}
+.github-card-wrapper > a {
+  text-decoration: none !important;
 }
 .github-card-wrapper > a > div {
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 16px !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  backdrop-filter: blur(8px);
+  background: rgba(20, 27, 36, 0.6) !important;
+  backdrop-filter: blur(10px);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 .github-card-wrapper > a > div:hover {
-  border-color: rgba(0, 200, 165, 0.3) !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  box-shadow: 0 8px 30px rgba(0, 200, 165, 0.08);
+  border-color: rgba(0, 200, 165, 0.4) !important;
+  background: rgba(20, 27, 36, 0.8) !important;
+  box-shadow: 0 12px 40px rgba(0, 200, 165, 0.15);
+  transform: translateY(-2px);
 }
+.github-card-wrapper > a > div > div:first-child {
+  position: relative;
+}
+.github-card-wrapper > a > div > div:first-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 27, 36, 0.45) 0%, rgba(20, 27, 36, 0.85) 100%);
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+.github-card-wrapper:hover > a > div > div:first-child::after {
+  background: linear-gradient(180deg, rgba(20, 27, 36, 0.35) 0%, rgba(20, 27, 36, 0.75) 100%);
+}
+.github-card-wrapper img {
+  filter: brightness(0.7) contrast(1.1) saturate(0.85);
+  transition: filter 0.3s ease;
+}
+.github-card-wrapper:hover img {
+  filter: brightness(0.8) contrast(1.1) saturate(0.95);
+}
+.github-card-wrapper [class*="text-neutral-800"] {
+  color: rgba(245, 245, 245, 0.95) !important;
+}
+.github-card-wrapper [id$="-description"] {
+  color: rgba(245, 245, 245, 0.7) !important;
+}
+
 :root:not(.dark) .github-card-wrapper > a > div {
   border-color: rgba(0, 0, 0, 0.08) !important;
-  background: rgba(255, 255, 255, 0.6) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 :root:not(.dark) .github-card-wrapper > a > div:hover {
-  border-color: rgba(0, 200, 165, 0.35) !important;
-  background: rgba(255, 255, 255, 0.85) !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 200, 165, 0.4) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+:root:not(.dark) .github-card-wrapper img {
+  filter: none;
+}
+:root:not(.dark) .github-card-wrapper > a > div > div:first-child::after {
+  display: none;
+}
+:root:not(.dark) .github-card-wrapper [class*="text-neutral-800"] {
+  color: rgba(20, 20, 20, 0.95) !important;
+}
+:root:not(.dark) .github-card-wrapper [id$="-description"] {
+  color: rgba(20, 20, 20, 0.7) !important;
 }
 
 /* ==============================================
@@ -1521,4 +1557,94 @@
 }
 .giscus-frame {
   width: 100%;
+}
+
+/* ==============================================
+   POLISH PASS — contrast, sticky TOC, blog grid
+   ============================================== */
+
+/* Footer: better contrast for legal/copyright text */
+#site-footer .text-neutral-500,
+#site-footer .dark\:text-neutral-400,
+.dark #site-footer p,
+.dark #site-footer a {
+  color: rgba(245, 245, 245, 0.6) !important;
+}
+#site-footer a:hover {
+  color: #00d4ad !important;
+}
+:root:not(.dark) #site-footer p,
+:root:not(.dark) #site-footer a {
+  color: rgba(20, 20, 20, 0.65) !important;
+}
+
+/* Sticky TOC — make sure it stays visible while scrolling */
+@media (min-width: 1024px) {
+  .toc {
+    position: sticky !important;
+    top: 100px !important;
+    align-self: flex-start;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+  #TOCView {
+    max-height: calc(100vh - 160px);
+  }
+}
+
+/* Brighter active TOC link */
+#TableOfContents a.active {
+  color: #00d4ad !important;
+  font-weight: 600;
+}
+
+/* Card description text — better contrast */
+.home-card p,
+.project-featured__content p,
+.project-card__content p,
+.blog-featured__content p,
+.blog-feed-item__body p,
+.service-card p,
+.process-step p,
+.about-hero__text {
+  opacity: 0.85;
+  color: rgba(245, 245, 245, 0.85);
+}
+:root:not(.dark) .home-card p,
+:root:not(.dark) .project-featured__content p,
+:root:not(.dark) .project-card__content p,
+:root:not(.dark) .blog-featured__content p,
+:root:not(.dark) .blog-feed-item__body p,
+:root:not(.dark) .service-card p,
+:root:not(.dark) .process-step p,
+:root:not(.dark) .about-hero__text {
+  color: rgba(20, 20, 20, 0.75);
+  opacity: 1;
+}
+
+/* Blog feed: 2-column grid on larger screens */
+@media (min-width: 768px) {
+  .blog-feed {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .blog-feed-item {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .blog-feed-item__img {
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+  }
+  .blog-feed-item:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Tag chip count: better contrast */
+.blog-filter-chip__count {
+  opacity: 0.7;
 }

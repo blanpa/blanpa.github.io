@@ -28,6 +28,7 @@ PROMPTS = {}
 PROMPTS["projects"] = {
     "condition-monitoring": "industrial vibration sensor attached to machine with real-time anomaly detection graphs and health scoring dashboard, predictive maintenance",
     "nats-suite": "abstract network of glowing nodes connected by light beams in a dark void, data routing mesh with multiple endpoints, futuristic interconnected server topology",
+    "kafka-suite": "distributed event streaming pipeline with partitioned topic logs flowing as parallel data rivers, horizontally scaled broker cluster with producers and consumers exchanging high-throughput message streams",
     "cip-suite": "Allen-Bradley ControlLogix PLC rack with EtherNet/IP communication cables and protocol data packets flowing, industrial automation",
     "s7-suite": "Siemens S7-1500 PLC with communication interface, industrial controller exchanging data blocks via protocol connection",
     "opcua-suite": "OPC-UA server and client architecture with information model tree, secure encrypted industrial data exchange",
