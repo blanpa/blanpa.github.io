@@ -16,15 +16,24 @@ Every factory I've worked in has the same problem: data is everywhere, but acces
 
 A typical manufacturing IT landscape looks something like this:
 
-{{< mermaid >}}
-flowchart LR
-    PI["OSIsoft PI<br/>(Historian)"] -->|Proprietary API| APP["Your App<br/>(Dashboard,<br/>Analytics,<br/>ML Model)"]
-    SAP["SAP MES"] -->|SOAP / XML| APP
-    PLC["Siemens PLC"] -->|OPC-UA| APP
+```
+┌──────────────┐  Proprietary API   ┌──────────────┐
+│  OSIsoft PI   ├──────────────────→│              │
+│  (Historian)  │                   │              │
+└──────────────┘                    │              │
+                                    │  Your App    │
+┌──────────────┐  SOAP/XML          │  (Dashboard, │
+│  SAP MES     ├──────────────────→│   Analytics, │
+│              │                    │   ML Model)  │
+└──────────────┘                    │              │
+                                    │              │
+┌──────────────┐  OPC-UA            │              │
+│  Siemens PLC ├──────────────────→│              │
+│              │                    └──────────────┘
+└──────────────┘
 
-    note["3 protocols · 3 data models · 3 adapters to maintain"]
-    style note fill:none,stroke:none
-{{< /mermaid >}}
+= 3 different protocols, 3 different data models, 3 adapters to maintain
+```
 
 Now imagine adding a fourth data source. Or a fifth. Each new connection multiplies the integration effort. This is the **N×M problem** — N data sources times M consuming applications.
 
@@ -40,16 +49,21 @@ i3x is an **open REST API specification** developed by [CESMII](https://www.cesm
 
 The key insight: i3x sits **between** your applications and your data sources as a unified abstraction layer.
 
-{{< mermaid >}}
-flowchart LR
-    PI["OSIsoft PI"] --> I3X["i3x API"]
-    SAP["SAP MES"] --> I3X
-    PLC["Siemens PLC"] --> I3X
-    I3X --> APP["Your App<br/>(one REST client)"]
+```
+┌──────────────┐                    ┌──────────────┐
+│  OSIsoft PI   ├──┐                │              │
+└──────────────┘  │                │              │
+                   │  ┌──────────┐  │  Your App    │
+┌──────────────┐  ├─→│  i3x API ├─→│  (one REST   │
+│  SAP MES     ├──┤  └──────────┘  │   client)    │
+└──────────────┘  │                │              │
+                   │                │              │
+┌──────────────┐  │                │              │
+│  Siemens PLC ├──┘                └──────────────┘
+└──────────────┘
 
-    note["1 protocol (REST) · 1 data model · 1 adapter to maintain"]
-    style note fill:none,stroke:none
-{{< /mermaid >}}
+= 1 protocol (REST), 1 data model, 1 adapter to maintain
+```
 
 ## The Information Model
 

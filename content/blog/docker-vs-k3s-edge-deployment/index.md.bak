@@ -14,30 +14,36 @@ The real question isn't *whether* to use containers in industrial environments �
 
 ## Why Containers on the Shop Floor?
 
-{{< mermaid >}}
-flowchart TB
-    subgraph wo["Without Containers — Industrial Edge PC"]
-        direction TB
-        wo1["Node-RED v3.1<br/>(needs Node.js 18)"]
-        wo2["Grafana v10.2<br/>(needs libfontconfig)"]
-        wo3["PostgreSQL 15<br/>(port conflict with legacy)"]
-        wo4["NATS Server<br/>(manual systemd service)"]
-        wo5["Python 3.11<br/>(but script needs 3.9)"]
-        wos["State: 'works on my machine' / 'don't touch it'"]
-        style wos fill:none,stroke:none
-    end
+```
+Without Containers:
+┌─────────────────────────────────────────────────┐
+│              Industrial Edge PC                  │
+│                                                  │
+│  Node-RED v3.1    (depends on Node.js 18)       │
+│  Grafana v10.2    (depends on libfontconfig)    │
+│  PostgreSQL 15    (port conflict with legacy)   │
+│  NATS Server      (manual systemd service)      │
+│  Python 3.11      (but script needs 3.9)        │
+│                                                  │
+│  State: "works on my machine" / "don't touch it"│
+└─────────────────────────────────────────────────┘
 
-    subgraph wi["With Containers — Industrial Edge PC"]
-        direction TB
-        wi1["Node-RED 3.1"]
-        wi2["Grafana 10.2"]
-        wi3["PostgreSQL 15"]
-        wi4["NATS Server"]
-        wi5["Python 3.9"]
-        wis["State: version-pinned, isolated, reproducible"]
-        style wis fill:none,stroke:none
-    end
-{{< /mermaid >}}
+With Containers:
+┌─────────────────────────────────────────────────┐
+│              Industrial Edge PC                  │
+│                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐        │
+│  │ Node-RED │ │ Grafana  │ │PostgreSQL│        │
+│  │  3.1     │ │  10.2    │ │   15     │        │
+│  └──────────┘ └──────────┘ └──────────┘        │
+│  ┌──────────┐ ┌──────────┐                      │
+│  │   NATS   │ │ Python   │                      │
+│  │  Server  │ │   3.9    │                      │
+│  └──────────┘ └──────────┘                      │
+│                                                  │
+│  State: version-pinned, isolated, reproducible  │
+└─────────────────────────────────────────────────┘
+```
 
 The benefits are concrete:
 
@@ -239,12 +245,14 @@ When a single edge PC isn't enough — multiple machines, high availability requ
 
 K3s is a certified Kubernetes distribution optimized for edge and IoT:
 
-| Aspect | Full Kubernetes (K8s) | K3s |
-|--------|----------------------|-----|
-| RAM minimum | ~600 MB | ~512 MB |
-| Datastore | etcd (heavy) | SQLite or embedded etcd |
-| Footprint | Multiple binaries | Single ~70 MB binary |
-| Installation | Complex | `curl \| sh` |
+```
+Full Kubernetes (K8s)              K3s
+─────────────────────              ───
+~600MB RAM minimum                 ~512MB RAM minimum
+etcd (heavy)                       SQLite or embedded etcd
+Multiple binaries                  Single ~70MB binary
+Complex installation               curl | sh
+```
 
 ### Resource Comparison (ARM64, Raspberry Pi 4)
 
@@ -523,16 +531,26 @@ services:
       - portainer_data:/data
 ```
 
-{{< mermaid >}}
-flowchart TB
-    PS["Portainer Server (Central Office)<br/><br/>Site Overview:<br/>Munich   ● Online   5 containers   CPU 23%<br/>Berlin   ● Online   4 containers   CPU 15%<br/>Hamburg  ● Offline   —              CPU —<br/>Dresden  ● Online   6 containers   CPU 31%"]
-    AM["Agent<br/>Munich"]
-    AB["Agent<br/>Berlin"]
-    AD["Agent<br/>Dresden"]
-    PS --> AM
-    PS --> AB
-    PS --> AD
-{{< /mermaid >}}
+```
+┌──────────────────────────────────────────────────────┐
+│                 Portainer Server                      │
+│                 (Central Office)                      │
+│                                                      │
+│  ┌─────────────────────────────────────────────────┐ │
+│  │  Site Overview                                  │ │
+│  │                                                 │ │
+│  │  Munich    ● Online   5 containers   CPU: 23%  │ │
+│  │  Berlin    ● Online   4 containers   CPU: 15%  │ │
+│  │  Hamburg   ● Offline  -              CPU: -    │ │
+│  │  Dresden   ● Online   6 containers   CPU: 31%  │ │
+│  └─────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────┘
+         │            │            │
+    ┌────┴───┐   ┌────┴───┐   ┌───┴────┐
+    │ Agent  │   │ Agent  │   │ Agent  │
+    │ Munich │   │ Berlin │   │Dresden │
+    └────────┘   └────────┘   └────────┘
+```
 
 ### K3s: Rancher
 
@@ -666,27 +684,27 @@ K3s rollback is more powerful — Kubernetes keeps revision history and can roll
 
 ### Docker Networking
 
-{{< mermaid >}}
-flowchart TB
-    subgraph br["Docker Bridge Network — docker0 (172.17.0.0/16)"]
-        direction LR
-        NR["Node-RED<br/>.2"]
-        NA["NATS<br/>.3"]
-        GR["Grafana<br/>.4"]
-        NR --- NA
-        NA --- GR
-        SD["Service discovery<br/>via container names"]
-        style SD fill:none,stroke:none
-    end
-
-    subgraph host["Host Network"]
-        direction LR
-        E0["eth0: 192.168.1.50<br/>← factory LAN"]
-        E1["eth1: 10.0.0.50<br/>← PLC network (isolated)"]
-    end
-
-    br --> host
-{{< /mermaid >}}
+```
+Docker Bridge Network (default)
+┌──────────────────────────────────────┐
+│  docker0 (172.17.0.0/16)            │
+│                                      │
+│  ┌────────┐  ┌────────┐  ┌────────┐ │
+│  │Node-RED│  │  NATS  │  │Grafana │ │
+│  │ .2     │  │  .3    │  │  .4    │ │
+│  └───┬────┘  └───┬────┘  └───┬────┘ │
+│      └──────┬────┘           │       │
+│             │  Service discovery     │
+│             │  via container names   │
+│             │                        │
+└─────────────┼────────────────────────┘
+              │
+         Host Network
+    ┌─────────┴─────────┐
+    │  eth0: 192.168.1.50│ ←── factory LAN
+    │  eth1: 10.0.0.50   │ ←── PLC network (isolated)
+    └────────────────────┘
+```
 
 ### K3s Networking
 
@@ -738,15 +756,15 @@ networks:
 
 ### My Rule of Thumb
 
-| Situation | Choose |
-|-----------|--------|
-| 1 edge PC, ≤5 services | Docker Compose |
-| 1 edge PC, 5–10 services | Docker Compose (still fine) |
-| 2+ edge PCs, same site | K3s |
-| Multiple sites, fleet management | K3s + Rancher |
-| HA requirement (99.9%+) | K3s (multi-server) |
-| Raspberry Pi / 2 GB RAM | Docker Compose |
-| Industrial PC / 8 GB+ RAM | Either (your choice) |
+```
+ 1 edge PC, ≤5 services       →  Docker Compose
+ 1 edge PC, 5-10 services     →  Docker Compose (still fine)
+ 2+ edge PCs, same site       →  K3s
+ Multiple sites, fleet mgmt   →  K3s + Rancher
+ HA requirement (99.9%+)      →  K3s (multi-server)
+ Raspberry Pi / 2GB RAM       →  Docker Compose
+ Industrial PC / 8GB+ RAM     →  Either (your choice)
+```
 
 ---
 

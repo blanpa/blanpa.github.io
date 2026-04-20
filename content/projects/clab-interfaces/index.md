@@ -16,6 +16,27 @@ A Node-RED package that exposes **all hardware interfaces** of CompuLab IoT Gate
 
 {{< github repo="blanpa/node-red-contrib-clab-interfaces" >}}
 
+## Architecture
+
+Every hardware interface of the gateway is exposed as a Node-RED node — no shell scripts, no driver code:
+
+{{< mermaid >}}
+flowchart LR
+    subgraph NR["Node-RED Flow"]
+        IO["Industrial I/O Nodes<br/>GPIO · Analog · CAN · RS232/485"]
+        DEV["Device Mgmt Nodes<br/>System · LED · BT · GPS"]
+        NET["Connectivity Nodes<br/>LTE · WiFi · Ethernet · Diag"]
+    end
+    LIB["clab-interfaces driver layer<br/>sysfs · netlink · gpiod · socketcan · ModemManager"]
+    HW["CompuLab IoT Gateway<br/>iMX8 · RPi · IOT-LINK · DIN-iMX8PLUS"]
+    EXP["I/O expansion modules<br/>up to 8 stacked \u2192 64 AI / 64 DI / 64 DO"]
+    IO --> LIB
+    DEV --> LIB
+    NET --> LIB
+    LIB --> HW
+    HW --- EXP
+{{< /mermaid >}}
+
 ## Supported Devices
 
 | Gateway | Processor | Use Case |

@@ -192,31 +192,31 @@ def get_all_running_machines() -> list[dict]:
 
 OPC-UA (Open Platform Communications Unified Architecture) is the industrial automation standard. It provides a rich information model with types, methods, events, and subscriptions — all over a binary TCP protocol (or optionally HTTP/JSON).
 
-{{< mermaid >}}
-flowchart LR
-    AS["OPC-UA Address Space"] --> Obj["Objects"]
-    AS --> Tps["Types"]
-    AS --> Vws["Views"]
-
-    Obj --> Srv["Server<br/>(metadata, diagnostics)"]
-    Obj --> Fac["Factory"]
-    Fac --> L1["Line1"]
-    Fac --> L2["Line2"]
-    L1 --> C1["CNC-001"]
-    L1 --> C2["CNC-002"]
-    C1 --> T["Temperature<br/>Double, EURange 0–200 °C"]
-    C1 --> SS["SpindleSpeed<br/>Double, EURange 0–12000 RPM"]
-    C1 --> St["Status<br/>Int32, Enum 0=Off / 1=Run / 2=Err"]
-    C1 --> PP["PartsProduced<br/>Int64"]
-    C1 --> Rst["Reset() — Method"]
-
-    Tps --> CMT["CNCMachineType"]
-    CMT --> CT["Temperature<br/>BaseDataVariableType, Double"]
-    CMT --> CS["SpindleSpeed<br/>AnalogItemType, Double"]
-    CMT --> CSt["Status<br/>MultiStateDiscreteType, Int32"]
-
-    Vws --> MV["MaintenanceView<br/>(filtered for maintenance staff)"]
-{{< /mermaid >}}
+```
+OPC-UA Address Space
+├── Objects
+│   ├── Server (metadata, diagnostics)
+│   └── Factory
+│       ├── Line1
+│       │   ├── CNC-001
+│       │   │   ├── Temperature    (Variable, Double, EURange: 0-200°C)
+│       │   │   ├── SpindleSpeed   (Variable, Double, EURange: 0-12000 RPM)
+│       │   │   ├── Status         (Variable, Int32, Enum: 0=Off,1=Run,2=Err)
+│       │   │   ├── PartsProduced  (Variable, Int64)
+│       │   │   └── Reset()        (Method)
+│       │   └── CNC-002
+│       │       └── ...
+│       └── Line2
+│           └── ...
+├── Types
+│   ├── CNCMachineType
+│   │   ├── Temperature  (BaseDataVariableType, Double)
+│   │   ├── SpindleSpeed (AnalogItemType, Double)
+│   │   └── Status       (MultiStateDiscreteType, Int32)
+│   └── ...
+└── Views
+    └── MaintenanceView (filtered view for maintenance staff)
+```
 
 ### JavaScript Example (node-opcua)
 
@@ -481,36 +481,38 @@ result = client.execute(query, variable_values={
 
 Real-time data is critical in manufacturing. Here's how each paradigm handles it:
 
-{{< mermaid >}}
-sequenceDiagram
-    autonumber
-    participant C as Client
-    participant S as Server
+```
+REST (Polling)
+──────────────
+Client                          Server
+  │──GET /temperature──────────→│
+  │←──{ value: 42.7 }──────────│
+  │          (wait 1s)          │
+  │──GET /temperature──────────→│
+  │←──{ value: 42.7 }──────────│  ← wasted request, no change
+  │          (wait 1s)          │
+  │──GET /temperature──────────→│
+  │←──{ value: 43.1 }──────────│  ← change detected after up to 1s
 
-    Note over C,S: REST (Polling)
-    C->>S: GET /temperature
-    S-->>C: { value: 42.7 }
-    Note right of C: wait 1s
-    C->>S: GET /temperature
-    S-->>C: { value: 42.7 } (wasted, no change)
-    Note right of C: wait 1s
-    C->>S: GET /temperature
-    S-->>C: { value: 43.1 } (change detected ≤1s late)
+OPC-UA (Subscription)
+─────────────────────
+Client                          Server
+  │──CreateSubscription────────→│
+  │──MonitoredItemCreate───────→│
+  │←──Publish(42.7)────────────│  ← initial value
+  │                             │  (server monitors internally)
+  │←──Publish(43.1)────────────│  ← pushed immediately on change
+  │←──Publish(43.8)────────────│  ← pushed immediately on change
 
-    Note over C,S: OPC-UA (Subscription)
-    C->>S: CreateSubscription
-    C->>S: MonitoredItemCreate
-    S-->>C: Publish(42.7)  initial value
-    Note over S: server monitors internally
-    S-->>C: Publish(43.1)  on change
-    S-->>C: Publish(43.8)  on change
-
-    Note over C,S: GraphQL (WebSocket Subscription)
-    C->>S: WS subscribe { temp }
-    S-->>C: { value: 42.7 } initial
-    S-->>C: { value: 43.1 } on change
-    S-->>C: { value: 43.8 } on change
-{{< /mermaid >}}
+GraphQL (WebSocket Subscription)
+────────────────────────────────
+Client                          Server
+  │──WS: subscribe { temp }───→│
+  │←──{ value: 42.7 }─────────│  ← initial value
+  │                             │  (server pushes on change)
+  │←──{ value: 43.1 }─────────│  ← pushed on change
+  │←──{ value: 43.8 }─────────│  ← pushed on change
+```
 
 OPC-UA subscriptions are the most efficient — the server samples internally and only sends changes that exceed a deadband (configurable). This is critical when you have thousands of tags.
 
@@ -543,26 +545,22 @@ No standard. Every API inventor reinvents how to represent units, ranges, and en
 
 ### OPC-UA: Typed Address Space (standardized)
 
-{{< mermaid >}}
-flowchart LR
-    Root["CNC-001<br/>(CNCMachineType)"]
-    Root --> T["Temperature"]
-    Root --> SS["SpindleSpeed"]
-    Root --> St["Status"]
-
-    T --> TV["Value: 42.7 (Double)"]
-    T --> TU["EngineeringUnits: °C"]
-    T --> TR["EURange: 0.0 – 200.0"]
-    T --> TI["InstrumentRange: -40.0 – 250.0"]
-    T --> TD["Description: 'Coolant temperature'"]
-
-    SS --> SV["Value: 2450.0 (Double)"]
-    SS --> SU["EngineeringUnits: RPM"]
-    SS --> SR["EURange: 0.0 – 12000.0"]
-
-    St --> StV["Value: 1 (Int32)"]
-    St --> StE["EnumStrings: Off / Running / Error / Maintenance"]
-{{< /mermaid >}}
+```
+CNC-001 (CNCMachineType)
+├── Temperature
+│   ├── Value:          42.7 (Double)
+│   ├── EngineeringUnits: °C (EUInformation)
+│   ├── EURange:        { Low: 0.0, High: 200.0 }
+│   ├── InstrumentRange: { Low: -40.0, High: 250.0 }
+│   └── Description:    "Coolant temperature"
+├── SpindleSpeed
+│   ├── Value:          2450.0 (Double)
+│   ├── EngineeringUnits: RPM
+│   └── EURange:        { Low: 0.0, High: 12000.0 }
+└── Status
+    ├── Value:          1 (Int32)
+    └── EnumStrings:    ["Off", "Running", "Error", "Maintenance"]
+```
 
 Rich, standardized metadata. Any OPC-UA client knows how to interpret `EURange` and `EngineeringUnits` without reading documentation.
 
@@ -644,39 +642,41 @@ GraphQL sits in the middle — efficient queries but JSON overhead and no binary
 
 In practice, most factories use a combination:
 
-{{< mermaid >}}
-flowchart TB
-    subgraph SF["Shop Floor"]
-        direction LR
-        P1[PLC] -->|OPC-UA| EG1[Edge Gateway]
-        P2[PLC] -->|OPC-UA| EG2[Edge Gateway]
-        EG1 -->|MQTT| BR[Broker]
-        EG2 -->|MQTT| BR
-    end
-
-    subgraph SR["Server Room"]
-        direction LR
-        DP["Data Platform<br/>(Node-RED / Custom)"]
-        H["Historian<br/>(OPC-UA HDA)"]
-        REST["REST API<br/>(External)"]
-        GQL["GraphQL API<br/>(Aggregation)"]
-        DP --> H
-        DP --> REST
-        DP --> GQL
-    end
-
-    subgraph CL["Cloud"]
-        direction LR
-        AGW["API Gateway<br/>(REST / GraphQL)"]
-        DASH["Dashboard<br/>(React)"]
-        ML["ML Pipeline<br/>(Python)"]
-        AGW --> DASH
-        AGW --> ML
-    end
-
-    BR --> DP
-    GQL --> AGW
-{{< /mermaid >}}
+```
+┌─────────────────────────────────────────────────────────────┐
+│                       Shop Floor                             │
+│                                                              │
+│   PLC ──OPC-UA──→ Edge Gateway ──MQTT──→ Broker             │
+│   PLC ──OPC-UA──→ Edge Gateway ──MQTT──→ Broker             │
+│                                                              │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+┌────────────────────────┼────────────────────────────────────┐
+│                    Server Room │                              │
+│                                │                             │
+│   ┌────────────┐     ┌────────┴───────┐    ┌─────────────┐  │
+│   │  Historian  │←───│  Data Platform  │──→│  REST API   │  │
+│   │  (OPC-UA    │    │  (Node-RED /    │   │  (External) │  │
+│   │   HDA)      │    │   Custom)       │   └─────────────┘  │
+│   └────────────┘     └────────┬───────┘                     │
+│                               │                              │
+│                      ┌────────┴───────┐                      │
+│                      │  GraphQL API   │                      │
+│                      │  (Aggregation) │                      │
+│                      └────────┬───────┘                      │
+│                               │                              │
+└───────────────────────────────┼──────────────────────────────┘
+                                │
+┌───────────────────────────────┼──────────────────────────────┐
+│                          Cloud │                              │
+│                                │                             │
+│   ┌────────────┐     ┌────────┴───────┐    ┌─────────────┐  │
+│   │  Dashboard  │←───│  API Gateway   │──→│  ML Pipeline │  │
+│   │  (React)    │    │  (REST/GraphQL)│   │  (Python)    │  │
+│   └────────────┘     └───────────────┘    └─────────────┘  │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
 
 **OPC-UA** handles the PLC-to-edge layer where performance and type safety matter. **MQTT** carries data from edge to server. **GraphQL** provides a flexible query layer for dashboards and applications. **REST** exposes simple endpoints for external integrations and cloud services.
 

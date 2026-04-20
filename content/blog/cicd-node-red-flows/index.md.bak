@@ -16,17 +16,23 @@ The answer is treating Node-RED flows as code — putting them in Git, writing a
 
 In a typical Node-RED setup, flows live inside the running instance:
 
-{{< mermaid >}}
-flowchart TB
-    subgraph NR["Node-RED Instance (Server) — ~/.node-red/"]
-        F["flows.json — your logic"]
-        C["flows_cred.json — encrypted credentials"]
-        S["settings.js — runtime config"]
-        P["package.json — installed nodes"]
-        M["node_modules/ — dependencies"]
-    end
-    NR --> OPS["Deployment: click 'Deploy'<br/>Versioning: ¯\_(ツ)_/¯<br/>Testing: 'it works on my Pi'<br/>Rollback: hope you exported"]
-{{< /mermaid >}}
+```
+┌───────────────────────────────┐
+│  Node-RED Instance (Server)   │
+│                               │
+│  ~/.node-red/                 │
+│  ├── flows.json       ← your logic
+│  ├── flows_cred.json  ← encrypted credentials
+│  ├── settings.js      ← runtime config
+│  ├── package.json     ← installed nodes
+│  └── node_modules/    ← dependencies
+│                               │
+│  Deployment: click "Deploy"   │
+│  Versioning: ¯\_(ツ)_/¯       │
+│  Testing: "it works on my Pi" │
+│  Rollback: hope you exported  │
+└───────────────────────────────┘
+```
 
 This leads to real problems:
 
@@ -42,7 +48,7 @@ This leads to real problems:
 
 Here's the repo structure I use for production Node-RED projects:
 
-```text
+```
 node-red-project/
 ├── .github/
 │   └── workflows/
@@ -141,21 +147,21 @@ module.exports = {
 
 For CI/CD, manage credentials through environment variables:
 
-{{< mermaid >}}
-flowchart LR
-    DEV["Developer<br/>.env file (local)"]
-    CI["GitHub Actions<br/>GitHub Secrets (CI/CD)"]
-    PROD["Production<br/>K8s Secrets or .env"]
-    DEV --- CI --- PROD
-{{< /mermaid >}}
+```
+┌─────────────┐     ┌───────────────────┐     ┌──────────────┐
+│  Developer  │     │  GitHub Actions    │     │  Production  │
+│             │     │                    │     │              │
+│  .env file  │     │  GitHub Secrets    │     │  K8s Secrets │
+│  (local)    │     │  (CI/CD)           │     │  or .env     │
+└─────────────┘     └───────────────────┘     └──────────────┘
 
 All three use the same env var names:
-
-- `MQTT_BROKER_URL`
-- `MQTT_USERNAME`
-- `MQTT_PASSWORD`
-- `DB_CONNECTION_STRING`
-- `NODE_RED_CREDENTIAL_SECRET`
+  MQTT_BROKER_URL
+  MQTT_USERNAME
+  MQTT_PASSWORD
+  DB_CONNECTION_STRING
+  NODE_RED_CREDENTIAL_SECRET
+```
 
 In your flow, reference environment variables using Node-RED's `${ENV_VAR}` syntax or `process.env.ENV_VAR` in function nodes.
 
@@ -624,17 +630,17 @@ jobs:
 
 ### Pipeline Visualization
 
-{{< mermaid >}}
-flowchart LR
-    L["Lint<br/>ESLint · JSON valid."]
-    T["Test<br/>Mocha · Unit · Integ."]
-    B["Build & Push<br/>Docker · ghcr.io"]
-    S["Deploy Staging<br/>Auto"]
-    P["Deploy Production<br/>Manual approval"]
-    L --> T --> B --> S --> P
-    S -. Health check .-> S
-    P -. Health check .-> P
-{{< /mermaid >}}
+```
+┌────────┐     ┌────────┐     ┌────────────┐     ┌─────────┐     ┌────────────┐
+│  Lint  │────►│  Test  │────►│   Build &  │────►│ Deploy  │────►│   Deploy   │
+│        │     │        │     │   Push     │     │ Staging │     │ Production │
+│ ESLint │     │ Mocha  │     │ Docker     │     │         │     │            │
+│ JSON   │     │ Unit   │     │ ghcr.io    │     │ Auto    │     │ Manual     │
+│ valid. │     │ Integ. │     │            │     │         │     │ approval   │
+└────────┘     └────────┘     └────────────┘     └─────────┘     └────────────┘
+                                                      │                │
+                                                 Health check     Health check
+```
 
 ---
 
@@ -675,16 +681,18 @@ module.exports = baseSettings;
 
 ### Environment Variable Reference
 
-| Variable                     | Dev            | Staging          | Production       |
-| ---------------------------- | -------------- | ---------------- | ---------------- |
-| `NODE_ENV`                   | development    | staging          | production       |
-| `PORT`                       | 1880           | 1880             | 1880             |
-| `NODE_RED_CREDENTIAL_SECRET` | dev-secret     | (GitHub Secret)  | (GitHub Secret)  |
-| `MQTT_BROKER_URL`            | localhost      | mqtt.staging     | mqtt.prod        |
-| `MQTT_USERNAME`              | dev            | (GitHub Secret)  | (GitHub Secret)  |
-| `MQTT_PASSWORD`              | dev            | (GitHub Secret)  | (GitHub Secret)  |
-| `DB_CONNECTION_STRING`       | `sqlite://...` | `postgres://...` | `postgres://...` |
-| `DISABLE_EDITOR`             | false          | false            | true             |
+```
+Variable                       Dev           Staging          Production
+─────────────────────────────────────────────────────────────────────────
+NODE_ENV                       development   staging          production
+PORT                           1880          1880             1880
+NODE_RED_CREDENTIAL_SECRET     dev-secret    (GitHub Secret)  (GitHub Secret)
+MQTT_BROKER_URL                localhost      mqtt.staging     mqtt.prod
+MQTT_USERNAME                  dev           (GitHub Secret)  (GitHub Secret)
+MQTT_PASSWORD                  dev           (GitHub Secret)  (GitHub Secret)
+DB_CONNECTION_STRING           sqlite://...  postgres://...   postgres://...
+DISABLE_EDITOR                 false         false            true
+```
 
 ---
 
@@ -694,20 +702,27 @@ When updating flows, you can't just swap `flows.json` — nodes may have runtime
 
 ### Blue-Green Deployment
 
-{{< mermaid >}}
-flowchart TB
-    LB["Load Balancer<br/>Traefik / Nginx"]
-    BLUE["Blue (v1.2)<br/>Active"]
-    GREEN["Green (v1.3)<br/>Standby"]
-    LB --> BLUE
-    LB --> GREEN
-{{< /mermaid >}}
+```
+                    Load Balancer
+                    ┌──────────┐
+                    │  Traefik │
+                    │  / Nginx │
+                    └────┬─────┘
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+         ┌────┴────┐          ┌────┴────┐
+         │  Blue   │          │  Green  │
+         │ (v1.2)  │          │ (v1.3)  │
+         │ Active  │          │ Standby │
+         └─────────┘          └─────────┘
 
 1. Deploy new version to Green
 2. Run health checks on Green
 3. Switch traffic from Blue to Green
 4. Keep Blue running for 30 minutes (rollback window)
 5. Stop Blue
+```
 
 ### Rolling Restart
 

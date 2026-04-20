@@ -25,14 +25,19 @@ Before starting, make sure you have:
 
 ### Architecture Overview
 
-{{< mermaid >}}
-flowchart LR
-    PLC["Siemens S7-1500<br/>OPC-UA Server<br/><i>192.168.1.100</i>"]
-    NR["Node-RED<br/>Dashboard (Port 1880)<br/><i>192.168.1.50</i>"]
-    PLC -->|"OPC-UA (TCP:4840)"| NR
-{{< /mermaid >}}
+```
+┌─────────────┐        OPC-UA (TCP:4840)       ┌─────────────┐
+│  Siemens    │                                 │             │
+│  S7-1500    ├────────────────────────────────→│  Node-RED   │
+│             │                                 │             │
+│  OPC-UA     │                                 │  Dashboard  │
+│  Server     │                                 │  (Port 1880)│
+└─────────────┘                                 └─────────────┘
+  192.168.1.100                                  192.168.1.50
 
-PLC runs the OPC-UA server. Node-RED is the OPC-UA client.
+  PLC runs the OPC-UA server.
+  Node-RED is the OPC-UA client.
+```
 
 ---
 
@@ -208,12 +213,16 @@ The quotes around data block and variable names are part of the NodeId.
 
 Drag variables to the Data Access View. You should see live values updating:
 
-| Variable        | Value   | Status | Timestamp      |
-| --------------- | ------- | ------ | -------------- |
-| Temperature     | 42.7    | Good   | 08:30:00.123   |
-| SpindleSpeed    | 2450.0  | Good   | 08:30:00.123   |
-| Status          | 1       | Good   | 08:29:55.456   |
-| PartsProduced   | 1847    | Good   | 08:30:00.123   |
+```
+┌──────────────────────────────────────────────────────────────┐
+│ Variable              │ Value    │ Status │ Timestamp         │
+├───────────────────────┼──────────┼────────┼───────────────────┤
+│ Temperature           │ 42.7     │ Good   │ 08:30:00.123     │
+│ SpindleSpeed          │ 2450.0   │ Good   │ 08:30:00.123     │
+│ Status                │ 1        │ Good   │ 08:29:55.456     │
+│ PartsProduced         │ 1847     │ Good   │ 08:30:00.123     │
+└──────────────────────────────────────────────────────────────┘
+```
 
 If you see values, the PLC's OPC-UA server is working correctly.
 
@@ -438,34 +447,36 @@ return msg;
 
 Here's the complete flow connecting all pieces:
 
-{{< mermaid >}}
-flowchart LR
-    subgraph SRC["OPC-UA Items"]
-        I1["Item: Temp"]
-        I2["Item: Spindle"]
-        I3["Item: Status"]
-        I4["Item: Parts"]
-    end
-    SUB["OPC-UA Client<br/>Subscribe"]
-    I1 --> SUB
-    I2 --> SUB
-    I3 --> SUB
-    I4 --> SUB
-
-    subgraph UI["Dashboard widgets"]
-        G1["Gauge: Temperature"]
-        C1["Chart: Temp Trend"]
-        G2["Gauge: Spindle Speed"]
-        MAP["Map Func"]
-        ST["Status Text"]
-        PC["Text: Parts Count"]
-    end
-    SUB --> G1
-    SUB --> C1
-    SUB --> G2
-    SUB --> MAP --> ST
-    SUB --> PC
-{{< /mermaid >}}
+```
+┌──────────────────────────────────────────────────────────┐
+│                     Node-RED Flow                         │
+│                                                           │
+│  ┌──────────┐     ┌──────────┐     ┌────────────────┐   │
+│  │ OPC-UA   │     │ OPC-UA   │     │ Gauge:         │   │
+│  │ Item:    ├────→│ Client:  ├────→│ Temperature    │   │
+│  │ Temp     │     │Subscribe │     └────────────────┘   │
+│  └──────────┘     │          │     ┌────────────────┐   │
+│                   │          ├────→│ Chart:         │   │
+│  ┌──────────┐     │          │     │ Temp Trend     │   │
+│  │ OPC-UA   │     │          │     └────────────────┘   │
+│  │ Item:    ├────→│          │                           │
+│  │ Spindle  │     │          │     ┌────────────────┐   │
+│  └──────────┘     │          ├────→│ Gauge:         │   │
+│                   │          │     │ Spindle Speed  │   │
+│  ┌──────────┐     │          │     └────────────────┘   │
+│  │ OPC-UA   │     │          │                           │
+│  │ Item:    ├────→│          │     ┌──────┐ ┌────────┐  │
+│  │ Status   │     │          ├────→│ Map  ├→│ Status │  │
+│  └──────────┘     │          │     │ Func │ │ Text   │  │
+│                   │          │     └──────┘ └────────┘  │
+│  ┌──────────┐     │          │                           │
+│  │ OPC-UA   │     │          │     ┌────────────────┐   │
+│  │ Item:    ├────→│          ├────→│ Text:          │   │
+│  │ Parts    │     │          │     │ Parts Count    │   │
+│  └──────────┘     └──────────┘     └────────────────┘   │
+│                                                           │
+└──────────────────────────────────────────────────────────┘
+```
 
 ---
 

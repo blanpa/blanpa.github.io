@@ -20,22 +20,20 @@ A modern OPC-UA suite for Node-RED that uses **shared connections**, **batch ope
 
 **OPC Unified Architecture** is the interoperability standard for secure, reliable data exchange in industrial automation. It's platform-independent, vendor-neutral, and supported by virtually every major PLC, SCADA, and MES vendor.
 
-{{< mermaid >}}
-flowchart TB
-    S["Siemens PLC"]
-    B["Beckhoff PLC"]
-    A["ABB DCS"]
-    NR["Node-RED<br/>OPC-UA Suite"]
-    D["Dashboard"]
-    DB["Database"]
-    C["Cloud / MQTT"]
-    S -->|OPC-UA| NR
-    B -->|OPC-UA| NR
-    A -->|OPC-UA| NR
-    NR --> D
-    NR --> DB
-    NR --> C
-{{< /mermaid >}}
+```
+┌──────────┐  ┌──────────┐  ┌──────────┐
+│ Siemens  │  │  Beckhoff │  │   ABB    │
+│   PLC    │  │   PLC    │  │   DCS    │
+└────┬─────┘  └────┬─────┘  └────┬─────┘
+     │             │             │
+     └──────┬──────┴─────────────┘
+            │    OPC-UA
+     ┌──────┴──────┐
+     │   Node-RED  │──→ Dashboard
+     │  OPC-UA     │──→ Database
+     │   Suite     │──→ Cloud/MQTT
+     └─────────────┘
+```
 
 ## 7 Nodes
 
@@ -55,14 +53,12 @@ Unlike legacy packages that open one TCP connection per node, this suite uses **
 
 Single OPC-UA service calls handle multiple variables simultaneously. Chain `opcua-item` nodes to visually build batch configurations:
 
-{{< mermaid >}}
-flowchart LR
-    I1["item<br/>Temp"]
-    I2["item<br/>Pressure"]
-    I3["item<br/>Speed"]
-    C["opcua-client<br/>(batch read)"]
-    I1 --> I2 --> I3 --> C
-{{< /mermaid >}}
+```
+┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────────┐
+│ item     │──→│ item     │──→│ item     │──→│ opcua-client │
+│ Temp     │   │ Pressure │   │ Speed    │   │ (batch read) │
+└──────────┘   └──────────┘   └──────────┘   └──────────────┘
+```
 
 ## Security
 

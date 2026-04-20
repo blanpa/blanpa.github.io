@@ -16,6 +16,31 @@ A comprehensive **Node-RED integration for Apache Kafka** with producer/consumer
 
 {{< github repo="blanpa/node-red-contrib-kafka-suite" >}}
 
+## Architecture
+
+Three node families talk to a Kafka cluster through a shared, ref-counted broker connection — with optional Schema Registry and a choice of two backends:
+
+{{< mermaid >}}
+flowchart LR
+    subgraph NR["Node-RED Flow"]
+        P["Producer"]
+        C["Consumer"]
+        A["Admin"]
+    end
+    subgraph BC["Broker Config"]
+        KJ["kafkajs<br/>(pure JS)"]
+        LR["librdkafka<br/>(native)"]
+    end
+    SR["Schema Registry<br/>Avro / JSON / Protobuf"]
+    K["Kafka Cluster<br/>Confluent / MSK / Event Hubs / Aiven / Redpanda"]
+    P --> BC
+    C --> BC
+    A --> BC
+    P -. encode .-> SR
+    C -. decode .-> SR
+    BC --> K
+{{< /mermaid >}}
+
 ## Producer
 
 - **Single & batch messaging** — publish one message or many in a single call

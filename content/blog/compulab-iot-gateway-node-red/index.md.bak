@@ -115,11 +115,14 @@ CAN bus is the lingua franca of industrial automation — robots, motor drives, 
 
 ### Hardware Setup
 
-{{< mermaid >}}
-flowchart LR
-    R["Robot Controller<br/>(Kuka KRC)"] -->|"CAN Bus<br/>120 Ω term."| GW["IOT-GATE<br/>can0"]
-    GW -->|NATS| NR["Node-RED<br/>Dashboard"]
-{{< /mermaid >}}
+```
+┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+│  Robot       │   CAN   │  IOT-GATE    │  NATS   │  Node-RED    │
+│  Controller  ├────H────┤  CAN0        ├────────→│  Dashboard   │
+│  (Kuka KRC)  │   Bus   │              │         │              │
+└──────────────┘   120Ω  └──────────────┘         └──────────────┘
+                   term.
+```
 
 Both ends of the CAN bus need 120Ω termination resistors. The IOT-GATE has a built-in termination jumper.
 
@@ -270,12 +273,17 @@ while True:
 
 The `node-red-contrib-modbus` package handles all the heavy lifting:
 
-{{< mermaid >}}
-flowchart LR
-    I["Inject<br/>(every 5 s)"] --> MR["Modbus Read<br/>FC3: 0x0000 · Qty 2 · Unit 1<br/>Serial /dev/ttyS1 · 9600 8N1"]
-    MR --> PF["Parse Float<br/>Big-Endian"]
-    PF --> NP["NATS Publish"]
-{{< /mermaid >}}
+```
+┌──────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────┐
+│ Inject   ├───→│ Modbus Read  ├───→│ Parse Float  ├───→│ NATS     │
+│ (5 sec)  │    │ FC3: 0x0000  │    │ Big-Endian   │    │ Publish  │
+│          │    │ Qty: 2       │    │              │    │          │
+└──────────┘    │ Unit ID: 1   │    └──────────────┘    └──────────┘
+                │ Serial:      │
+                │  /dev/ttyS1  │
+                │  9600 8N1    │
+                └──────────────┘
+```
 
 ---
 
@@ -382,21 +390,22 @@ sudo nmcli connection modify "Wired connection 1" \
 
 ### Failover Architecture
 
-{{< mermaid >}}
-flowchart LR
-    LAN["Factory LAN"] --> ETH["eth0<br/>metric 100"]
-    LTE["4G / LTE"] --> WWAN["wwan0<br/>metric 700"]
-
-    subgraph IOT["IOT-GATE — NetworkManager"]
-        ETH
-        WWAN
-        AF["Auto-failover<br/>eth0 down → wwan0<br/>eth0 up → eth0"]
-        ETH --- AF
-        WWAN --- AF
-    end
-
-    AF --> CL["Cloud NATS"]
-{{< /mermaid >}}
+```
+                    ┌──────────────────────────┐
+                    │        IOT-GATE           │
+                    │                            │
+                    │  ┌──────────────────────┐  │
+                    │  │ NetworkManager        │  │
+                    │  │                        │  │
+ ┌──────────┐      │  │  eth0 (metric 100) ◄──┼──┤──── Factory LAN
+ │  Cloud   │◄─────┼──┤  wwan0 (metric 700)◄──┼──┤──── 4G/LTE
+ │  NATS    │      │  │                        │  │
+ └──────────┘      │  │  Auto-failover:        │  │
+                    │  │  eth0 down → wwan0     │  │
+                    │  │  eth0 up   → eth0      │  │
+                    │  └──────────────────────┘  │
+                    └──────────────────────────┘
+```
 
 NetworkManager handles failover automatically. Combined with NATS leaf nodes (which reconnect transparently), the gateway switches from Ethernet to 4G without losing messages.
 
@@ -502,20 +511,27 @@ services:
 
 ### DIN Rail Mounting
 
-{{< mermaid >}}
-flowchart TB
-    subgraph CC["Control Cabinet"]
-        direction TB
-        subgraph DR["DIN Rail (TS35)"]
-            direction LR
-            PLC["PLC<br/>Siemens S7-1200"]
-            GW["IOT-GATE<br/>CompuLab"]
-            PSU["PSU<br/>24 V · 5 A"]
-        end
-        CE["Cable entries:<br/>• Ethernet (shielded Cat6)<br/>• CAN bus (twisted pair, shielded)<br/>• RS-485 (twisted pair, shielded)<br/>• 4G antenna (SMA, external mount)<br/>• Power (24 V DC from PSU)"]
-        style CE fill:none,stroke:none
-    end
-{{< /mermaid >}}
+```
+┌────────────────────────────────────────┐
+│            Control Cabinet             │
+│                                        │
+│  ┌─────────┐  ┌─────────┐  ┌───────┐  │
+│  │  PLC    │  │IOT-GATE │  │ PSU   │  │
+│  │ Siemens │  │ CompuLab│  │ 24V   │  │
+│  │ S7-1200 │  │         │  │ 5A    │  │
+│  └────┬────┘  └────┬────┘  └───┬───┘  │
+│       │            │           │       │
+│  ─────┴────────────┴───────────┴─────  │
+│              DIN Rail (TS35)            │
+│                                        │
+│  Cable entries:                        │
+│  • Ethernet (shielded Cat6)            │
+│  • CAN bus (twisted pair, shielded)    │
+│  • RS-485 (twisted pair, shielded)     │
+│  • 4G antenna (SMA, external mount)    │
+│  • Power (24V DC from PSU)             │
+└────────────────────────────────────────┘
+```
 
 ### Power
 

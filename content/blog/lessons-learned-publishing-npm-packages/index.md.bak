@@ -32,41 +32,46 @@ Each one started the same way: I needed something for a project, couldn't find a
 
 I started with separate repos for each package. After the third package, I considered a monorepo but decided against it. Here's why:
 
-**Monorepo (Lerna / npm workspaces)**
-
-```text
-packages/
-├── condition-monitoring/
-├── cip-suite/
-├── s7-suite/
-├── nats-suite/
-├── opcua-suite/
-├── clab-interfaces/
-└── i3x/
 ```
+Monorepo (Lerna / npm workspaces):
+  ┌──────────────────────────────────┐
+  │  packages/                       │
+  │  ├── condition-monitoring/       │
+  │  ├── cip-suite/                  │
+  │  ├── s7-suite/                   │
+  │  ├── nats-suite/                 │
+  │  ├── opcua-suite/                │
+  │  ├── clab-interfaces/            │
+  │  └── i3x/                        │
+  │                                  │
+  │  ✓ Shared dev dependencies       │
+  │  ✓ Cross-package changes atomic  │
+  │  ✗ Complex CI/CD                 │
+  │  ✗ Intimidating for contributors │
+  │  ✗ Version coupling risk         │
+  └──────────────────────────────────┘
 
-- ✓ Shared dev dependencies
-- ✓ Cross-package changes atomic
-- ✗ Complex CI/CD
-- ✗ Intimidating for contributors
-- ✗ Version coupling risk
+Separate repos:
+  ┌─────────────────────┐  ┌─────────────────────┐
+  │ condition-monitoring│  │ nats-suite          │
+  │ v1.3.2              │  │ v0.8.1              │
+  │ Own CI, own issues  │  │ Own CI, own issues  │
+  └─────────────────────┘  └─────────────────────┘
+  ┌─────────────────────┐  ┌─────────────────────┐
+  │ opcua-suite         │  │ cip-suite           │
+  │ v0.5.0              │  │ v0.1.0              │
+  └─────────────────────┘  └─────────────────────┘
+  ┌─────────────────────┐  ┌─────────────────────┐
+  │ s7-suite            │  │ i3x                 │
+  │ v0.1.0              │  │ v0.3.0              │
+  └─────────────────────┘  └─────────────────────┘
 
-**Separate repos**
-
-| Package                | Version |
-| ---------------------- | ------- |
-| `condition-monitoring` | v1.3.2  |
-| `nats-suite`           | v0.8.1  |
-| `opcua-suite`          | v0.5.0  |
-| `cip-suite`            | v0.1.0  |
-| `s7-suite`             | v0.1.0  |
-| `i3x`                  | v0.3.0  |
-
-- ✓ Simple CI/CD per package
-- ✓ Independent versioning
-- ✓ Lower contributor barrier
-- ✗ Duplicated boilerplate
-- ✗ Shared fixes need N commits
+  ✓ Simple CI/CD per package
+  ✓ Independent versioning
+  ✓ Lower contributor barrier
+  ✗ Duplicated boilerplate
+  ✗ Shared fixes need N commits
+```
 
 **My recommendation:** Use separate repos unless your packages genuinely share significant code. IIoT packages rarely do — a NATS client has nothing in common with a vibration analysis module.
 
@@ -76,21 +81,20 @@ My first version of `opcua-suite` had a single "OPC-UA" node that tried to do ev
 
 I split it into focused nodes:
 
-{{< mermaid >}}
-flowchart LR
-    subgraph BEFORE["Before (v0.1)"]
-        AIO["opcua-all-in-one<br/>Browse? Read? Write?<br/>Subscribe? Monitor?<br/>30 config fields<br/>Confused users"]
-    end
-    subgraph AFTER["After (v0.3) — 5–8 config fields each, clear purpose"]
-        CONN["opcua-connection<br/>(config node)"]
-        BR["opcua-browse"]
-        RD["opcua-read"]
-        WR["opcua-write"]
-        SUB["opcua-subscribe"]
-        MC["opcua-method-call"]
-    end
-    BEFORE --> AFTER
-{{< /mermaid >}}
+```
+Before (v0.1):                     After (v0.3):
+┌──────────────────────┐           ┌───────────────────┐
+│   opcua-all-in-one   │           │ opcua-connection  │ (config node)
+│                      │           ├───────────────────┤
+│  Browse? Read? Write?│           │ opcua-browse      │
+│  Subscribe? Monitor? │           │ opcua-read        │
+│                      │           │ opcua-write       │
+│  30 config fields    │           │ opcua-subscribe   │
+│  Confused users      │           │ opcua-method-call │
+└──────────────────────┘           └───────────────────┘
+                                   Each: 5-8 config fields
+                                   Clear purpose
+```
 
 **Rule of thumb:** If a node needs a dropdown to select its mode of operation, split it. Each node should do one thing well.
 
@@ -98,18 +102,25 @@ flowchart LR
 
 Every package that connects to an external service (NATS broker, OPC-UA server, i3x API) uses a **config node** for the connection. The config node manages the connection lifecycle, and operation nodes reference it:
 
-{{< mermaid >}}
-flowchart LR
-    subgraph FLOW["Node-RED Flow — 3 operation nodes, 1 shared connection"]
-        PUB["nats-pub"]
-        SUB["nats-sub"]
-        REQ["nats-req"]
-        CONN["nats-conn (config)<br/>host: ...<br/>port: ...<br/>creds: ..."]
-        PUB --> CONN
-        SUB --> CONN
-        REQ --> CONN
-    end
-{{< /mermaid >}}
+```
+┌─────────────────────────────────────────┐
+│  Node-RED Flow                          │
+│                                         │
+│  ┌────────────┐    ┌────────────┐       │
+│  │ nats-pub   ├───►│ nats-conn  │       │
+│  └────────────┘    │ (config)   │       │
+│                    │            │       │
+│  ┌────────────┐    │ host: ...  │       │
+│  │ nats-sub   ├───►│ port: ...  │       │
+│  └────────────┘    │ creds: ... │       │
+│                    └──────┬─────┘       │
+│  ┌────────────┐           │             │
+│  │ nats-req   ├───────────┘             │
+│  └────────────┘                         │
+│                                         │
+│  3 operation nodes, 1 shared connection │
+└─────────────────────────────────────────┘
+```
 
 This pattern prevents connection sprawl (ten nodes opening ten separate TCP connections) and centralizes credential management.
 
@@ -127,13 +138,27 @@ The challenge with IIoT nodes: they interact with real hardware and services. Yo
 
 My approach: **three testing layers**.
 
-{{< mermaid >}}
-flowchart TB
-    L1["Layer 1: Pure Logic Tests (fast)<br/>• Data parsing, encoding, validation<br/>• Math (FFT, RMS, thresholds)<br/>• No external dependencies<br/>• 80% of tests live here"]
-    L2["Layer 2: Node Behavior Tests (medium)<br/>• node-red-node-test-helper<br/>• Mocked connections<br/>• Input/output message validation<br/>• Status and error handling"]
-    L3["Layer 3: Integration Tests (slow)<br/>• Docker Compose with real services<br/>• NATS server, OPC-UA simulator<br/>• End-to-end message flow<br/>• Run manually or nightly in CI"]
-    L1 --> L2 --> L3
-{{< /mermaid >}}
+```
+┌────────────────────────────────────────┐
+│  Layer 1: Pure Logic Tests (fast)      │
+│  - Data parsing, encoding, validation  │
+│  - Math (FFT, RMS, thresholds)         │
+│  - No external dependencies            │
+│  - 80% of tests live here              │
+├────────────────────────────────────────┤
+│  Layer 2: Node Behavior Tests (medium) │
+│  - node-red-node-test-helper           │
+│  - Mocked connections                  │
+│  - Input/output message validation     │
+│  - Status and error handling           │
+├────────────────────────────────────────┤
+│  Layer 3: Integration Tests (slow)     │
+│  - Docker Compose with real services   │
+│  - NATS server, OPC-UA simulator       │
+│  - End-to-end message flow             │
+│  - Run manually or nightly in CI       │
+└────────────────────────────────────────┘
+```
 
 ### Example: Testing the Condition Monitoring FFT Node
 
@@ -281,17 +306,19 @@ describe('nats-publish Node', function() {
 
 The condition monitoring package has the most tests because it does the most math. Here's the breakdown:
 
-| Test file                   | Tests | Coverage                |
-| --------------------------- | ----: | ----------------------- |
-| `fft_spec.js`               |    28 | FFT accuracy, edge cases |
-| `rms_spec.js`               |    12 | RMS calculation         |
-| `threshold_spec.js`         |    24 | Alarm logic             |
-| `envelope_spec.js`          |    18 | Envelope analysis       |
-| `trend_spec.js`             |    15 | Trend detection         |
-| `node_behavior_spec.js`     |    22 | Node-RED node I/O       |
-| `config_validation_spec.js` |    10 | Configuration checks    |
-| `integration_spec.js`       |     6 | End-to-end flow         |
-| **Total**                   | **135** |                       |
+```
+test/
+├── fft_spec.js              ── 28 tests (FFT accuracy, edge cases)
+├── rms_spec.js              ── 12 tests (RMS calculation)
+├── threshold_spec.js        ── 24 tests (alarm logic)
+├── envelope_spec.js         ── 18 tests (envelope analysis)
+├── trend_spec.js            ── 15 tests (trend detection)
+├── node_behavior_spec.js    ── 22 tests (Node-RED node I/O)
+├── config_validation_spec.js── 10 tests (configuration checks)
+└── integration_spec.js      ──  6 tests (end-to-end flow)
+                             ─────
+                              135 total
+```
 
 Running them:
 
@@ -362,7 +389,7 @@ npm install node-red-contrib-condition-monitoring
 
 Every package includes at least one importable example flow. Node-RED has a built-in example import feature — if you put example flows in the right directory, users can import them from `Import → Examples → your-package-name`:
 
-```text
+```
 your-package/
 ├── examples/
 │   ├── basic-fft-analysis.json
@@ -410,14 +437,16 @@ This goes in the node's HTML help panel (the sidebar in the Node-RED editor) and
 
 My publishing checklist:
 
-1. Update version in `package.json` (follow semver)
-2. Update `CHANGELOG.md`
-3. Run full test suite: `npm test`
+```
+1. Update version in package.json (follow semver)
+2. Update CHANGELOG.md
+3. Run full test suite: npm test
 4. Build if needed (most Node-RED nodes don't need a build step)
-5. Dry run: `npm publish --dry-run`
-6. Publish: `npm publish`
+5. Dry run: npm publish --dry-run
+6. Publish: npm publish
 7. Create GitHub release with tag
 8. Post update to Node-RED forum
+```
 
 ### Semantic Versioning
 
@@ -554,14 +583,16 @@ The OPC-UA suite worked perfectly with Siemens PLCs — which is what I tested a
 
 Another user had a PLC that returned arrays of 50,000 values in a single read. Out of memory.
 
-| What I tested        | What users did                              |
-| -------------------- | ------------------------------------------- |
-| 10 variables         | 500 variables                               |
-| English node names   | Chinese node names (UTF-8 handling)         |
-| Single server        | 3 servers simultaneously                    |
-| Clean data           | `null`, `NaN`, `Infinity`, empty strings    |
-| Fast network         | Satellite link with 800 ms latency          |
-| Linux                | Windows (path separator issues)             |
+```
+What I tested:                What users did:
+────────────────────          ──────────────────
+10 variables                  500 variables
+English node names            Chinese node names (UTF-8 handling)
+Single server                 3 servers simultaneously
+Clean data                    null, NaN, Infinity, empty strings
+Fast network                  Satellite link with 800ms latency
+Linux                         Windows (path separator issues)
+```
 
 **Lesson:** Every assumption you make about the environment will be violated by at least one user.
 
@@ -580,25 +611,32 @@ For `condition-monitoring`, I wrote tests first. The difference was dramatic —
 
 ### Download Numbers Over Time
 
-**`node-red-contrib-condition-monitoring` — monthly downloads**
+```
+node-red-contrib-condition-monitoring:
 
-{{< mermaid >}}
-xychart-beta
-    title "Monthly downloads over 24 months"
-    x-axis "Month" [1, 3, 6, 9, 12, 18, 24]
-    y-axis "Downloads / month" 0 --> 250
-    line [30, 80, 120, 160, 180, 210, 230]
-{{< /mermaid >}}
+Downloads
+  250 ┤
+      │                                          ╭──
+  200 ┤                                     ╭────╯
+      │                                 ╭───╯
+  150 ┤                            ╭────╯
+      │                       ╭────╯
+  100 ┤                  ╭────╯
+      │             ╭────╯
+   50 ┤        ╭────╯
+      │   ╭────╯
+    0 ┤───╯
+      └──┬──────┬──────┬──────┬──────┬──────┬──────┬──
+        Month  Month  Month  Month  Month  Month  Month
+          1      3      6      9     12     18     24
 
-**Key moments:**
-
-| Month | Event                                  | Downloads/month |
-| ----: | -------------------------------------- | --------------- |
-|     1 | Published, posted on Node-RED forum    | 30              |
-|     3 | Someone blogged about it               | 80              |
-|     6 | Added example flows, improved README   | 120             |
-|     9 | v1.0 release with 135 tests            | 160             |
-|    18 | Referenced in a conference talk        | 210             |
+Key moments:
+  Month 1:  Published, posted on Node-RED forum         → 30 downloads
+  Month 3:  Someone blogged about it                    → 80/month
+  Month 6:  Added example flows, improved README        → 120/month
+  Month 9:  v1.0 release with 135 tests                 → 160/month
+  Month 18: Referenced in a conference talk              → 210/month
+```
 
 ### What Drove Downloads
 

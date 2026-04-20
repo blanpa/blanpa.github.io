@@ -235,15 +235,17 @@ for line in sys.stdin:
 
 The Node-RED flow:
 
-{{< mermaid >}}
-flowchart LR
-    M["MQTT In<br/>raw vibration"] --> FE["Feature Extraction<br/>(function)"]
-    FE --> INF["ONNX Inference<br/>(Python)"]
-    INF --> R["Route by prediction"]
-    R --> D[Dashboard]
-    R --> A["Alert if abnormal"]
-    R --> L["Log to InfluxDB"]
-{{< /mermaid >}}
+```
+┌──────────┐    ┌──────────────┐    ┌───────────────┐    ┌──────────────┐
+│ MQTT In  ├───→│ Feature      ├───→│ ONNX Inference├───→│ Route by     │
+│ raw      │    │ Extraction   │    │ (Python)      │    │ prediction   │
+│ vibration│    │ (function)   │    └───────────────┘    └──────┬───────┘
+└──────────┘    └──────────────┘                               │
+                                                    ┌──────────┼──────────┐
+                                                    ▼          ▼          ▼
+                                              [Dashboard] [Alert if   [Log to
+                                                          abnormal]   InfluxDB]
+```
 
 Node-RED function node for feature extraction:
 
@@ -371,14 +373,16 @@ confidence = float(np.max(probabilities))
 
 Deploying a model once is not enough. Models degrade as operating conditions change — a phenomenon called **model drift**. A production system needs a full lifecycle:
 
-{{< mermaid >}}
-flowchart LR
-    T["Train<br/>(Cloud)"] --> E["Export<br/>(ONNX / TFLite)"]
-    E --> D["Deploy<br/>(Edge Device)"]
-    D --> M["Monitor<br/>(Drift Detect)"]
-    M --> R["Retrain<br/>(New Data)"]
-    R -.->|feedback loop| T
-{{< /mermaid >}}
+```
+┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+│  Train   ├───→│  Export   ├───→│  Deploy  ├───→│  Monitor ├───→│ Retrain  │
+│          │    │  (ONNX/   │    │  (Edge   │    │  (Drift  │    │  (New    │
+│  (Cloud) │    │   TFLite) │    │  Device) │    │  Detect) │    │  Data)   │
+└──────────┘    └──────────┘    └──────────┘    └────┬─────┘    └────┬─────┘
+                                                     │               │
+                                                     └───────────────┘
+                                                      Feedback Loop
+```
 
 ### Model Versioning
 
@@ -429,15 +433,23 @@ def detect_drift(
 
 When a new model version is ready, push it to edge devices without downtime:
 
-{{< mermaid >}}
-flowchart LR
-    MR["Model Registry<br/>(S3 / MinIO)"] -->|"model.update"| MQ[NATS / MQTT]
-    MQ --> EG[Edge Gateway]
-    EG --> DL[Download .onnx]
-    DL --> VL[Validate locally]
-    VL --> HS[Hot-swap model]
-    HS --> RP[Report new version]
-{{< /mermaid >}}
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Model Update Flow                         │
+│                                                              │
+│  [Model Registry]──→[NATS/MQTT]──→[Edge Gateway]            │
+│   (S3 / MinIO)       "model.update"  │                       │
+│                                      ▼                       │
+│                              [Download .onnx]                │
+│                                      │                       │
+│                              [Validate locally]              │
+│                                      │                       │
+│                              [Hot-swap model]                │
+│                                      │                       │
+│                              [Report new version]            │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
 
 The Node-RED flow listens for model update messages, downloads the new ONNX file, validates it against a test dataset stored locally, and swaps it into the inference pipeline — all without restarting the flow.
 

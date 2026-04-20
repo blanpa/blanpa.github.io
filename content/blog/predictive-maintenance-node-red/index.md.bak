@@ -30,16 +30,19 @@ The math is straightforward: a single unplanned stop on a CNC line costs €5,00
 
 The full pipeline in Node-RED looks like this:
 
-{{< mermaid >}}
-flowchart LR
-    A["Accelerometer<br/>(MQTT / OPC)"] --> B["Signal Processing<br/>(FFT, RMS)"]
-    B --> C["Anomaly Detection<br/>(Z-Score, CUSUM, IF)"]
-    C --> D["Health Index<br/>Calculation"]
-    D --> E["Trend Analysis"]
-    E --> F["RUL Prediction"]
-    F --> G["Alert Engine"]
-    G --> H["Dashboard<br/>& Reports"]
-{{< /mermaid >}}
+```
+┌─────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ Accelero-   │    │  Signal      │    │  Anomaly     │    │  Health      │
+│ meter       ├───→│  Processing  ├───→│  Detection   ├───→│  Index       │
+│ (MQTT/OPC)  │    │  (FFT, RMS)  │    │  (Z-Score,   │    │  Calculation │
+└─────────────┘    └──────────────┘    │  CUSUM, IF)  │    └──────┬───────┘
+                                       └──────────────┘           │
+                                                                  ▼
+┌─────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ Dashboard   │◀───┤  Alert       │◀───┤  RUL         │◀───┤  Trend       │
+│ & Reports   │    │  Engine      │    │  Prediction  │    │  Analysis    │
+└─────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
+```
 
 Each stage transforms data: raw acceleration → frequency spectrum → anomaly flags → health percentage → remaining useful life → maintenance work orders.
 
@@ -82,12 +85,13 @@ For a standard 6205 bearing at 1800 RPM: BPFO ≈ 107 Hz, BPFI ≈ 163 Hz, BSF �
 
 Most industrial vibration sensors publish via MQTT or OPC-UA. A typical Node-RED ingestion flow:
 
-{{< mermaid >}}
-flowchart LR
-    M["MQTT In<br/>vibration / machine1"] --> JP["JSON Parse"]
-    JP --> BUF["Buffer 1024 samples"]
-    BUF --> FFT["FFT Node"]
-{{< /mermaid >}}
+```
+┌──────────┐    ┌───────────┐    ┌──────────────┐    ┌──────────┐
+│ MQTT In  ├───→│ JSON Parse├───→│ Buffer 1024  ├───→│ FFT Node │
+│ vibration│    │           │    │ samples      │    │          │
+│ /machine1│    └───────────┘    └──────────────┘    └──────────┘
+└──────────┘
+```
 
 The buffer node collects 1024 samples before sending a complete block to the FFT node. At 25.6 kHz sampling, that's a new FFT every 40 ms — fast enough for real-time monitoring.
 
@@ -425,27 +429,37 @@ The output: "This bearing has approximately 340 ± 80 hours of useful life remai
 
 The complete flow in Node-RED, using the [node-red-contrib-condition-monitoring](https://flows.nodered.org/node/node-red-contrib-condition-monitoring) package:
 
-{{< mermaid >}}
-flowchart LR
-    MQ["MQTT In<br/>vibration"] --> BUF[Buffer]
-    BUF --> PFFT[Python FFT]
-    PFFT --> FE[Feature Extract]
-    OPC["OPC-UA<br/>temperature"] --> MF[Merge Features]
-    MOD["Modbus<br/>motor amps"] --> MF
-    FE --> MF
-    MF --> HI[Health Index]
-    HI --> IDB[InfluxDB Write]
-    HI --> DG[Dashboard Gauge]
-    HI --> AC[Anomaly Check]
-    AC --> ZS[Z-Score]
-    AC --> CU[CUSUM]
-    AC --> IF[Isolation Forest]
-    ZS --> AD[Alert Decision]
-    CU --> AD
-    IF --> AD
-    AD --> EM[Email]
-    AD --> CMMS[CMMS Work Order]
-{{< /mermaid >}}
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        Node-RED Flow: PdM Pipeline                     │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  [MQTT In]──→[Buffer]──→[Python FFT]──→[Feature Extract]──┐            │
+│  vibration                                                  │            │
+│                                                             ▼            │
+│  [OPC-UA]───→[Temperature]──────────────────────→[Merge Features]       │
+│  temperature                                         │                   │
+│                                                      ▼                   │
+│  [Modbus]───→[Current Draw]─────────────────→[Health Index]             │
+│  motor amps                                      │                       │
+│                                                  ├──→[InfluxDB Write]   │
+│                                                  ├──→[Dashboard Gauge]  │
+│                                                  ▼                       │
+│                                          [Anomaly Check]                │
+│                                              │                           │
+│                                   ┌──────────┼──────────┐               │
+│                                   ▼          ▼          ▼               │
+│                              [Z-Score]  [CUSUM]  [Isolation Forest]     │
+│                                   │          │          │               │
+│                                   └──────────┼──────────┘               │
+│                                              ▼                           │
+│                                     [Alert Decision]                    │
+│                                          │        │                      │
+│                                          ▼        ▼                      │
+│                                    [Email]  [CMMS Work Order]           │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Key Node-RED Nodes Used
 
@@ -475,12 +489,12 @@ At 25.6 kHz × 2 bytes × 10 seconds = 512 KB per burst. Even with 100 machines,
 
 ### Alert Escalation
 
-| Health Index | Status | Action |
-|--------------|--------|--------|
-| ≥ 80 % | Green | No action |
-| 50–79 % | Yellow | Log to CMMS, notify maintenance planner |
-| 20–49 % | Orange | Priority work order, order spare parts |
-| < 20 % | Red | Immediate attention, schedule emergency stop |
+```
+Health ≥ 80%  →  Green  →  No action
+Health 50-79% →  Yellow →  Log to CMMS, notify maintenance planner
+Health 20-49% →  Orange →  Priority work order, order spare parts
+Health < 20%  →  Red    →  Immediate attention, schedule emergency stop
+```
 
 ### Baseline Period
 

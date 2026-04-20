@@ -16,6 +16,31 @@ A comprehensive **Node-RED package for EtherNet/IP** that covers the full range 
 
 {{< github repo="blanpa/node-red-contrib-cip-suite" >}}
 
+## Architecture
+
+Three node families share a single CIP/EtherNet/IP transport layer and route to the right protocol for each PLC generation:
+
+{{< mermaid >}}
+flowchart TB
+    subgraph NR["Node-RED Flows"]
+        SYM["CIP Symbolic Nodes<br/>read / write / browse / subscribe"]
+        PCCC["PCCC Nodes<br/>read / write"]
+        OBJ["Advanced Object Nodes<br/>I/O · Motion · Energy · Sync · File"]
+    end
+    EP["cip-endpoint / cip-pccc-endpoint<br/>shared TCP session · auto-reconnect · multi-hop routing"]
+    EIP["EtherNet/IP · CIP Encapsulation"]
+    LOGIX["ControlLogix · CompactLogix · Micro800"]
+    LEGACY["SLC 500 · MicroLogix · PLC-5"]
+    DEV["Third-party CIP devices<br/>drives · I/O blocks · sensors"]
+    SYM --> EP
+    PCCC --> EP
+    OBJ --> EP
+    EP --> EIP
+    EIP --> LOGIX
+    EIP --> LEGACY
+    EIP --> DEV
+{{< /mermaid >}}
+
 ## Supported Hardware
 
 | Platform | Protocol | Notes |

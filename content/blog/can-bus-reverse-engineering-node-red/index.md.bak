@@ -16,16 +16,17 @@ This post walks through the entire process: hardware setup, Linux socketcan conf
 
 **Controller Area Network (CAN)** was developed by Bosch in 1986 for in-vehicle communication. The idea was simple: let microcontrollers talk to each other without a central host. Every node on the bus sees every message, and hardware-level arbitration prevents collisions.
 
-{{< mermaid >}}
-timeline
-    title CAN Bus Timeline
-    1986 : Bosch develops CAN for automotive
-    1991 : Mercedes-Benz — first production car with CAN
-    1993 : ISO 11898 standard published
-    2012 : CAN-FD (Flexible Data Rate) introduced by Bosch
-    2015 : CAN-FD standardized as ISO 11898-1:2015
-    Today : CAN in cars, trucks, elevators, medical devices, industrial drives, agricultural equipment, robots
-{{< /mermaid >}}
+```
+CAN Bus Timeline:
+
+1986 ─── Bosch develops CAN for automotive
+1991 ─── Mercedes-Benz first production car with CAN
+1993 ─── ISO 11898 standard published
+2012 ─── CAN-FD (Flexible Data Rate) introduced by Bosch
+2015 ─── CAN-FD standardized as ISO 11898-1:2015
+Today ── CAN is in cars, trucks, elevators, medical devices,
+         industrial drives, agricultural equipment, and robots
+```
 
 ### Automotive vs Industrial CAN
 
@@ -47,17 +48,31 @@ In industrial settings, you'll most often encounter **CANopen** (used by SEW-Eur
 
 This is the cheapest and most flexible option. The MCP2515 is a standalone CAN controller that talks to the Pi via SPI.
 
-{{< mermaid >}}
-flowchart LR
-    subgraph PI["Raspberry Pi 4 — GPIO Header"]
-        GPIO["SPI0_MOSI (GPIO 10)<br/>SPI0_MISO (GPIO 9)<br/>SPI0_SCLK (GPIO 11)<br/>SPI0_CE0 (GPIO 8)<br/>INT (GPIO 25)<br/>GND<br/>3.3 V / 5 V"]
-    end
-    subgraph HAT["MCP2515 CAN Hat"]
-        MCP["MCP2515<br/>+ TJA1050 (Transceiver)"]
-    end
-    GPIO --- MCP
-    MCP --> BUS["CAN_H / CAN_L<br/>(to bus)"]
-{{< /mermaid >}}
+```
+┌─────────────────────────────────────────────┐
+│                Raspberry Pi 4               │
+│                                             │
+│  GPIO Header                                │
+│  ┌──────────────────────┐                   │
+│  │ SPI0_MOSI (GPIO 10)  ├──┐               │
+│  │ SPI0_MISO (GPIO 9)   ├──┤               │
+│  │ SPI0_SCLK (GPIO 11)  ├──┤               │
+│  │ SPI0_CE0  (GPIO 8)   ├──┤  ┌──────────┐ │
+│  │ INT       (GPIO 25)  ├──┼──│ MCP2515  │ │
+│  │ GND                  ├──┤  │ CAN Hat  │ │
+│  │ 3.3V / 5V            ├──┘  │          │ │
+│  └──────────────────────┘     │ TJA1050  │ │
+│                               │ (Xcvr)   │ │
+│                               └────┬─────┘ │
+│                                    │        │
+└────────────────────────────────────┼────────┘
+                                     │
+                              ┌──────┴──────┐
+                              │  CAN_H      │
+                              │  CAN_L      │
+                              │  (to bus)   │
+                              └─────────────┘
+```
 
 Popular hats: **Waveshare RS485 CAN HAT**, **PiCAN2**, **Seeed Studio 2-Channel CAN-BUS(FD) Shield**.
 
@@ -187,20 +202,21 @@ Each line: `interface  CAN_ID  [DLC]  DATA_BYTES`
 
 ### Understanding CAN Frames
 
-{{< mermaid >}}
-flowchart LR
-    subgraph CF["CAN Frame"]
-        direction LR
-        ID["ID<br/>11-bit or 29-bit"]
-        DLC["DLC<br/>0–8"]
-        DATA["Data (0–8 bytes)<br/>B0 B1 B2 B3 B4 B5 B6 B7"]
-        CRC["CRC"]
-        ID --- DLC --- DATA --- CRC
-    end
-
-    note["ID: identifies message type AND priority (lower = higher)<br/>DLC: Data Length Code — how many bytes follow<br/>Data: the payload to decode"]
-    style note fill:none,stroke:none
-{{< /mermaid >}}
+```
+┌─────────────────────────── CAN Frame ────────────────────────────┐
+│                                                                   │
+│  ┌────────┐  ┌─────┐  ┌────────────────────────────────┐  ┌───┐ │
+│  │  ID     │  │ DLC │  │         Data (0-8 bytes)       │  │CRC│ │
+│  │ 11-bit  │  │     │  │  B0  B1  B2  B3  B4  B5  B6  B7 │  │   │ │
+│  │ or      │  │ 0-8 │  │                                │  │   │ │
+│  │ 29-bit  │  │     │  │                                │  │   │ │
+│  └────────┘  └─────┘  └────────────────────────────────┘  └───┘ │
+│                                                                   │
+│  ID:   Identifies the message type AND priority (lower = higher) │
+│  DLC:  Data Length Code — how many bytes follow                  │
+│  Data: The payload — what we want to decode                      │
+└───────────────────────────────────────────────────────────────────┘
+```
 
 ### Filtering by ID
 
@@ -256,19 +272,23 @@ can0  181   [8]  00 00 09 A4 00 00 00 00
 3. Increase to 2000 RPM → which bytes scaled?
 4. Change direction → which bit flipped?
 
-| State              | ID 0x181 Data             |
-| ------------------ | ------------------------- |
-| Motor stopped      | `00 00 00 00 00 00 00 00` |
-| Motor  500 RPM FWD | `00 00 01 F4 00 00 00 01` |
-| Motor 1000 RPM FWD | `00 00 03 E8 00 00 00 01` |
-| Motor 1500 RPM FWD | `00 00 05 DC 00 00 00 01` |
-| Motor 1000 RPM REV | `00 00 03 E8 00 00 00 02` |
-| Motor stopped      | `00 00 00 00 00 00 00 00` |
+```
+State               ID 0x181 Data
+─────────────────────────────────────────
+Motor stopped       00 00 00 00 00 00 00 00
+Motor  500 RPM FWD  00 00 01 F4 00 00 00 01
+Motor 1000 RPM FWD  00 00 03 E8 00 00 00 01
+Motor 1500 RPM FWD  00 00 05 DC 00 00 00 01
+Motor 1000 RPM REV  00 00 03 E8 00 00 00 02
+Motor stopped       00 00 00 00 00 00 00 00
 
-**Analysis:**
-
-- Bytes 2–3: RPM value (big-endian uint16) — `01 F4` = 500, `03 E8` = 1000, `05 DC` = 1500
-- Byte 7: Direction (`01` = FWD, `02` = REV)
+Analysis:
+  Bytes 2-3: RPM value (big-endian uint16)
+    01 F4 =  500
+    03 E8 = 1000
+    05 DC = 1500
+  Byte 7: Direction (01 = FWD, 02 = REV)
+```
 
 ### Strategy 3: DBC Files
 
@@ -408,14 +428,15 @@ With decoded CAN data arriving via MQTT, Node-RED can visualize and act on it.
 
 ### Architecture
 
-{{< mermaid >}}
-flowchart LR
-    DRV["Industrial Drive<br/>CAN_H / CAN_L"]
-    PI["Raspberry Pi<br/>python-can + MQTT pub"]
-    NR["Node-RED<br/>Dashboard · Alerts · Logging"]
-    DRV <-->|CAN Bus| PI
-    PI -->|MQTT| NR
-{{< /mermaid >}}
+```
+┌────────────┐    CAN Bus     ┌────────────────┐    MQTT      ┌──────────┐
+│ Industrial │◄──────────────►│  Raspberry Pi  │─────────────►│ Node-RED │
+│   Drive    │                │                │              │          │
+│            │                │  python-can    │              │ Dashboard│
+│  CAN_H ───┤                │  + MQTT pub    │              │ Alerts   │
+│  CAN_L ───┤                │                │              │ Logging  │
+└────────────┘                └────────────────┘              └──────────┘
+```
 
 ### Dashboard Flow
 

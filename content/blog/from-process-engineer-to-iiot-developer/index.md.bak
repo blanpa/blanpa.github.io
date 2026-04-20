@@ -28,17 +28,35 @@ Every process improvement project I ran followed the same pattern:
 
 The data was there — machines had PLCs, sensors were measuring everything — but getting that data out of the machine and into something useful was either impossible or required a six-figure SCADA investment.
 
-**My frustration loop:**
+```
+My frustration loop:
 
-{{< mermaid >}}
-flowchart TB
-    A["See a problem on the production line"]
-    B["Realize the data exists in the PLC"]
-    C["Ask IT for access to the data"]
-    D["Get told it requires a vendor project<br/>($50k, 6 months)"]
-    E["Go back to clipboard and Excel"]
-    A --> B --> C --> D --> E
-{{< /mermaid >}}
+    ┌──────────────────────┐
+    │ See a problem on the │
+    │ production line       │
+    └──────────┬───────────┘
+               │
+    ┌──────────▼───────────┐
+    │ Realize the data     │
+    │ exists in the PLC    │
+    └──────────┬───────────┘
+               │
+    ┌──────────▼───────────┐
+    │ Ask IT for access    │
+    │ to the data          │
+    └──────────┬───────────┘
+               │
+    ┌──────────▼───────────┐
+    │ Get told it requires │
+    │ a vendor project     │
+    │ ($50k, 6 months)     │
+    └──────────┬───────────┘
+               │
+    ┌──────────▼───────────┐
+    │ Go back to clipboard │
+    │ and Excel            │
+    └──────────────────────┘
+```
 
 ### The Turning Point
 
@@ -60,11 +78,26 @@ Most software developers have never set foot on a factory floor. They don't know
 
 I knew all of this. When I started building IIoT solutions, I didn't have to *guess* what users needed — I had *been* the user.
 
-{{< mermaid >}}
-flowchart LR
-    DEV["What a typical developer builds:<br/><br/>Beautiful dashboard with 47 charts,<br/>3 dropdown menus, a sidebar,<br/>and a settings page<br/><br/>Operator: 'I can't find the machine status'"]
-    OP["What the operator actually needs:<br/><br/>🟢 RUNNING — 2,450 RPM<br/><br/>Shift total: 847 / 1,000"]
-{{< /mermaid >}}
+```
+What a typical developer builds:
+  ┌───────────────────────────────────────┐
+  │  Beautiful dashboard with 47 charts,  │
+  │  3 dropdown menus, a sidebar,         │
+  │  and a settings page                  │
+  │                                       │
+  │  Operator: "I can't find the          │
+  │  machine status"                      │
+  └───────────────────────────────────────┘
+
+What the operator actually needs:
+  ┌───────────────────────────────────────┐
+  │                                       │
+  │         🟢  RUNNING  —  2,450 RPM     │
+  │                                       │
+  │       Shift total: 847 / 1,000        │
+  │                                       │
+  └───────────────────────────────────────┘
+```
 
 ### 2. Lean / Six Sigma Thinking
 
@@ -124,15 +157,22 @@ Month 5-6: Node-RED development
 
 For data engineering and machine learning. I learned it through DataTalks.Club's ZoomCamps — free, project-based courses that taught me more than any Udemy course.
 
-**DataTalks.Club ZoomCamps I completed:**
+```
+DataTalks.Club ZoomCamps I completed:
 
-| ZoomCamp                  | Topics                                                       |
-| ------------------------- | ------------------------------------------------------------ |
-| Data Engineering ZoomCamp | Docker, SQL, dbt, Spark, Kafka, Terraform, GCP               |
-| ML ZoomCamp               | scikit-learn, XGBoost, deep learning, model deployment       |
-| MLOps ZoomCamp            | MLflow, Prefect, model monitoring, experiment tracking       |
+┌────────────────────────────────┬──────────────────────────────────────┐
+│ Data Engineering ZoomCamp      │ Docker, SQL, dbt, Spark, Kafka,      │
+│                                │ Terraform, GCP                       │
+├────────────────────────────────┼──────────────────────────────────────┤
+│ ML ZoomCamp                    │ scikit-learn, XGBoost, deep learning,│
+│                                │ model deployment                     │
+├────────────────────────────────┼──────────────────────────────────────┤
+│ MLOps ZoomCamp                 │ MLflow, Prefect, model monitoring,   │
+│                                │ experiment tracking                  │
+└────────────────────────────────┴──────────────────────────────────────┘
 
 All free. All project-based. All excellent.
+```
 
 ### Git & Version Control
 
@@ -198,17 +238,28 @@ I spent hours reading the source code of popular Node-RED contrib packages. How 
 
 In tech, there's a bias toward pure engineering skill. But in IIoT, knowing the difference between a VFD and a servo matters more than knowing the difference between `map` and `reduce`. Manufacturing domain knowledge takes years to build. JavaScript takes months.
 
-**The IIoT developer skill stack:**
+```
+The IIoT developer skill stack:
 
-{{< mermaid >}}
-flowchart TB
-    TOP["Domain Expertise<br/>Manufacturing, processes, OT<br/><i>← hardest to learn, takes years</i>"]
-    MID["Industrial Protocols<br/>OPC-UA, MQTT, Modbus, CAN<br/><i>← moderate learning curve</i>"]
-    BOT["Software Dev<br/>JS, Python, Docker, Git<br/><i>← learnable in months with dedication</i>"]
-    TOP --- MID --- BOT
-{{< /mermaid >}}
+                    ┌────────────────┐
+                    │ Domain Expertise│  ← hardest to learn,
+                    │ Manufacturing, │     takes years
+                    │ processes, OT  │
+                    ├────────────────┤
+                    │ Industrial     │  ← moderate learning
+                    │ Protocols      │     curve
+                    │ OPC-UA, MQTT,  │
+                    │ Modbus, CAN    │
+                    ├────────────────┤
+                    │ Software Dev   │  ← learnable in months
+                    │ JS, Python,    │     with dedication
+                    │ Docker, Git    │
+                    └────────────────┘
 
-Most developers have the bottom layer. Few have the top. Having all three is rare.
+Most developers have the bottom layer.
+Few have the top.
+Having all three is rare.
+```
 
 ### Start with Solving Real Problems
 

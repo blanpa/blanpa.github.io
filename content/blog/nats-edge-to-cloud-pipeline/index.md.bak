@@ -16,41 +16,38 @@ This post walks through a complete NATS-based architecture for industrial IoT.
 
 ## Architecture Overview
 
-{{< mermaid >}}
-flowchart TB
-    subgraph cloud["Cloud NATS Cluster"]
-        direction TB
-        N1["N1"]
-        N2["N2"]
-        N3["N3"]
-        N1 --- N2 --- N3
-        store["JetStream Streams<br/>KV Stores<br/>Object Store"]
-        N2 --- store
-    end
-
-    subgraph fa["Factory A"]
-        direction TB
-        EA["NATS Edge<br/>(Leaf Node)"]
-        SA["Sensors<br/>PLCs<br/>Gateways"]
-        SA --> EA
-    end
-    subgraph fb["Factory B"]
-        direction TB
-        EB["NATS Edge<br/>(Leaf Node)"]
-        SB["Sensors<br/>PLCs<br/>Gateways"]
-        SB --> EB
-    end
-    subgraph fc["Factory C"]
-        direction TB
-        EC["NATS Edge<br/>(Leaf Node)"]
-        SC["Sensors<br/>PLCs<br/>Gateways"]
-        SC --> EC
-    end
-
-    EA -. "TLS / WebSocket<br/>(NAT-friendly)" .-> cloud
-    EB -. TLS / WebSocket .-> cloud
-    EC -. TLS / WebSocket .-> cloud
-{{< /mermaid >}}
+```
+                            ┌──────────────────────┐
+                            │    Cloud NATS Cluster │
+                            │  ┌────┐ ┌────┐ ┌────┐│
+                            │  │ N1 │ │ N2 │ │ N3 ││
+                            │  └──┬─┘ └──┬─┘ └──┬─┘│
+                            │     └──────┼──────┘  │
+                            │            │         │
+                            │    JetStream Streams  │
+                            │    KV Stores          │
+                            │    Object Store       │
+                            └────────┬─────────────┘
+                                     │
+                          TLS / WebSocket
+                          (NAT-friendly)
+                    ┌────────────┼────────────┐
+                    │            │            │
+              ┌─────┴─────┐┌────┴──────┐┌────┴──────┐
+              │  Factory A ││ Factory B ││ Factory C │
+              │  Leaf Node ││ Leaf Node ││ Leaf Node │
+              │  ┌───────┐ ││ ┌───────┐ ││ ┌───────┐ │
+              │  │ NATS  │ ││ │ NATS  │ ││ │ NATS  │ │
+              │  │ Edge  │ ││ │ Edge  │ ││ │ Edge  │ │
+              │  └───┬───┘ ││ └───┬───┘ ││ └───┬───┘ │
+              │      │     ││     │     ││     │     │
+              │  ┌───┴───┐ ││ ┌───┴───┐ ││ ┌───┴───┐ │
+              │  │Sensors│ ││ │Sensors│ ││ │Sensors│ │
+              │  │PLCs   │ ││ │PLCs   │ ││ │PLCs   │ │
+              │  │Gateways│││ │Gateways│││ │Gateways││
+              │  └───────┘ ││ └───────┘ ││ └───────┘ │
+              └───────────┘└───────────┘└───────────┘
+```
 
 Each factory runs a local NATS server as a **leaf node**. Sensors and PLCs publish to the local server with sub-millisecond latency. The leaf node selectively forwards messages to the cloud cluster over a single TLS connection — NAT-friendly, firewall-friendly, resumable on disconnect.
 
@@ -365,30 +362,22 @@ leafnodes {
 
 This is where NATS shines compared to MQTT bridges:
 
-{{< mermaid >}}
-flowchart TB
-    subgraph normal["Normal operation"]
-        direction LR
-        E1[Edge] -->|publish| L1[Local NATS]
-        L1 -->|leaf| C1[Cloud NATS]
-        C1 --> A1[Analytics]
-    end
+```
+Normal operation:
+  [Edge] ──publish──→ [Local NATS] ──leaf──→ [Cloud NATS] ──→ [Analytics]
 
-    subgraph drop["Network drops"]
-        direction LR
-        E2[Edge] -->|publish| L2[Local NATS]
-        L2 -. "X" .-x C2[Cloud NATS]
-        L2 --> JS["JetStream stores<br/>messages locally<br/>(up to 5 GB)"]
-    end
+Network drops:
+  [Edge] ──publish──→ [Local NATS] ──X──  [Cloud NATS]
+                        │
+                        └── JetStream stores messages locally
+                            (up to 5 GB / configured limit)
 
-    subgraph recover["Network recovers"]
-        direction LR
-        L3[Local NATS] ==>|"replays buffered<br/>messages in order"| C3[Cloud NATS]
-        C3 --> A3[Analytics]
-    end
-
-    normal --> drop --> recover
-{{< /mermaid >}}
+Network recovers:
+  [Edge]               [Local NATS] ──leaf──→ [Cloud NATS] ──→ [Analytics]
+                        │                        │
+                        └── Replays buffered ────┘
+                            messages in order
+```
 
 Local edge applications (Node-RED dashboards, local alerts) continue working because they subscribe to the local NATS server. The cloud just receives data late — but in order and without gaps.
 
@@ -559,13 +548,21 @@ Twenty-three hours of offline buffering. Enough to survive a full business day o
 
 Use the `node-red-contrib-nats-streaming` or a custom NATS node to integrate:
 
-{{< mermaid >}}
-flowchart LR
-    OPC["OPC-UA<br/>Client"] --> TR["Transform<br/>to JSON"]
-    TR --> PUB["NATS<br/>Publish"]
-    PUB --> LOCAL["Local NATS<br/>Server"]
-    LOCAL -. "Leaf Node" .-> CLOUD["Cloud NATS<br/>Cluster"]
-{{< /mermaid >}}
+```
+┌──────────┐    ┌──────────────┐    ┌──────────┐    ┌──────────┐
+│ OPC-UA   ├───→│ Transform    ├───→│ NATS     ├───→│ Local    │
+│ Client   │    │ to JSON      │    │ Publish  │    │ NATS     │
+│          │    │              │    │          │    │ Server   │
+└──────────┘    └──────────────┘    └──────────┘    └────┬─────┘
+                                                         │
+                                                    Leaf Node
+                                                         │
+                                                    ┌────┴─────┐
+                                                    │ Cloud    │
+                                                    │ NATS     │
+                                                    │ Cluster  │
+                                                    └──────────┘
+```
 
 Node-RED function node for NATS subject construction:
 
@@ -595,29 +592,42 @@ return msg;
 
 Three ways to connect edge to cloud — and when to use each:
 
-{{< mermaid >}}
-flowchart TB
-    subgraph star["Star Topology (Leaf Nodes) — most IIoT, simple, scalable"]
-        direction TB
-        SA[Edge A] --> SC[Cloud]
-        SB[Edge B] --> SC
-    end
+```
+Star Topology (Leaf Nodes):          Mesh Topology:
+                                    
+     ┌─Edge A─┐                       ┌─Edge A─┐
+     └───┬────┘                        └───┬────┘
+         │                                 │╲
+     ┌───┴────┐                        ┌───┴────┐
+     │ Cloud  │                        │ Cloud  │
+     └───┬────┘                        └───┬────┘
+         │                                 │╱
+     ┌───┴────┐                        ┌───┴────┐
+     └─Edge B─┘                        └─Edge B─┘
 
-    subgraph mesh["Mesh Topology — edge-to-edge communication"]
-        direction TB
-        MA[Edge A] --> MC[Cloud]
-        MB[Edge B] --> MC
-        MA <--> MB
-    end
+Best for: Most IIoT              Best for: Edge-to-edge
+  (simple, scalable)               communication needed
 
-    subgraph tree["Gateway Tree — large factories, many sensors per line"]
-        direction TB
-        S1[Sensor] --> LGW[Line GW]
-        S2[Sensor] --> LGW
-        LGW --> FE[Factory Edge]
-        FE --> TC[Cloud]
-    end
-{{< /mermaid >}}
+
+Gateway Tree:
+
+     ┌─Sensor─┐   ┌─Sensor─┐
+     └───┬────┘   └───┬────┘
+         └─────┬──────┘
+          ┌────┴─────┐
+          │ Line GW  │
+          └────┬─────┘
+          ┌────┴─────┐
+          │ Factory  │
+          │ Edge     │
+          └────┬─────┘
+          ┌────┴─────┐
+          │  Cloud   │
+          └──────────┘
+
+Best for: Large factories
+  with many sensors per line
+```
 
 For most industrial IoT deployments, the **star topology with leaf nodes** is the right choice. It's simple, scales linearly, and the cloud cluster never becomes a single point of failure for local operations.
 

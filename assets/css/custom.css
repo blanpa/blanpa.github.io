@@ -1648,3 +1648,211 @@
 .blog-filter-chip__count {
   opacity: 0.7;
 }
+
+/* ==============================================
+   MERMAID DIAGRAMS — readable + zoomable
+   ============================================== */
+.mermaid-wrapper {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(6px);
+  overflow-x: auto;
+  cursor: zoom-in;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+.mermaid-wrapper:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 6px 24px rgba(0, 200, 165, 0.08);
+}
+:root:not(.dark) .mermaid-wrapper {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+:root:not(.dark) .mermaid-wrapper:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+}
+
+.mermaid-wrapper .mermaid {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 60px;
+}
+.mermaid-wrapper .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  font-size: 16px !important;
+}
+
+.mermaid-zoom-hint {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.55);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.mermaid-wrapper:hover .mermaid-zoom-hint,
+.mermaid-wrapper:focus-visible .mermaid-zoom-hint {
+  opacity: 1;
+}
+:root:not(.dark) .mermaid-zoom-hint {
+  color: rgba(20, 20, 20, 0.6);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Lightbox / zoomed mode */
+.mermaid-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(10px);
+  cursor: zoom-out;
+  animation: mermaid-fade-in 0.2s ease-out;
+}
+.mermaid-lightbox.is-open {
+  display: flex;
+}
+:root:not(.dark) .mermaid-lightbox {
+  background: rgba(245, 245, 245, 0.96);
+}
+
+@keyframes mermaid-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mermaid-lightbox__inner {
+  position: relative;
+  width: 95vw;
+  height: 88vh;
+  overflow: auto;
+  cursor: default;
+}
+.mermaid-lightbox__svg-stage {
+  min-width: 100%;
+  min-height: 100%;
+  width: calc(95vw * var(--mermaid-zoom, 1));
+  height: calc(88vh * var(--mermaid-zoom, 1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.2s ease, height 0.2s ease;
+}
+.mermaid-lightbox__svg-stage svg {
+  width: 100%;
+  height: 100%;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.mermaid-lightbox__close {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+.mermaid-lightbox__close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+:root:not(.dark) .mermaid-lightbox__close {
+  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.06);
+  color: #1a1a1a;
+}
+:root:not(.dark) .mermaid-lightbox__close:hover {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.mermaid-lightbox__controls {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.4rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+}
+:root:not(.dark) .mermaid-lightbox__controls {
+  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.mermaid-lightbox__controls button {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 0.75rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.mermaid-lightbox__controls button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+:root:not(.dark) .mermaid-lightbox__controls button {
+  color: #1a1a1a;
+}
+:root:not(.dark) .mermaid-lightbox__controls button:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.mermaid-lightbox-open {
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .mermaid-wrapper {
+    padding: 0.75rem;
+  }
+  .mermaid-zoom-hint {
+    opacity: 1;
+  }
+}

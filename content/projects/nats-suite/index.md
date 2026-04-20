@@ -16,6 +16,43 @@ A comprehensive **Node-RED integration for NATS** — the cloud-native messaging
 
 {{< github repo="blanpa/node-red-contrib-nats-suite" >}}
 
+## Architecture
+
+The 8 nodes cover the three NATS surfaces — core messaging, persistent JetStream, and the KV store — and can run against an external cluster or an embedded server right inside Node-RED:
+
+{{< mermaid >}}
+flowchart LR
+    subgraph NR["Node-RED Flow"]
+        PUB["publish"]
+        SUB["subscribe"]
+        REQ["request"]
+        REP["reply"]
+        JS["jetstream"]
+        KV["kv"]
+        SRV["nats-server<br/>(embedded)"]
+    end
+    CFG["nats-config<br/>auth · TLS · cluster failover"]
+    CORE["Core NATS<br/>pub/sub · req/rep · queue groups"]
+    JSE["JetStream<br/>streams · consumers · replay"]
+    KVE["KV Store<br/>watch · history · TTL"]
+    MQTT["MQTT clients"]
+    WS["WebSocket clients"]
+    PUB --> CFG
+    SUB --> CFG
+    REQ --> CFG
+    REP --> CFG
+    JS --> CFG
+    KV --> CFG
+    CFG --> CORE
+    CFG --> JSE
+    CFG --> KVE
+    SRV -. provides .-> CORE
+    SRV -. provides .-> JSE
+    SRV -. provides .-> KVE
+    MQTT --> SRV
+    WS --> SRV
+{{< /mermaid >}}
+
 ## Why NATS over MQTT?
 
 | Feature | MQTT | NATS |
