@@ -3,6 +3,8 @@ name: Deploy Hugo to GitHub Pages
 on:
   push:
     branches: [main]
+  # Daily rebuild so future-dated (scheduled) posts publish on their date.
+  # Hugo excludes future-dated content from the build until that date arrives.
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:
@@ -48,6 +50,8 @@ jobs:
         run: |
           hugo \
             --minify \
+            --gc \
+            --printPathWarnings \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
       - name: Upload artifact
