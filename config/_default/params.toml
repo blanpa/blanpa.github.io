@@ -4,6 +4,7 @@ autoSwitchAppearance = true
 
 enableSearch = true
 enableCodeCopy = true
+defaultSocialImage = "img/og-default.png"
 mainSections = ["blog"]
 disableImageOptimization = false
 highlightCurrentMenuArea = true
@@ -22,11 +23,12 @@ smartTOC = true
 [homepage]
   layout = "profile"
   homepageImage = ""
-  showRecent = false
+  showRecent = true
+  showRecentItems = 5
 
 [article]
   showDate = true
-  showDateUpdated = false
+  showDateUpdated = true
   showAuthor = false
   showHero = true
   heroStyle = "background"
