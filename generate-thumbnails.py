@@ -2,11 +2,14 @@
 """Generate AI thumbnails for blog posts using Hugging Face Inference API (FLUX.1-schnell)."""
 
 import os
+import io
 import json
 import urllib.request
 import urllib.parse
 import time
 import sys
+
+from PIL import Image  # pip install Pillow — used to encode hero images as webp
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WIDTH = 1200
@@ -51,25 +54,11 @@ PROMPTS["blog"] = {
     "cicd-node-red-flows": "CI/CD pipeline with automated testing and deployment stages for IoT flows, DevOps automation",
     "from-process-engineer-to-iiot-developer": "transformation journey from factory floor engineering to software development, industrial to digital",
     "lessons-learned-publishing-npm-packages": "npm package boxes being published and downloaded, open source software distribution",
-    "data-engineering-zoomcamp-week-1": "Docker containers and PostgreSQL database with data ingestion pipeline, cloud infrastructure setup",
-    "data-engineering-zoomcamp-week-2": "workflow orchestration DAG with connected pipeline stages, data automation",
-    "data-engineering-zoomcamp-week-3": "BigQuery data warehouse with analytical queries and data transformations",
-    "data-engineering-zoomcamp-week-4": "dbt data transformation models with analytics dashboards and visualizations",
-    "data-engineering-zoomcamp-week-5": "Apache Spark cluster processing large datasets in parallel, distributed computing",
-    "data-engineering-zoomcamp-week-6": "Apache Kafka streaming data pipeline with real-time event processing",
-    "ML-ZoomCamp-week-1": "machine learning regression model with data points and prediction line, introductory ML concepts",
-    "ML-ZoomCamp-week-2": "linear regression and feature engineering with mathematical formulas and data matrices",
-    "ML-ZoomCamp-week-3": "classification model with decision boundaries separating data clusters",
-    "ML-ZoomCamp-week-4": "model evaluation metrics with ROC curves and confusion matrices",
-    "ML-ZoomCamp-week-5": "machine learning model deployment with Flask API server and prediction endpoint",
-    "ML-ZoomCamp-week-6": "decision trees and random forest ensemble learning visualization",
-    "ML-Ops-ZoomCamp-week-1": "MLOps pipeline overview with experiment tracking and model registry",
-    "ML-Ops-ZoomCamp-week-2-mlflow": "MLflow experiment tracking dashboard with model metrics and artifacts",
-    "ML-Ops-ZoomCamp-week-2-wandb": "Weights and Biases experiment dashboard with training curves and hyperparameters",
-    "ML-Ops-ZoomCamp-week-3": "Prefect workflow orchestration with connected ML pipeline tasks",
-    "ML-Ops-ZoomCamp-week-4": "ML model deployment infrastructure with serving endpoints and monitoring",
-    "ML-Ops-ZoomCamp-week-5": "Grafana monitoring dashboard with ML model performance metrics and Evidently drift detection",
-    "ML-Ops-ZoomCamp-week-6": "software engineering best practices with testing frameworks and code quality tools",
+    "kafka-shop-floor-event-streaming": "Apache Kafka distributed event log streaming manufacturing sensor data as parallel partitioned rivers, factory floor feeding a high-throughput broker cluster with many independent consumers",
+    "allen-bradley-ethernet-ip-node-red": "Allen-Bradley ControlLogix PLC rack with EtherNet/IP communication cables and CIP protocol data packets flowing to an edge device, industrial automation",
+    "unified-namespace-sparkplug-node-red": "central unified namespace hub with hierarchical industrial data tree, many factory systems publishing and subscribing through a single MQTT broker in hub-and-spoke topology",
+    "modbus-node-red": "Modbus RTU serial RS-485 bus connecting industrial meters VFDs and sensors with 16-bit register data words flowing, classic industrial protocol",
+    "securing-ot-networks-opcua-purdue": "layered industrial network security with segmented zones and firewalls, Purdue model pyramid of factory levels with an isolated DMZ protecting PLCs, OT cybersecurity",
 }
 
 
@@ -78,7 +67,7 @@ def generate_image(section, folder_name, prompt_text):
     """Generate image via Hugging Face Inference API."""
     full_prompt = f"{prompt_text}, {STYLE_SUFFIX}"
     content_dir = os.path.join(BASE_DIR, "content", section)
-    output_path = os.path.join(content_dir, folder_name, "featured.png")
+    output_path = os.path.join(content_dir, folder_name, "featured.webp")
 
     print(f"  Generating: {folder_name}...")
     payload = json.dumps({
@@ -109,9 +98,10 @@ def generate_image(section, folder_name, prompt_text):
                 if len(data) < 5000:
                     print(f"  SKIP (response too small: {len(data)} bytes)")
                     return False
-                with open(output_path, "wb") as f:
-                    f.write(data)
-                print(f"  OK ({len(data) // 1024} KB)")
+                # Re-encode the PNG response as webp (~95% smaller at q82)
+                img = Image.open(io.BytesIO(data)).convert("RGB")
+                img.save(output_path, "WEBP", quality=82, method=6)
+                print(f"  OK ({os.path.getsize(output_path) // 1024} KB webp)")
                 return True
         except urllib.error.HTTPError as e:
             body = e.read().decode("utf-8", errors="replace")
