@@ -2,8 +2,8 @@
 title: "OPC-UA Suite"
 description: "Modern OPC-UA client/server suite for Node-RED with connection pooling and batch operations"
 tags: ["Node-RED", "JavaScript", "OPC-UA", "IIoT"]
-weight: 5
-date: 2025-01-01
+weight: 6
+date: 2026-03-06
 ---
 
 ## The Problem

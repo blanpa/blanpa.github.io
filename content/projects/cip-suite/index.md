@@ -2,7 +2,7 @@
 title: "CIP / EtherNet/IP Suite"
 description: "Node-RED nodes for Allen-Bradley PLCs and EtherNet/IP devices — from ControlLogix to legacy SLC/PLC-5"
 tags: ["Node-RED", "TypeScript", "Allen-Bradley", "EtherNet/IP", "IIoT"]
-weight: 3
+weight: 4
 date: 2026-03-12
 ---
 

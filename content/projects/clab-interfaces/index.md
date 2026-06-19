@@ -2,8 +2,8 @@
 title: "CompuLab IoT Gateway Interfaces"
 description: "Node-RED nodes for CompuLab IoT Gateway hardware — GPIO, serial, CAN, cellular, and more"
 tags: ["Node-RED", "JavaScript", "CAN Bus", "Embedded Linux", "IIoT"]
-weight: 7
-date: 2024-08-01
+weight: 8
+date: 2026-01-12
 ---
 
 ## The Problem

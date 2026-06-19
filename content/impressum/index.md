@@ -1,7 +1,7 @@
 ---
 title: "Legal Notice"
 layout: "simple"
-_build:
+build:
   list: never
 ---
 

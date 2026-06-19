@@ -2,7 +2,7 @@
 title: "Kafka Suite"
 description: "Comprehensive Apache Kafka integration for Node-RED with Schema Registry, dual-backend support, and managed service presets"
 tags: ["Node-RED", "JavaScript", "Kafka", "IIoT"]
-weight: 2
+weight: 3
 date: 2026-04-10
 ---
 

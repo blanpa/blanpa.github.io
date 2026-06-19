@@ -1,7 +1,7 @@
 ---
 title: "Privacy Policy"
 layout: "simple"
-_build:
+build:
   list: never
 ---
 

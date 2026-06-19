@@ -2,7 +2,7 @@
 title: "S7 Communication Suite"
 description: "Node-RED nodes for Siemens S7 PLC communication with dual backend support"
 tags: ["Node-RED", "TypeScript", "Siemens", "IIoT"]
-weight: 4
+weight: 5
 date: 2026-03-01
 ---
 
