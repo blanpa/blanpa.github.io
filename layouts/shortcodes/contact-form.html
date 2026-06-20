@@ -1,4 +1,5 @@
-{{ $formspreeId := .Get "id" | default "YOUR_FORMSPREE_ID" }}
+{{ $formspreeId := .Get "id" }}
+{{ if not $formspreeId }}{{ errorf "contact-form shortcode requires an 'id' (Formspree form id) — called from %s" .Page.File.Path }}{{ end }}
 {{ $uid := .Page.File.UniqueID }}
 
 <form id="contact-form-{{ $uid }}" class="contact-form">
