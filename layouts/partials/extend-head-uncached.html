@@ -1,0 +1,44 @@
+{{/* Structured data (JSON-LD) for richer search results.
+     Called uncached with the page as context, so per-page schema works. */}}
+{{- $author := .Site.Params.author -}}
+{{- $sameAs := slice -}}
+{{- range $author.links -}}
+  {{- range $k, $v := . -}}
+    {{- if and (ne $k "email") (hasPrefix $v "http") -}}{{- $sameAs = $sameAs | append $v -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if .IsHome -}}
+{{/* Blowfish already emits a WebSite schema; we add the Person identity. */}}
+{{- $person := dict
+  "@context" "https://schema.org"
+  "@type" "Person"
+  "name" $author.name
+  "url" .Site.BaseURL
+  "jobTitle" $author.headline
+  "description" $author.bio
+  "image" (absURL $author.image)
+  "sameAs" $sameAs
+-}}
+<script type="application/ld+json">{{ $person | jsonify (dict "indent" "  ") | safeJS }}</script>
+{{- end -}}
+
+{{- if and .IsPage (eq .Section "blog") -}}
+{{- $img := .Site.Params.defaultSocialImage -}}
+{{- with .Resources.GetMatch "featured.*" -}}{{- $img = .RelPermalink -}}{{- end -}}
+{{- $posting := dict
+  "@context" "https://schema.org"
+  "@type" "BlogPosting"
+  "headline" .Title
+  "description" .Description
+  "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
+  "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+  "url" .Permalink
+  "mainEntityOfPage" .Permalink
+  "image" (absURL $img)
+  "keywords" (delimit .Params.tags ", ")
+  "author" (dict "@type" "Person" "name" $author.name "url" .Site.BaseURL)
+  "publisher" (dict "@type" "Person" "name" $author.name "url" .Site.BaseURL)
+-}}
+<script type="application/ld+json">{{ $posting | jsonify (dict "indent" "  ") | safeJS }}</script>
+{{- end -}}

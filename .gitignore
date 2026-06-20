@@ -1,7 +1,9 @@
 public/
+_site/
 resources/_gen/
 .hugo_build.lock
 hugo-site/
 vendor/
 node_modules/
 *.log
+*.bak

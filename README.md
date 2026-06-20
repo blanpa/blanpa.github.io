@@ -9,9 +9,21 @@ Personal portfolio website — IIoT Software Developer building industrial conne
 
 ## Local Development
 
+The site is built with Hugo Extended. The easiest way to run it locally is via Docker (no local Hugo install required):
+
+```bash
+docker compose up
+```
+
+This serves the site with drafts enabled at http://localhost:1314.
+
+If you have [Hugo Extended](https://gohugo.io/installation/) installed locally instead:
+
 ```bash
 hugo server -D
 ```
+
+> Note: CI builds with the pinned Hugo version in `.github/workflows/deploy.yml`.
 
 ## Projects
 
