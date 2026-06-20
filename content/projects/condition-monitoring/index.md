@@ -12,7 +12,7 @@ Unplanned machine downtime costs manufacturing companies thousands of euros per 
 
 ## The Solution
 
-A **Node-RED module** that turns raw sensor data into actionable maintenance insights — directly on the factory floor, without cloud dependency. 9 specialized nodes cover the full predictive maintenance pipeline: from data ingestion and anomaly detection to ML inference and health scoring.
+A **Node-RED module** that turns raw sensor data into actionable maintenance insights — directly on the factory floor, without cloud dependency. 15 specialized nodes cover the full predictive maintenance pipeline: from data ingestion and anomaly detection to ML inference and health scoring.
 
 {{< github repo="blanpa/node-red-contrib-condition-monitoring" >}}
 
@@ -58,7 +58,7 @@ All detectors support **hysteresis** — preventing alarm floods from noisy sign
 
 ## Predictive Maintenance
 
-- **Remaining Useful Life (RUL)** — Weibull distribution modeling predicts when a component will likely fail
+- **Remaining Useful Life (RUL)** — Weibull/linear/exponential degradation modeling predicts when a component will likely fail
 - **Trend prediction** — Linear regression and exponential smoothing forecast sensor trajectories
 - **Health Index** — Multi-sensor aggregation with dynamic weighting produces a single 0-100 health score
 
@@ -73,7 +73,7 @@ Run trained models directly in Node-RED without cloud roundtrips:
 
 ## Quality
 
-- **135 unit tests** covering all nodes and edge cases
+- **405 unit tests** covering all nodes and edge cases
 - State persistence across Node-RED restarts
 - Dynamic runtime configuration via message objects
 - MIT licensed, production-ready

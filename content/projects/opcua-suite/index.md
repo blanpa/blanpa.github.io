@@ -37,15 +37,19 @@ flowchart TB
     NR --> C
 {{< /mermaid >}}
 
-## 7 Nodes
+## 11 Nodes
 
 - **opcua-endpoint** — Shared connection pooling with reference counting (one TCP connection per endpoint, not per node)
 - **opcua-client** — All-in-one node for read, write, subscribe, browse, methods, history, and discovery
 - **opcua-item** — Visual batch operation builder through node chaining
 - **opcua-browser** — Address space navigation with recursive traversal
+- **opcua-browse-client** — Interactive address space browser with visual tree selection in the editor
 - **opcua-method** — Method invocation with auto-detected typed arguments
 - **opcua-event** — Event subscription for alarm conditions and custom event types
 - **opcua-server** — Embedded OPC-UA server for testing and integration
+- **opcua-pubsub-connection** — Shared OPC-UA PubSub transport configuration for UDP multicast or MQTT
+- **opcua-publisher** — Publishes DataSets over PubSub connections in acyclic or cyclic modes
+- **opcua-subscriber** — Receives and decodes DataSets over PubSub connections with filtering
 
 ## Shared Connections
 

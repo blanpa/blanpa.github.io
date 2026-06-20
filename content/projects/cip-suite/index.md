@@ -76,7 +76,7 @@ flowchart TB
 
 ## Advanced CIP Object Nodes
 
-8 nodes for specialized CIP objects:
+7 nodes for specialized CIP objects:
 
 - **cip-io-scanner** — Implicit I/O via ForwardOpen + UDP for cyclic exchange
 - **cip-security** — TLS/DTLS status and security profiles (Class 0x5D)

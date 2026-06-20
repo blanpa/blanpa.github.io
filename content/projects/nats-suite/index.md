@@ -23,15 +23,15 @@ The 8 nodes cover the three NATS surfaces — core messaging, persistent JetStre
 {{< mermaid >}}
 flowchart LR
     subgraph NR["Node-RED Flow"]
-        PUB["publish"]
-        SUB["subscribe"]
-        REQ["request"]
-        REP["reply"]
-        JS["jetstream"]
-        KV["kv"]
-        SRV["nats-server<br/>(embedded)"]
+        PUB["nats-suite-publish<br/>(pub · request/reply)"]
+        SUB["nats-suite-subscribe"]
+        JSP["nats-suite-stream-publisher"]
+        JSC["nats-suite-stream-consumer"]
+        KVG["nats-suite-kv-get"]
+        KVP["nats-suite-kv-put"]
+        SRVM["nats-suite-server-manager<br/>(embedded)"]
     end
-    CFG["nats-config<br/>auth · TLS · cluster failover"]
+    CFG["nats-suite-server<br/>auth · TLS · cluster failover"]
     CORE["Core NATS<br/>pub/sub · req/rep · queue groups"]
     JSE["JetStream<br/>streams · consumers · replay"]
     KVE["KV Store<br/>watch · history · TTL"]
@@ -39,18 +39,18 @@ flowchart LR
     WS["WebSocket clients"]
     PUB --> CFG
     SUB --> CFG
-    REQ --> CFG
-    REP --> CFG
-    JS --> CFG
-    KV --> CFG
+    JSP --> CFG
+    JSC --> CFG
+    KVG --> CFG
+    KVP --> CFG
     CFG --> CORE
     CFG --> JSE
     CFG --> KVE
-    SRV -. provides .-> CORE
-    SRV -. provides .-> JSE
-    SRV -. provides .-> KVE
-    MQTT --> SRV
-    WS --> SRV
+    SRVM -. provides .-> CORE
+    SRVM -. provides .-> JSE
+    SRVM -. provides .-> KVE
+    MQTT --> SRVM
+    WS --> SRVM
 {{< /mermaid >}}
 
 ## Why NATS over MQTT?
@@ -90,7 +90,7 @@ A distributed key-value store for configuration, state, and metadata:
 - **Watch** — Real-time notifications when values change
 - **TTL** — Automatic expiration of stale entries
 - **History** — Configurable revision history per key
-- **Compression** — S2 compression for large values
+- **Compression** — Value compression for large values
 
 ## Embedded NATS Server
 
@@ -103,4 +103,4 @@ Run a full NATS server directly inside Node-RED — perfect for edge deployments
 
 ## Node Types
 
-8 purpose-built nodes: `nats-config`, `nats-publish`, `nats-subscribe`, `nats-request`, `nats-reply`, `nats-jetstream`, `nats-kv`, `nats-server`
+8 purpose-built nodes: `nats-suite-server`, `nats-suite-publish` (publish plus request/reply mode), `nats-suite-subscribe`, `nats-suite-stream-publisher`, `nats-suite-stream-consumer`, `nats-suite-kv-get`, `nats-suite-kv-put`, `nats-suite-server-manager`

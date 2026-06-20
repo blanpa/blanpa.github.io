@@ -12,7 +12,7 @@ Manufacturing data is trapped in silos. Historians, MES, MOM, and SCADA systems 
 
 ## The Solution
 
-Node-RED nodes for the **i3X API** — an open REST specification developed by [CESMII](https://www.cesmii.org/) (the Clean Energy Smart Manufacturing Innovation Institute) that provides a **vendor-agnostic interface** to manufacturing data platforms. One API, any data source.
+Node-RED nodes for the **i3X API** — an open REST specification developed by [CESMII](https://www.cesmii.org/) (the Smart Manufacturing Institute) that provides a **vendor-agnostic interface** to manufacturing data platforms. One API, any data source.
 
 {{< github repo="blanpa/node-red-contrib-i3x" >}}
 
@@ -73,6 +73,6 @@ Stay up to date without polling:
 
 ## Coverage
 
-- **20 API endpoints** across exploration, querying, updates, and subscription management
+- **18 API endpoints** across exploration, querying, updates, and subscription management
 - Docker support for quick local development and testing
 - Comprehensive test suite (unit + integration)

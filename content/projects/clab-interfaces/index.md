@@ -41,12 +41,12 @@ flowchart LR
 
 | Gateway | Processor | Use Case |
 |---------|-----------|----------|
-| **IOT-GATE-iMX8** | NXP i.MX8M | High-performance edge computing |
+| **IOT-GATE-iMX8** | NXP i.MX8M Mini | High-performance edge computing |
 | **IOT-GATE-RPi** | Broadcom BCM2711 | Cost-effective IoT gateway |
 | **IOT-LINK** | Intel Atom | x86 edge computing |
 | **IOT-DIN-IMX8PLUS** | NXP i.MX8M Plus | DIN-rail industrial gateway |
 
-## 13 Node Categories
+## 12 Node Categories
 
 ### Industrial I/O
 - **GPIO** — Digital input/output with configurable pull-up/down and edge detection
