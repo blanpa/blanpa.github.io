@@ -33,11 +33,21 @@
 /* ==============================================
    HOMEPAGE HERO — tagline + proof band
    ============================================== */
+/* Hero elements break out of the profile layout's narrow .prose column
+   (max-width: 65ch) and centre in the viewport, capped responsively. */
+.home-tagline,
+.home-proof,
+.home-cards {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .home-tagline {
-  max-width: 42rem;
-  margin: 0.25rem auto 1.5rem;
+  width: min(44rem, 92vw);
+  margin: 1rem auto 2.5rem;
   font-size: var(--text-lg);
-  line-height: 1.6;
+  line-height: 1.65;
   opacity: 0.85;
 }
 .home-tagline strong {
@@ -53,8 +63,9 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 1rem 2.5rem;
-  margin: 0 auto 2rem;
+  width: min(50rem, 92vw);
+  gap: 1.25rem 3rem;
+  margin: 0 auto 2.75rem;
 }
 .home-proof__item {
   display: flex;
@@ -101,9 +112,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  width: 100%;
-  max-width: 60rem;
-  margin: 2rem auto;
+  width: min(60rem, 92vw);
+  margin: 0 auto;
 }
 
 .home-card {
@@ -172,11 +182,12 @@
    GET IN TOUCH — primary CTA button
    ============================================== */
 .home-contact-btn {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  margin: 0 auto 1rem;
+  margin: 0 auto 3rem;
   padding: 1rem 3rem;
   border: 1px solid rgba(0, 200, 165, 0.3);
   border-radius: 12px;
