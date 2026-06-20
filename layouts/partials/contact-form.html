@@ -1,0 +1,31 @@
+{{- /* Reusable contact form. Params: id (Formspree form id), uid (unique suffix). */ -}}
+{{- $id := .id -}}
+{{- $uid := .uid | default "form" -}}
+<form id="contact-form-{{ $uid }}" class="contact-form" data-formspree="{{ $id }}">
+  <div class="form-group">
+    <label for="contact-name-{{ $uid }}">Name</label>
+    <input type="text" id="contact-name-{{ $uid }}" name="name" required placeholder="Your name">
+  </div>
+  <div class="form-group">
+    <label for="contact-email-{{ $uid }}">Email</label>
+    <input type="email" id="contact-email-{{ $uid }}" name="email" required placeholder="your@email.com">
+  </div>
+  <div class="form-group">
+    <label for="contact-subject-{{ $uid }}">Subject</label>
+    <select id="contact-subject-{{ $uid }}" name="subject" required>
+      <option value="" disabled selected>Select a topic</option>
+      <option value="Custom Node-RED Module">Custom Node-RED Module</option>
+      <option value="Protocol Integration">Protocol Integration</option>
+      <option value="Edge-to-Cloud Architecture">Edge-to-Cloud Architecture</option>
+      <option value="Data Engineering">Data Engineering &amp; Automation</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="contact-message-{{ $uid }}">Message</label>
+    <textarea id="contact-message-{{ $uid }}" name="message" rows="6" required placeholder="Tell me about your project..."></textarea>
+  </div>
+  <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <button type="submit" class="contact-submit">Send Message</button>
+  <p class="form-status" id="form-status-{{ $uid }}"></p>
+</form>

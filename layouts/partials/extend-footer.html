@@ -171,3 +171,10 @@
   setTimeout(bind, 2500);
 })();
 </script>
+
+<div class="reading-progress" aria-hidden="true"><span></span></div>
+
+{{ with resources.Get "js/ui.js" }}
+  {{ $ui := . | minify | fingerprint }}
+  <script src="{{ $ui.RelPermalink }}" integrity="{{ $ui.Data.Integrity }}" defer></script>
+{{ end }}

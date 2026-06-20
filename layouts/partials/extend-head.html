@@ -101,5 +101,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   }, { passive: true });
+
+  // Pause orb animations while the tab is hidden to save CPU/battery.
+  document.addEventListener("visibilitychange", function () {
+    bg.classList.toggle("bg-paused", document.hidden);
+  });
 });
 </script>

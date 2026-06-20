@@ -1,67 +1,7 @@
 {{ $formspreeId := .Get "id" }}
 {{ if not $formspreeId }}{{ errorf "contact-form shortcode requires an 'id' (Formspree form id) — called from %s" .Page.File.Path }}{{ end }}
-{{ $uid := .Page.File.UniqueID }}
 
-<form id="contact-form-{{ $uid }}" class="contact-form">
-  <div class="form-group">
-    <label for="contact-name-{{ $uid }}">Name</label>
-    <input type="text" id="contact-name-{{ $uid }}" name="name" required placeholder="Your name">
-  </div>
-  <div class="form-group">
-    <label for="contact-email-{{ $uid }}">Email</label>
-    <input type="email" id="contact-email-{{ $uid }}" name="email" required placeholder="your@email.com">
-  </div>
-  <div class="form-group">
-    <label for="contact-subject-{{ $uid }}">Subject</label>
-    <select id="contact-subject-{{ $uid }}" name="subject" required>
-      <option value="" disabled selected>Select a topic</option>
-      <option value="Custom Node-RED Module">Custom Node-RED Module</option>
-      <option value="Protocol Integration">Protocol Integration</option>
-      <option value="Edge-to-Cloud Architecture">Edge-to-Cloud Architecture</option>
-      <option value="Data Engineering">Data Engineering & Automation</option>
-      <option value="Other">Other</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="contact-message-{{ $uid }}">Message</label>
-    <textarea id="contact-message-{{ $uid }}" name="message" rows="6" required placeholder="Tell me about your project..."></textarea>
-  </div>
-  <input type="text" name="_gotcha" style="display:none">
-  <button type="submit" class="contact-submit">Send Message</button>
-  <p class="form-status" id="form-status-{{ $uid }}"></p>
-</form>
-
-<script>
-document.getElementById('contact-form-{{ $uid }}').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn = this.querySelector('.contact-submit');
-  const status = document.getElementById('form-status-{{ $uid }}');
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
-  status.textContent = '';
-  status.className = 'form-status';
-  try {
-    const res = await fetch('https://formspree.io/f/{{ $formspreeId }}', {
-      method: 'POST',
-      body: new FormData(this),
-      headers: { 'Accept': 'application/json' }
-    });
-    if (res.ok) {
-      status.textContent = 'Message sent successfully!';
-      status.classList.add('form-status--success');
-      this.reset();
-    } else {
-      status.textContent = 'Something went wrong. Please try again.';
-      status.classList.add('form-status--error');
-    }
-  } catch {
-    status.textContent = 'Connection error. Please try again.';
-    status.classList.add('form-status--error');
-  }
-  btn.disabled = false;
-  btn.textContent = 'Send Message';
-});
-</script>
+{{ partial "contact-form.html" (dict "id" $formspreeId "uid" .Page.File.UniqueID) }}
 
 <style>
 .contact-form {
