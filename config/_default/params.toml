@@ -83,7 +83,7 @@ smartTOC = true
 [author]
   name = "blanpa"
   image = "img/author.png"
-  headline = "IIoT Software Developer"
+  headline = "IIoT Software Developer — from PLC to cloud"
   bio = "Building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing."
   links = [
     { github = "https://github.com/blanpa" },

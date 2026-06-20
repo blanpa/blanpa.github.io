@@ -82,10 +82,30 @@
     update();
   }
 
+  /* ---- Homepage proof band: live total npm downloads --------------- */
+  function initNpmTotal() {
+    var band = document.querySelector("[data-npm-packages]");
+    if (!band) return;
+    var target = band.querySelector("[data-npm-total]");
+    if (!target) return;
+    var pkgs = band.getAttribute("data-npm-packages").split(",").filter(Boolean);
+    if (!pkgs.length) return;
+    Promise.all(pkgs.map(function (p) {
+      return fetch("https://api.npmjs.org/downloads/point/last-month/" + p)
+        .then(function (r) { return r.json(); })
+        .then(function (d) { return d.downloads || 0; })
+        .catch(function () { return 0; });
+    })).then(function (counts) {
+      var total = counts.reduce(function (a, b) { return a + b; }, 0);
+      target.textContent = total > 0 ? total.toLocaleString("en") : "8+";
+    });
+  }
+
   function init() {
     initDialogs();
     initForms();
     initReadingProgress();
+    initNpmTotal();
   }
 
   if (document.readyState === "loading") {

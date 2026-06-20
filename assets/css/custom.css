@@ -1,23 +1,120 @@
-.home-cards {
+/* ==============================================
+   DESIGN TOKENS
+   ============================================== */
+:root {
+  /* Accent */
+  --accent: #00c8a5;
+  --accent-2: #0099cc;
+  --accent-grad: linear-gradient(135deg, var(--accent), var(--accent-2));
+  --accent-on-light: #008a70;
+
+  /* Type scale (rem — scales with user font settings) */
+  --text-xs: 0.78rem;
+  --text-sm: 0.9rem;
+  --text-base: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: 1.4rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  /* Surfaces */
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --border-soft: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.25);
+}
+:root:not(.dark) {
+  --surface: rgba(0, 0, 0, 0.02);
+  --surface-hover: rgba(0, 0, 0, 0.04);
+  --border-soft: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+}
+
+/* ==============================================
+   HOMEPAGE HERO — tagline + proof band
+   ============================================== */
+.home-tagline {
+  max-width: 42rem;
+  margin: 0.25rem auto 1.5rem;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  opacity: 0.85;
+}
+.home-tagline strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+:root:not(.dark) .home-tagline strong {
+  color: var(--accent-on-light);
+}
+
+.home-proof {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem 2.5rem;
+  margin: 0 auto 2rem;
+}
+.home-proof__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+.home-proof__num {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  line-height: 1.1;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.home-proof__label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+.home-proof__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  max-width: 30rem;
+}
+.home-proof__chip {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 200, 165, 0.25);
+  background: rgba(0, 200, 165, 0.06);
+  color: var(--accent);
+}
+:root:not(.dark) .home-proof__chip {
+  color: var(--accent-on-light);
+}
+
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 65vw;
-  margin: 2rem 0;
+  width: 100%;
+  max-width: 60rem;
+  margin: 2rem auto;
 }
 
 .home-card {
-  flex: 1;
   padding: 2.5rem 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-soft);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface);
   backdrop-filter: blur(8px);
   text-decoration: none;
   color: inherit;
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
   min-height: 200px;
   display: flex;
   flex-direction: column;
@@ -27,9 +124,15 @@
 }
 
 .home-card:hover {
-  border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
   transform: translateY(-4px);
+}
+.home-card:hover .home-card__icon {
+  transform: scale(1.08) rotate(-3deg);
+}
+.home-card__icon {
+  transition: transform 0.25s ease;
 }
 
 .home-card__icon {
@@ -57,84 +160,33 @@
   font-size: 0.92rem;
 }
 
-#support-fab {
-  right: 28px !important;
-  bottom: 28px !important;
-}
-
-#support-fab-btn {
-  padding: 14px 28px !important;
-  font-size: 17px !important;
-  justify-content: center !important;
-  min-width: 180px !important;
-  gap: 0 !important;
-  background: linear-gradient(135deg, #00d4aa, #0099cc) !important;
-  color: #fff !important;
-  border: none !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.3px !important;
-  font-size: 0 !important;
-  animation: fab-pulse 3s ease-in-out infinite;
-}
-
-#support-fab-btn::before {
-  content: "♥";
-  font-size: 24px;
-  margin-right: 4px;
-}
-
-#support-fab-btn::after {
-  content: "Support me";
-  font-size: 17px;
-}
-
-
-#support-fab-btn:hover {
-  background: linear-gradient(135deg, #00e6bb, #00aadd) !important;
-  transform: scale(1.05);
-}
-
-@keyframes fab-pulse {
-  0%, 100% { box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3); }
-  50% { box-shadow: 0 4px 25px rgba(0, 212, 170, 0.6); }
-}
-
-#support-options {
-  min-width: 240px !important;
-}
-
-#support-options a {
-  padding: 14px 24px !important;
-  font-size: 15px !important;
-  min-width: 240px !important;
-}
-
-#support-options a span {
-  font-size: 15px !important;
+/* Support FAB — intentionally a quiet, neutral pill (defined by the theme's
+   utility classes in extend-footer). It is a secondary action: the heart icon
+   tints to the accent on hover, but it never pulses or competes with the
+   primary "Get in Touch" CTA. */
+#support-fab-btn #support-fab-icon {
+  color: var(--accent);
 }
 
 /* ==============================================
-   GET IN TOUCH — card on homepage
-   ============================================== */
-/* ==============================================
-   GET IN TOUCH — button below cards
+   GET IN TOUCH — primary CTA button
    ============================================== */
 .home-contact-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  margin: 2rem auto 0;
-  padding: 1.4rem 6rem;
+  margin: 0 auto 1rem;
+  padding: 1rem 3rem;
   border: 1px solid rgba(0, 200, 165, 0.3);
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(0, 200, 165, 0.08), rgba(0, 153, 204, 0.08));
-  color: #00c8a5;
+  color: var(--accent);
   font-family: inherit;
-  font-size: 1.3rem;
+  font-size: var(--text-lg);
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .home-contact-btn:hover {
   background: linear-gradient(135deg, #00c8a5, #0099cc);
@@ -390,21 +442,22 @@
 
 @media (max-width: 768px) {
   .home-cards {
-    flex-direction: column;
-    width: 90vw;
+    grid-template-columns: 1fr;
   }
   .home-card {
     padding: 1.5rem 1.2rem;
     min-height: auto;
   }
+  .home-proof {
+    gap: 1rem 1.75rem;
+  }
   .contact-dialog__inner {
     padding: 1.5rem;
   }
   .home-contact-btn {
-    padding: 1.2rem 2.5rem;
-    font-size: 1.1rem;
-    width: 90vw;
-    max-width: 400px;
+    padding: 1rem 2.5rem;
+    width: 100%;
+    max-width: 420px;
   }
 }
 
