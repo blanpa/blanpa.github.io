@@ -53,13 +53,15 @@ flowchart LR
         GPIO["SPI0_MOSI (GPIO 10)<br/>SPI0_MISO (GPIO 9)<br/>SPI0_SCLK (GPIO 11)<br/>SPI0_CE0 (GPIO 8)<br/>INT (GPIO 25)<br/>GND<br/>3.3 V / 5 V"]
     end
     subgraph HAT["MCP2515 CAN Hat"]
-        MCP["MCP2515<br/>+ TJA1050 (Transceiver)"]
+        MCP["MCP2515<br/>+ CAN transceiver"]
     end
     GPIO --- MCP
     MCP --> BUS["CAN_H / CAN_L<br/>(to bus)"]
 {{< /mermaid >}}
 
 Popular hats: **Waveshare RS485 CAN HAT**, **PiCAN2**, **Seeed Studio 2-Channel CAN-BUS(FD) Shield**.
+
+The transceiver varies by board: the Waveshare RS485 CAN HAT uses the SN65HVD230 (3.3 V), the PiCAN2 uses an MCP2551/2562, and cheap generic MCP2515 modules typically use a TJA1050. They're all interchangeable from the software side.
 
 **Enable SPI and configure the device tree overlay:**
 
@@ -524,20 +526,25 @@ NODE_ID = 0x05
 TPDO1_ID = 0x180 + NODE_ID  # 0x185
 TPDO2_ID = 0x280 + NODE_ID  # 0x285
 
-DS402_STATES = {
-    0x0000: "NOT_READY",
-    0x0040: "SWITCH_ON_DISABLED",
-    0x0021: "READY_TO_SWITCH_ON",
-    0x0023: "SWITCHED_ON",
-    0x0027: "OPERATION_ENABLED",
-    0x0007: "QUICK_STOP_ACTIVE",
-    0x000F: "FAULT_REACTION_ACTIVE",
-    0x0008: "FAULT",
-}
+# Per CiA402: some states ignore the quick-stop bit (0x20),
+# so they need mask 0x4F; the rest are matched with 0x6F.
+DS402_STATES = [
+    # (mask, value, name)
+    (0x4F, 0x0000, "NOT_READY"),
+    (0x4F, 0x0040, "SWITCH_ON_DISABLED"),
+    (0x6F, 0x0021, "READY_TO_SWITCH_ON"),
+    (0x6F, 0x0023, "SWITCHED_ON"),
+    (0x6F, 0x0027, "OPERATION_ENABLED"),
+    (0x6F, 0x0007, "QUICK_STOP_ACTIVE"),
+    (0x4F, 0x000F, "FAULT_REACTION_ACTIVE"),
+    (0x4F, 0x0008, "FAULT"),
+]
 
 def decode_statusword(raw):
-    masked = raw & 0x006F
-    return DS402_STATES.get(masked, f"UNKNOWN(0x{raw:04X})")
+    for mask, value, name in DS402_STATES:
+        if raw & mask == value:
+            return name
+    return f"UNKNOWN(0x{raw:04X})"
 
 mqtt_client = mqtt.Client()
 mqtt_client.connect("localhost", 1883)
@@ -596,9 +603,9 @@ DANGER: Industrial CAN buses may share cable trays with
 high-voltage power cables. Always verify isolation before
 touching CAN wiring.
 
-CAN signal levels are low voltage (0-5V differential),
-but the equipment connected to the bus may operate at
-24VDC, 400VAC, or higher.
+CAN signals are low voltage (each wire 0-5V, differential
+~2V dominant), but the equipment connected to the bus may
+operate at 24VDC, 400VAC, or higher.
 ```
 
 ---

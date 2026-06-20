@@ -16,9 +16,9 @@ Before starting, make sure you have:
 
 | Component | Minimum Version | Notes |
 |-----------|----------------|-------|
-| **Siemens S7-1500 or S7-1200** | FW V2.0+ (S7-1500), FW V4.2+ (S7-1200) | S7-1200 needs FW V4.2 for OPC-UA server |
+| **Siemens S7-1500 or S7-1200** | FW V2.0+ (S7-1500), FW V4.4+ (S7-1200) | S7-1200 needs FW V4.4 for OPC-UA server |
 | **TIA Portal** | V16 or newer | V15.1 works but has fewer OPC-UA features |
-| **OPC-UA license** | Required for S7-1500 | Check: ordered as 6ES7 823-1xx00-0YA5 |
+| **OPC-UA license** | Runtime license for S7-1500, sized to CPU (Small/Medium/Large) | E.g. 6ES7823-0BA00-1BA0 / -1CA0 / -1DA0 (Small/Medium/Large); certificate is bundled in the engineering software since TIA Portal V16 |
 | **Node-RED** | V3.0+ | With `node-red-contrib-opcua` or `node-red-opcua-suite` |
 | **UaExpert** | Latest | Free OPC-UA client for testing (Unified Automation) |
 | **Network access** | — | PC and PLC on the same subnet, port 4840 open |

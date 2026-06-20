@@ -39,7 +39,7 @@ Before deploying, you need to export your model to a format the edge device can 
 |--------|-----------|-----------------|---------------|-------------|-------------|
 | **ONNX** (.onnx) | Any → ONNX | CPU, GPU, NPU | Low | INT8, FP16 | Excellent |
 | **TFLite** (.tflite) | TensorFlow/Keras | ARM CPU, Coral TPU | Very low | INT8, FP16 | Excellent |
-| **TF.js** (model.json) | TensorFlow/Keras | Browser, Node.js | Medium | None native | Good |
+| **TF.js** (model.json) | TensorFlow/Keras | Browser, Node.js | Medium | weight quant (uint8/uint16) | Good |
 | **scikit-learn pickle** (.pkl) | scikit-learn only | Any Python env | None | None | Limited |
 | **PMML** (.pmml) | Various | Java runtimes | High (XML) | None | Niche |
 | **CoreML** (.mlmodel) | Any → CoreML | Apple devices | Low | INT8, FP16 | Apple only |
@@ -291,12 +291,14 @@ Inference time for a vibration classification model (10 features → 4 classes):
 |----------|-------------|---------------|-------|
 | Raspberry Pi 4 (CPU) | ONNX | 12 ms | 5W |
 | Raspberry Pi 4 (CPU) | TFLite | 8 ms | 5W |
-| Raspberry Pi 4 + Coral USB | TFLite (INT8) | 0.7 ms | 7W |
-| CompuLab IOT-GATE + Coral M.2 | TFLite (INT8) | 0.5 ms | 10W |
+| Raspberry Pi 4 + Coral USB | TFLite (INT8) | 0.7 ms* | 7W |
+| CompuLab IOT-GATE + Coral M.2 | TFLite (INT8) | 0.5 ms* | 10W |
 | Jetson Nano (GPU) | ONNX | 2 ms | 10W |
 | Cloud API (AWS) | ONNX | 80–200 ms | N/A |
 
-The Coral TPU is **10–15× faster** than CPU inference for quantized models. For a simple classifier this doesn't matter much, but for CNN-based models processing spectrograms, the difference is enormous.
+> **\* Important caveat:** The sub-millisecond Coral figures (and the "10–15× faster" claim below) are representative of **CNN-class models** — e.g. MobileNet or spectrogram CNNs — *not* the 10-feature → 4-class classifier in this post. For a model that tiny, the Coral is **transfer-bound**: the fixed cost of shuttering inputs/outputs over USB or PCIe to the TPU dominates, and the accelerator is often the **same speed or slower** than a plain ARM CPU. Don't expect a speedup from the TPU on trivial dense classifiers — its advantage only shows up once the model is big enough that compute, not transfer, is the bottleneck.
+
+The Coral TPU can be **10–15× faster** than CPU inference for quantized models — but only for CNN-based models processing spectrograms or images, where the compute per inference is large. For a simple 10-feature classifier the TPU's fixed transfer overhead means little or no speedup, so the sub-millisecond numbers above don't apply to the model built in this post.
 
 ### Deploying to Coral
 
@@ -451,7 +453,7 @@ The Node-RED flow listens for model update messages, downloads the new ONNX file
 
 **Batch when possible.** If you're processing vibration bursts (1024 samples every 5 seconds), you have time to batch multiple sensors into a single inference call. ONNX Runtime handles batches much more efficiently than single predictions.
 
-**Profile memory.** A Raspberry Pi 4 has 4 GB RAM. ONNX Runtime's session overhead is ~50 MB. A typical model is < 1 MB. But if you load 20 models simultaneously, memory adds up — especially with Python's baseline footprint.
+**Profile memory.** A Raspberry Pi 4 has 4 GB RAM. ONNX Runtime's session overhead is roughly tens of MB (varies with model and session count). A typical model is < 1 MB. But if you load 20 models simultaneously, memory adds up — especially with Python's baseline footprint.
 
 **Test on the target device.** A model that runs in 5 ms on your laptop might take 50 ms on an ARM CPU. Always benchmark on the actual edge hardware before committing to an architecture.
 

@@ -1,5 +1,5 @@
 ---
-title: "Modbus in Node-RED — The 45-Year-Old Protocol Everyone Still Uses"
+title: "Modbus in Node-RED — The 47-Year-Old Protocol Everyone Still Uses"
 tags: [iiot, modbus, node-red, plc]
 description: "A practical guide to reading and writing Modbus TCP and RTU devices from Node-RED — register maps, data type decoding, byte ordering, and the gotchas that waste afternoons."
 date: 2026-07-11
@@ -80,6 +80,8 @@ Protocol address:   107
   Rule:  protocol_address = documented_number - 40001   (for 4xxxx)
                           = documented_number - 30001   (for 3xxxx input regs)
 ```
+
+The same offset rule applies to all four address spaces — coils `0xxxx` (offset = n−1), discrete inputs `1xxxx` (−10001), input registers `3xxxx` (−30001), and holding registers `4xxxx` (−40001).
 
 If every value you read is shifted by one register, this is why. Some Node-RED nodes and some vendors are already 0-based — always read two registers you *know* the values of and confirm the offset before trusting anything.
 
@@ -250,7 +252,7 @@ Modbus on its own is a dead end — raw registers nobody else understands. Its v
 - Stream high-frequency energy data to [Kafka](/blog/kafka-shop-floor-event-streaming/) for analysis.
 - Feed it into [predictive maintenance](/blog/predictive-maintenance-node-red/) or OEE calculations.
 
-That's the quiet superpower of using Node-RED as the integration layer: it turns a 45-year-old protocol with no metadata into a first-class citizen of a modern, event-driven plant.
+That's the quiet superpower of using Node-RED as the integration layer: it turns a 47-year-old protocol with no metadata into a first-class citizen of a modern, event-driven plant.
 
 ---
 

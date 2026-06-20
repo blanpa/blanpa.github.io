@@ -63,9 +63,9 @@ You *can* build a UNS on raw MQTT. People do. But plain MQTT gives you a dumb pi
 | No standard topic structure — everyone invents their own | Defined namespace: `spBv1.0/group/message_type/edge_node/device` |
 | No way to know if a publisher is alive or dead | **Birth/Death certificates** via MQTT Last Will |
 | Payloads are arbitrary blobs | Defined Protobuf payload with typed metrics, timestamps, quality |
-| Subscriber that connects late has no current state | **State on connect** — birth certificate carries all current values |
+| Subscriber that connects late has no current state | **State on (re)birth** — the birth certificate carries all current values, and a late host can request a Rebirth |
 
-That third and fourth points are the killers. With raw MQTT, a dashboard that connects at 09:00 has no idea what the temperature is until the next time it happens to change. Sparkplug's **birth certificate** publishes the full current state of an edge node the moment it connects, so every late subscriber is immediately up to date.
+That third and fourth points are the killers. With raw MQTT, a dashboard that connects at 09:00 has no idea what the temperature is until the next time it happens to change. Sparkplug's **birth certificate** publishes the full current state of an edge node the moment *that node* connects (the NBIRTH). A subscriber that joins later resyncs either from the retained birth certificate or by having the primary host issue a **Rebirth** request (an `NCMD` with `Node Control/Rebirth`), which forces the edge node to re-publish its full state — so no late subscriber is left guessing.
 
 ### The Birth/Death Model
 
@@ -129,7 +129,7 @@ Install a Sparkplug node set:
 
 ```bash
 cd ~/.node-red
-npm install node-red-contrib-sparkplug-plus
+npm install node-red-contrib-mqtt-sparkplug-plus
 ```
 
 Configure the edge node identity:

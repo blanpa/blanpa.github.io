@@ -19,17 +19,17 @@ The IOT-GATE-iMX8 (the model I've deployed most) is based on NXP's i.MX 8M Mini 
 | Spec | IOT-GATE-iMX8 | Raspberry Pi 4 (comparison) |
 |------|----------------|---------------------------|
 | **CPU** | NXP i.MX 8M Mini, 4× Cortex-A53 @ 1.8 GHz | BCM2711, 4× Cortex-A72 @ 1.5 GHz |
-| **RAM** | 2 GB DDR4 (up to 4 GB) | 1–8 GB LPDDR4 |
-| **Storage** | 8 GB eMMC + SD slot | MicroSD only |
+| **RAM** | 2 GB LPDDR4 (up to 4 GB) | 1–8 GB LPDDR4 |
+| **Storage** | up to 128 GB eMMC + SD slot | MicroSD only |
 | **Ethernet** | 2× Gigabit | 1× Gigabit |
-| **USB** | 2× USB 3.0, 2× USB 2.0 | 2× USB 3.0, 2× USB 2.0 |
+| **USB** | 3× USB 2.0 | 2× USB 3.0, 2× USB 2.0 |
 | **Serial** | 2× RS-232/RS-485 (configurable) | None (UART via GPIO) |
-| **CAN bus** | 1× CAN 2.0B (optional 2×) | None |
+| **CAN bus** | 1× CAN-FD (isolated, via industrial I/O add-on) | None |
 | **GPIO** | 8× digital I/O (isolated) | 40-pin header (not isolated) |
 | **Cellular** | Mini-PCIe slot (4G/LTE modem) | None |
 | **Wi-Fi/BT** | 802.11ac + BT 5.0 | 802.11ac + BT 5.0 |
-| **Power** | 9–36V DC (industrial range) | 5V USB-C (consumer) |
-| **Operating temp** | -40°C to +85°C | 0°C to 50°C |
+| **Power** | 8–36V DC (industrial range) | 5V USB-C (consumer) |
+| **Operating temp** | -40°C to +80°C | 0°C to 50°C |
 | **Mounting** | DIN rail + wall mount | None standard |
 | **Certifications** | CE, FCC, UL | CE, FCC |
 | **Price** | ~€350–500 | ~€50–80 |
@@ -532,7 +532,7 @@ A 24V/2.5A (60W) PSU gives comfortable margin. Add a UPS module (e.g., Mean Well
 
 ### Temperature
 
-The -40°C to +85°C rating covers most industrial environments, but:
+The -40°C to +80°C rating covers most industrial environments, but:
 
 - Mount the gateway in the **upper section** of the cabinet (heat rises, but it's away from the heat-generating VFDs at the bottom).
 - Ensure at least 20mm clearance on each side for airflow.
@@ -575,10 +575,10 @@ sudo dpkg-reconfigure -plow unattended-upgrades
 
 | Gateway | CPU | CAN | RS-485 | Cellular | Temp Range | Price |
 |---------|-----|-----|--------|----------|-----------|-------|
-| **CompuLab IOT-GATE-iMX8** | i.MX 8M Mini | Yes | 2× | Mini-PCIe | -40 to +85°C | ~€400 |
+| **CompuLab IOT-GATE-iMX8** | i.MX 8M Mini | Yes | 2× | Mini-PCIe | -40 to +80°C | ~€400 |
 | Advantech UNO-2271G | Atom E3940 | Optional | 2× | M.2 | -20 to +60°C | ~€600 |
 | Siemens IOT2050 | TI AM6548 | No | 1× | No | 0 to +50°C | ~€300 |
-| OnLogic Factor 201 | i.MX 8M Plus | Optional | 2× | Mini-PCIe | -40 to +85°C | ~€500 |
+| OnLogic Factor 201 | Broadcom BCM2711 (RPi CM4) | Optional | 2× | Mini-PCIe | -20 to +60°C | ~€500 |
 | Raspberry Pi 4 + enclosure | BCM2711 | No | No | No | 0 to +50°C | ~€150 |
 
 The CompuLab hits the sweet spot of price, I/O, and temperature range. The Siemens IOT2050 is a solid alternative if you don't need CAN or cellular — and it has strong Siemens ecosystem integration.

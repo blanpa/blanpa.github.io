@@ -35,10 +35,10 @@ The Purdue Enterprise Reference Architecture (PERA) is the lingua franca of OT s
 ```mermaid
 flowchart TB
     L5["Level 5 — Enterprise<br/>ERP, email, internet"]
-    L4["Level 4 — Site Business<br/>MES servers, scheduling"]
+    L4["Level 4 — Site Business / Enterprise<br/>ERP, scheduling, logistics"]
     DMZ["Industrial DMZ<br/>data brokers, historians, patch servers, jump hosts"]
-    L3["Level 3 — Site Operations<br/>SCADA, historians, engineering workstations"]
-    L2["Level 2 — Area Supervision<br/>HMIs, line controllers"]
+    L3["Level 3 — Site Operations<br/>MES, historians, OPC servers"]
+    L2["Level 2 — Area Supervision<br/>SCADA, HMIs, line controllers, engineering workstations"]
     L1["Level 1 — Basic Control<br/>PLCs, RTUs"]
     L0["Level 0 — Process<br/>sensors, actuators, motors"]
     L5 --- L4

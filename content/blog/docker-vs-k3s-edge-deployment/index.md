@@ -241,7 +241,7 @@ K3s is a certified Kubernetes distribution optimized for edge and IoT:
 
 | Aspect | Full Kubernetes (K8s) | K3s |
 |--------|----------------------|-----|
-| RAM minimum | ~600 MB | ~512 MB |
+| RAM minimum | ~2 GB (control-plane node) | ~2 GB (server node), ~512 MB (agent node) |
 | Datastore | etcd (heavy) | SQLite or embedded etcd |
 | Footprint | Multiple binaries | Single ~70 MB binary |
 | Installation | Complex | `curl \| sh` |
@@ -250,14 +250,14 @@ K3s is a certified Kubernetes distribution optimized for edge and IoT:
 
 | Component | Docker + Compose | K3s (single node) | K3s (3-node cluster) |
 |-----------|------------------|--------------------|-----------------------|
-| **Base RAM** | ~50 MB | ~512 MB | ~512 MB per node |
+| **Base RAM** | ~50 MB | ~1.2–1.4 GB (server) | ~1.2–1.4 GB per server node (agent-only nodes ~270 MB) |
 | **CPU idle** | ~1% | ~3–5% | ~3–5% per node |
 | **Disk** | ~500 MB (engine) | ~200 MB (binary) | ~200 MB per node |
 | **5-service stack RAM** | ~1.2 GB total | ~1.8 GB total | ~2.5 GB total |
 | **Startup time** | ~10 seconds | ~30 seconds | ~60 seconds |
 | **Complexity** | Low | Medium | High |
 
-K3s adds ~500 MB RAM overhead over plain Docker. On a 4 GB Raspberry Pi, that's significant. On an 8+ GB industrial PC, it's negligible.
+A K3s server node adds ~1+ GB RAM overhead over plain Docker (a server idles at ~1.2–1.4 GB; an agent-only node is much lighter at ~270 MB). On a 4 GB Raspberry Pi, that's significant. On an 8+ GB industrial PC, it's negligible.
 
 ### K3s Installation
 
@@ -732,7 +732,7 @@ networks:
 | **Load balancing** | None (or Traefik external) | Built-in |
 | **Resource limits** | `deploy.resources` | requests/limits (enforced) |
 | **Learning curve** | Low | Medium–High |
-| **RAM overhead** | ~50 MB | ~512 MB |
+| **RAM overhead** | ~50 MB | ~1.2–1.4 GB (server); ~270 MB (agent) |
 | **Team required** | 1 developer | 1–2 with K8s experience |
 | **Minimum hardware** | Raspberry Pi 3 (1GB) | Raspberry Pi 4 (4GB) |
 

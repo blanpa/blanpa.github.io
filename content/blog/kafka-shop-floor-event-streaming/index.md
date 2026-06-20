@@ -181,7 +181,7 @@ With kafka-suite, you point the producer at the registry and select a compatibil
 | **FULL** | Both directions | Strict, regulated environments |
 | **NONE** | Anything goes | Never, in production |
 
-Default to **BACKWARD**. Adding an optional field with a default is a backward-compatible change; renaming or removing a field is not, and the registry will reject it *at deploy time* instead of breaking consumers in production.
+Default to **BACKWARD**. Adding an optional field with a default and removing a field are both backward-compatible changes; the breaking change is adding a required field without a default, which the registry will reject *at deploy time* instead of breaking consumers in production.
 
 ---
 
@@ -202,7 +202,7 @@ Producer config per use case:
     max.in.flight.requests.per.connection: 5
 ```
 
-`enable.idempotence: true` gives you exactly-once *produce* semantics (no duplicates from retries) without measurable throughput loss on modern Kafka. There is rarely a reason not to set it for counter-type data.
+`enable.idempotence: true` gives you exactly-once *produce* semantics (no duplicates from retries) with negligible throughput cost on modern Kafka. There is rarely a reason not to set it for counter-type data.
 
 ---
 

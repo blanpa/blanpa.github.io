@@ -10,6 +10,8 @@ Every factory I've worked in has the same problem: data is everywhere, but acces
 
 **i3x** changes this. It's an open REST API specification that gives you **one interface to all manufacturing data**, regardless of what platform stores it. I built a [Node-RED integration](https://github.com/blanpa/node-red-contrib-i3x) for it, and in this post I'll explain what i3x is, how it works, and why it matters.
 
+> **Note:** i3x is a new and rapidly evolving CESMII specification. It launched in public beta in early 2026 and is still maturing, so the API surface and exact payloads may change. The Node-RED integration and the examples below track the evolving spec — always check the official [i3x docs](https://i3x.dev/) and live OpenAPI definition for the authoritative, current shape.
+
 ---
 
 ## The Data Silo Problem
@@ -30,7 +32,7 @@ Now imagine adding a fourth data source. Or a fifth. Each new connection multipl
 
 ## What is i3x?
 
-i3x is an **open REST API specification** developed by [CESMII](https://www.cesmii.org/) (the Clean Energy Smart Manufacturing Innovation Institute). It defines a standard way to:
+i3x is an **open REST API specification** developed by [CESMII](https://www.cesmii.org/) (the Smart Manufacturing Institute). It defines a standard way to:
 
 - **Browse** the information model (what data exists?)
 - **Read** current values (what's the temperature right now?)
@@ -60,7 +62,7 @@ i3x organizes manufacturing data in a **hierarchical model** with four key conce
 Top-level organizational containers — think of them as databases:
 
 ```json
-GET /api/v1/namespaces
+GET /v1/namespaces
 
 [
   {
@@ -76,12 +78,14 @@ GET /api/v1/namespaces
 ]
 ```
 
+i3x exposes its resources as **flat collections** under `/v1/` — `GET /namespaces`, `GET /objecttypes`, `GET /objects` — rather than deeply nested paths. You filter and select with query parameters or, for bulk/value/history operations, with a `POST` body. (The example response payloads in this post are illustrative; check the live OpenAPI definition at the [official docs](https://i3x.dev/sdk/quickstart) for the exact field names and shapes.)
+
 ### Object Types
 
-Templates that define the structure of real-world things:
+Templates that define the structure of real-world things. Fetch them with `GET /objecttypes` (filterable by namespace):
 
 ```json
-GET /api/v1/namespaces/ns-plant-munich/object-types
+GET /v1/objecttypes
 
 [
   {
@@ -97,12 +101,12 @@ GET /api/v1/namespaces/ns-plant-munich/object-types
 ]
 ```
 
-### Instances
+### Objects (Instances)
 
-Actual machines, sensors, or equipment based on a type:
+The actual machines, sensors, or equipment based on a type. List them with `GET /objects` (filterable by type or root status):
 
 ```json
-GET /api/v1/namespaces/ns-plant-munich/instances?type=type-cnc-machine
+GET /v1/objects?typeId=type-cnc-machine
 
 [
   {
@@ -122,10 +126,11 @@ GET /api/v1/namespaces/ns-plant-munich/instances?type=type-cnc-machine
 
 ### Values
 
-The actual data — current readings from an instance:
+The actual data — current readings from an object. i3x serves current values through a **`POST /objects/value`** call that takes the target object IDs (and optional composition depth) in the request body, rather than a per-object GET path:
 
 ```json
-GET /api/v1/namespaces/ns-plant-munich/instances/inst-cnc-001/values
+POST /v1/objects/value
+{ "ids": ["inst-cnc-001"] }
 
 {
   "SpindleSpeed": { "value": 2450.0, "quality": "Good", "timestamp": "2026-03-05T10:30:00Z" },
@@ -179,7 +184,7 @@ The flow:
 
 ### Example 2: Historical Trend Analysis
 
-Query the last 7 days of spindle speed data for predictive maintenance:
+Query the last 7 days of spindle speed data for predictive maintenance. Under the hood this maps to a **`POST /objects/history`** call that takes the object IDs and time range in the request body:
 
 ```
 i3x Historical Query Node:
@@ -212,7 +217,7 @@ The time range supports multiple formats:
 
 ### Example 3: Live Subscriptions with SSE
 
-Subscribe to value changes without polling. The i3x Node-RED node automatically handles **Server-Sent Events (SSE)** with a fallback to polling:
+Subscribe to value changes without polling. In i3x this is a small workflow: you create a subscription with **`POST /subscriptions`**, add objects to it with **`POST /subscriptions/register`**, then either open the SSE stream with **`POST /subscriptions/stream`** (Server-Sent Events) or pull queued updates with **`POST /subscriptions/sync`**. The i3x Node-RED node handles this handshake for you, defaulting to SSE with a fallback to polling:
 
 ```
 i3x Subscribe Node:

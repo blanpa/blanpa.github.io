@@ -110,9 +110,9 @@ The `*` matches a single token, `>` matches one or more tokens (only at the end)
 ### Reserved Subjects
 
 ```
-_EVENTS.>                  → NATS system events
+$SYS.>                     → NATS system events
 $JS.>                      → JetStream internal
-_KV.>                      → Key-value store internal
+$KV.>                      → Key-value store subjects (KV_* internal streams)
 
 acme.*.config.>            → Machine configuration (KV-backed)
 acme.*.alert.>             → Alert messages (priority routing)
@@ -231,7 +231,7 @@ async def main():
 
     config = ConsumerConfig(
         durable_name="analytics-consumer",
-        deliver_policy=DeliverPolicy.LAST_PER_SUBJECT,
+        deliver_policy=DeliverPolicy.ALL,
         filter_subject="acme.munich.hall-a.>",
         ack_wait=30,
         max_deliver=3,
@@ -331,7 +331,7 @@ leafnodes {
             url: "tls://cloud-nats.company.com:7422"
             credentials: "/etc/nats/creds/factory-munich.creds"
 
-            # Only forward these subjects to the cloud
+            # Restrict which subjects cross the leaf link
             deny_imports: ["_INBOX.>"]
             deny_exports: []
         }
@@ -355,15 +355,49 @@ authorization {
     ]
 }
 
-# Store-and-forward when cloud connection drops
+# Reconnect behaviour for the leaf link
 leafnodes {
     reconnect_delay: "5s"
 }
 ```
 
+> **Important:** A leaf node connection alone does *not* buffer locally-published
+> core-NATS messages and replay them after an outage. Plain core-NATS traffic that
+> can't reach the cloud while the link is down is simply lost. Resilient edge→cloud
+> delivery requires a **local JetStream stream** that is **mirrored or sourced** to
+> an upstream cloud stream — *that's* what provides the store-and-forward semantics.
+>
+> Mirroring is store-and-forward and recovers automatically from connection drops.
+> Create the stream on the cloud cluster, then a mirror (or source) of it on the
+> edge, referencing the upstream `domain`:
+
+```json
+// Edge stream that mirrors the cloud TELEMETRY stream
+{
+  "name": "TELEMETRY_EDGE",
+  "mirror": {
+    "name": "TELEMETRY",
+    "external": {
+      "api": "$JS.cloud.API"
+    }
+  },
+  "storage": "file",
+  "max_bytes": 5368709120
+}
+```
+
+The `external.api` prefix (`$JS.<domain>.API`) points the mirror at the cloud
+JetStream domain across the leaf link. Use `sources` instead of `mirror` when you
+need to aggregate several upstream streams into one. Publishers on the edge write
+to the local JetStream stream; the mirror/source machinery replays anything queued
+locally once the cloud link is restored — in order and without gaps.
+
 ### What Happens When the Network Drops?
 
-This is where NATS shines compared to MQTT bridges:
+This is where NATS shines compared to MQTT bridges — **provided telemetry flows
+through a mirrored/sourced JetStream stream** (see the warning above). The
+diagram below assumes the edge writes to a local JetStream stream that mirrors
+the cloud; plain core-NATS publishes would simply be dropped during the outage.
 
 {{< mermaid >}}
 flowchart TB
@@ -376,14 +410,14 @@ flowchart TB
 
     subgraph drop["Network drops"]
         direction LR
-        E2[Edge] -->|publish| L2[Local NATS]
+        E2[Edge] -->|publish| L2["Local JetStream<br/>stream (mirror)"]
         L2 -. "X" .-x C2[Cloud NATS]
-        L2 --> JS["JetStream stores<br/>messages locally<br/>(up to 5 GB)"]
+        L2 --> JS["Stream stores<br/>messages locally<br/>(up to 5 GB)"]
     end
 
     subgraph recover["Network recovers"]
         direction LR
-        L3[Local NATS] ==>|"replays buffered<br/>messages in order"| C3[Cloud NATS]
+        L3["Local JetStream<br/>mirror"] ==>|"replays buffered<br/>messages in order"| C3[Cloud NATS]
         C3 --> A3[Analytics]
     end
 
@@ -557,7 +591,7 @@ Twenty-three hours of offline buffering. Enough to survive a full business day o
 
 ## NATS in Node-RED
 
-Use the `node-red-contrib-nats-streaming` or a custom NATS node to integrate:
+Use a core-NATS/JetStream Node-RED node — such as `node-red-contrib-nats` (built on the `nats.js` client) — or a custom NATS node to integrate. (Avoid `node-red-contrib-nats-streaming`: it targets NATS Streaming / STAN, which reached end-of-life in June 2023 and is superseded by JetStream.)
 
 {{< mermaid >}}
 flowchart LR
@@ -625,7 +659,7 @@ For most industrial IoT deployments, the **star topology with leaf nodes** is th
 
 ## Conclusion
 
-NATS simplifies the IIoT messaging stack from three systems (MQTT + Kafka + Redis) down to one. Leaf nodes solve the edge-to-cloud synchronization problem that has plagued industrial IoT architectures for years — with automatic store-and-forward, subject-based filtering, and zero custom bridge code.
+NATS simplifies the IIoT messaging stack from three systems (MQTT + Kafka + Redis) down to one. Leaf nodes plus **JetStream stream mirroring/sourcing** solve the edge-to-cloud synchronization problem that has plagued industrial IoT architectures for years — the leaf link gives you a single NAT-friendly tunnel and subject-based filtering, while the mirrored stream provides the automatic store-and-forward, all with zero custom bridge code. (Remember: the leaf link by itself does not buffer core-NATS messages — the resilience comes from JetStream.)
 
 The subject naming convention is worth spending time on. Get it right at the start, and every downstream system — from dashboards to ML pipelines to alerting rules — becomes a simple wildcard subscription. Get it wrong, and you're refactoring message routing across 30 factories.
 

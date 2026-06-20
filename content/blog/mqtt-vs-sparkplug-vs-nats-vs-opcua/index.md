@@ -55,7 +55,7 @@ client = mqtt.Client()
 client.connect("broker.local", 1883)
 
 payload = json.dumps({
-    "temperature": 72.5,
+    "temperature": 23.5,
     "unit": "celsius",
     "timestamp": "2026-03-05T10:30:00Z"
 })
@@ -88,7 +88,7 @@ client.loop_forever()
 - **No data model** — payload is raw bytes, you decide the format (JSON, Protobuf, etc.)
 - **No topic namespace standard** — every company invents their own topic tree
 - **No request/reply** — you have to build it yourself with correlated topics
-- **Broker is a single point of failure** — clustering requires commercial brokers
+- **Native clustering is broker-dependent** — Mosquitto has none, but EMQX/VerneMQ cluster in their open-source editions
 - **No built-in persistence** — messages are gone once delivered
 
 ### When to Use MQTT
@@ -124,7 +124,7 @@ Sparkplug introduces **NBIRTH** (Node Birth), **DBIRTH** (Device Birth), **NDEAT
 1. Edge Node connects    → publishes NBIRTH (declares all metrics)
 2. Device comes online   → publishes DBIRTH (declares device metrics)
 3. Data changes          → publishes DDATA (only changed metrics)
-4. Device goes offline   → broker publishes DDEATH (via LWT)
+4. Device goes offline   → edge node publishes DDEATH
 5. Edge Node disconnects → broker publishes NDEATH (via LWT)
 ```
 

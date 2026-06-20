@@ -179,7 +179,7 @@ def get_all_running_machines() -> list[dict]:
 ### REST Weaknesses in Manufacturing
 
 - **Over-fetching** — GET `/machines/cnc-001` returns 50 fields when you need 2
-- **Under-fetching** — need machine + sensors + alarms? That's 3 requests (N+1 problem)
+- **Under-fetching** — need machine + sensors + alarms? That's 3 requests (3 round-trips)
 - **No subscriptions** — polling wastes bandwidth and adds latency
 - **No standard data model** — every vendor invents their own JSON schema
 - **Polling overhead** — checking 500 machines at 1-second intervals means 500 req/s
@@ -451,7 +451,7 @@ result = client.execute(query, variable_values={
 
 - **Not an industry standard** — no PLC vendor exposes a GraphQL endpoint natively
 - **Gateway required** — you need a server that translates GraphQL to actual data sources
-- **Caching is harder** — POST requests don't cache like GET requests
+- **Caching is harder** — GraphQL's default POST transport defeats standard HTTP/URL caching (you can regain it with GET + persisted queries/APQ)
 - **Complexity budget** — deeply nested queries can overload the server
 - **Overkill for simple reads** — if you always need the same fields, REST is simpler
 
@@ -593,6 +593,8 @@ Explicit contract, but you have to build it. No industrial standard exists for G
 ## Performance Comparison
 
 Benchmarked on a typical industrial edge PC (Intel i5, 16GB RAM, Gigabit LAN):
+
+> Note: these figures are illustrative/typical orders of magnitude, not a formal reproducible benchmark — treat them as ballpark guidance, not precise measurements.
 
 | Scenario | REST | OPC-UA | GraphQL |
 |----------|------|--------|---------|

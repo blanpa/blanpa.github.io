@@ -31,7 +31,7 @@ flowchart LR
 
 **Weaknesses:** No built-in historian, limited out-of-the-box SCADA features, quality of community nodes varies wildly.
 
-### Kepware (KEPServerEX) — The Connectivity King
+### Kepware Server (formerly KEPServerEX) — The Connectivity King
 
 Kepware, now part of PTC's ThingWorx ecosystem, is a connectivity server that specializes in one thing: talking to industrial equipment. It supports 150+ device drivers — from Siemens S7 to Allen-Bradley to Modbus to BACnet.
 
@@ -46,7 +46,7 @@ flowchart LR
 
 **Strengths:** Unmatched driver library, battle-tested in thousands of factories, excellent PLC communication performance, certified drivers.
 
-**Weaknesses:** Expensive licensing per driver, Windows-only, limited data transformation capabilities, no visualization.
+**Weaknesses:** Expensive licensing per driver, primarily Windows (though Kepware Edge and container deployments add Linux support), limited data transformation capabilities, no visualization.
 
 ### Ignition — The SCADA Powerhouse
 
@@ -76,14 +76,16 @@ flowchart TB
 
 | Aspect | Node-RED | Kepware (KEPServerEX) | Ignition |
 |--------|----------|-----------------------|----------|
-| **Base License** | Free (Apache 2.0) | ~$1,500 (base server) | ~$4,800 (Platform) |
-| **Per-Driver/Module** | Free (community nodes) | $300–$1,500 per driver | $2,400–$4,800 per module |
+| **Base License** | Free (Apache 2.0) | ~$1,500 (base server) | ~$1,200 (Platform) |
+| **Per-Driver/Module** | Free (community nodes) | $300–$1,500 per driver | ~$2,245–$11,225 per module |
 | **Client Licenses** | N/A (web-based) | N/A (server only) | **Unlimited** |
 | **Tag Limits** | None | None (licensed per driver) | None |
 | **Typical 5-Machine Setup** | $0 | ~$4,000–$8,000 | ~$12,000–$20,000 |
 | **Typical 50-Machine Setup** | $0 | ~$15,000–$30,000 | ~$20,000–$35,000 |
 | **Annual Maintenance** | N/A | ~20% of license cost | ~20% of license cost |
 | **Cloud/Hosted Option** | FlowFuse (~$50/mo) | ThingWorx (enterprise pricing) | Ignition Cloud (contact sales) |
+
+> Hosted/cloud figures (FlowFuse, typical-setup totals, throughput-derived costs) are estimates, not official list pricing — confirm current tiers with each vendor.
 
 The cost advantage of Node-RED is obvious — but "free" doesn't mean "no cost." You pay with development time, support responsibility, and the need to build features that come out-of-the-box with commercial platforms.
 
@@ -101,7 +103,7 @@ Ignition's unlimited client model is a game-changer. With Kepware or traditional
 | **MQTT** | Core node (excellent) | MQTT Client driver | MQTT Engine module |
 | **HTTP/REST** | Core node (excellent) | REST agent (limited) | Web Dev module |
 | **SQL Databases** | Community nodes | ODBC interface | Native JDBC |
-| **BACnet** | Community node | Native driver | Third-party module |
+| **BACnet** | Community node | Native driver | Native driver (8.1+) |
 | **EtherNet/IP** | node-red-contrib-cip-suite | Native driver | Native driver |
 | **PROFINET** | Not available | Native driver | Not available |
 
@@ -115,9 +117,11 @@ Node-RED wins on IT-side protocols. REST APIs, MQTT, WebSockets, GraphQL, gRPC �
 |--------|----------|---------|----------|
 | **Tags/second** | ~5,000–20,000 | ~50,000–100,000 | ~50,000–150,000 |
 | **Horizontal scaling** | Easy (containerized) | Manual (multiple servers) | Gateway Network |
-| **Edge deployment** | Excellent (ARM, Docker) | Limited (Windows) | Ignition Edge (licensed) |
+| **Edge deployment** | Excellent (ARM, Docker) | Linux via Kepware Edge (containers) | Ignition Edge (licensed) |
 | **High availability** | DIY (container orchestration) | Redundancy add-on | Built-in redundancy |
 | **Multi-site** | Custom architecture | Enterprise licensing | Gateway Network |
+
+> Tags/second figures are rough estimates — actual throughput is highly config-dependent (hardware, polling rates, driver, network) and not an official benchmark.
 
 ### Learning Curve
 
@@ -324,19 +328,23 @@ Use this matrix to guide your platform choice. Score each criterion 1–5 for yo
 | IoT Gateway (REST/MQTT) | ~$1,200 |
 | Annual maintenance (20%) | ~$600–$1,500/year |
 
+> Estimates only — PTC does not publish list pricing for Kepware; figures are illustrative and require a quote.
+
 ### Ignition
 
 | Item | Cost |
 |------|------|
-| Ignition Platform | ~$4,800 |
-| Perspective module (web HMI) | ~$4,800 |
-| Historian (Tag Historian) | ~$4,800 |
-| Alarm Notification module | ~$4,800 |
-| Reporting module | ~$4,800 |
+| Ignition Platform | ~$1,200 |
+| Perspective module (web HMI) | ~$11,225 |
+| Industrial Historian Suite | ~$3,500 |
+| Alarm Notification module | ~$2,245 |
+| Reporting module | ~$3,900 |
 | OPC-UA module (included) | Free with platform |
-| SQL Bridge module | ~$4,800 |
+| SQL Bridge module | ~$2,300 |
 | Ignition Edge (per device) | ~$1,200–$2,400 |
 | Annual maintenance (20%) | varies |
+
+> Indicative list pricing from Inductive Automation's published price list — subject to change and bulk discounts.
 
 Ignition's pricing looks high, but remember: **zero per-client fees**. A 100-screen deployment costs the same as a 5-screen deployment for the server modules.
 

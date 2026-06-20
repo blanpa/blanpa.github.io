@@ -49,7 +49,7 @@ node-red-project/
 │       └── ci-cd.yml           ← GitHub Actions pipeline
 ├── flows/
 │   ├── flows.json              ← main flow file
-│   └── flows_cred.json.enc     ← encrypted credentials (optional)
+│   └── flows_cred.json         ← encrypted credentials (optional; name Node-RED expects)
 ├── custom-nodes/
 │   └── node-red-contrib-mynode/
 │       ├── mynode.js
@@ -371,7 +371,7 @@ Output:
 
 ### Integration Testing with Docker
 
-For integration tests, spin up Node-RED in Docker and test flows end-to-end:
+For integration tests, spin up Node-RED in Docker and test flows end-to-end. Note that Node-RED has no built-in `/health` endpoint — a `GET` on the admin root (`http://localhost:1880/`) returns 200 when the editor/admin API is enabled, so we use that as a liveness check. If you want a real `/health` endpoint, add a tiny `http in` flow serving `/health` or install `node-red-contrib-healthcheck`.
 
 ```javascript
 // test/integration_spec.js
@@ -383,8 +383,8 @@ const NR_URL = process.env.NODE_RED_URL || "http://localhost:1880";
 describe('Node-RED Integration Tests', function() {
     this.timeout(30000);
 
-    it('should respond to health check', function(done) {
-        http.get(`${NR_URL}/health`, (res) => {
+    it('should respond on the admin root (liveness)', function(done) {
+        http.get(`${NR_URL}/`, (res) => {
             expect(res.statusCode).to.equal(200);
             done();
         }).on('error', done);
@@ -420,9 +420,11 @@ describe('Node-RED Integration Tests', function() {
 ```dockerfile
 FROM nodered/node-red:3.1
 
-WORKDIR /usr/src/node-red
+# The official image uses /data as the Node-RED userDir — custom nodes
+# must be installed here to be discovered.
+WORKDIR /data
 
-COPY package.json .
+COPY package.json /data/
 RUN npm install --omit=dev
 
 COPY flows/ /data/
@@ -430,7 +432,7 @@ COPY config/settings.js /data/settings.js
 COPY custom-nodes/ /usr/src/custom-nodes/
 
 RUN cd /usr/src/custom-nodes/node-red-contrib-mynode && npm install --omit=dev \
-    && cd /usr/src/node-red && npm install /usr/src/custom-nodes/node-red-contrib-mynode
+    && cd /data && npm install /usr/src/custom-nodes/node-red-contrib-mynode
 
 EXPOSE 1880
 
@@ -454,7 +456,7 @@ services:
       - node-red-data:/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:1880/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:1880/"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -598,7 +600,7 @@ jobs:
             docker compose pull
             docker compose up -d
             sleep 10
-            curl -f http://localhost:1880/health || exit 1
+            curl -f http://localhost:1880/ || exit 1
             echo "Staging deployment successful"
 
   deploy-production:
@@ -618,7 +620,7 @@ jobs:
             docker compose pull
             docker compose up -d --no-deps node-red
             sleep 10
-            curl -f http://localhost:1880/health || exit 1
+            curl -f http://localhost:1880/ || exit 1
             echo "Production deployment successful"
 ```
 
@@ -666,12 +668,17 @@ const baseSettings = {
 };
 
 if (env === 'production') {
-    baseSettings.httpAdminRoot = false;
+    // disableEditor hides the editor UI but keeps the admin API reachable
+    // (so /flows and the admin root still respond for health checks).
+    // Setting httpAdminRoot = false would remove the admin routes entirely,
+    // which would break the integration tests and deploy health checks below.
     baseSettings.disableEditor = true;
 }
 
 module.exports = baseSettings;
 ```
+
+A quick distinction worth remembering: `disableEditor: true` hides the editor UI but leaves the admin API routes in place, while `httpAdminRoot: false` removes the admin routes entirely. Use the former in production so the editor is locked down but the admin API stays available for the health checks and integration tests above.
 
 ### Environment Variable Reference
 
@@ -731,7 +738,7 @@ docker compose up -d node-red
 
 echo "Waiting for health check..."
 for i in {1..30}; do
-    if curl -sf http://localhost:1880/health > /dev/null 2>&1; then
+    if curl -sf http://localhost:1880/ > /dev/null 2>&1; then
         echo "Deployment successful!"
         exit 0
     fi

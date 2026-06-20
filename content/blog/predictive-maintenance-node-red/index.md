@@ -155,6 +155,8 @@ if __name__ == "__main__":
 | **Crest factor** | 3 – 6 | Ratio of peak to RMS. >6 suggests impacting |
 | **Kurtosis** | ~3 (Gaussian) | >4 suggests bearing defects developing |
 
+> **Units matter.** ISO 10816/20816 severity zones are defined for **velocity RMS in mm/s** (typically the 10–1000 Hz band), *not* for acceleration. The `rms_g`/`peak_g` returned above are computed from the raw accelerometer signal and are **separate acceleration metrics**. To compare against the ISO velocity thresholds, the acceleration signal must first be **integrated to velocity** — in the frequency domain this means dividing the FFT by jω (with a high-pass to suppress integration drift) before computing RMS. The pipeline below does not include that integration step, so treat the g-based RMS/peak as acceleration trends rather than ISO-velocity values.
+
 ### Monitoring Fault Frequencies
 
 Extract amplitude at specific bearing fault frequencies:
@@ -350,6 +352,9 @@ def calculate_health_index(
     }
 
 thresholds = {
+    # NOTE: ISO 10816/20816 zones below are velocity RMS in mm/s. Feed this key
+    # the *velocity* RMS — integrate the acceleration signal to velocity first
+    # (FFT / jω with a high-pass). Do NOT pass the g-based `rms` directly here.
     "rms_velocity": {"weight": 3, "normal": 1.8, "warning": 4.5, "critical": 7.1},
     "kurtosis": {"weight": 2, "normal": 3.5, "warning": 5.0, "critical": 8.0},
     "bpfo_amplitude": {"weight": 4, "normal": 0.001, "warning": 0.005, "critical": 0.02},
@@ -492,6 +497,6 @@ Every machine needs a **learning period** during known-good operation to establi
 
 Predictive maintenance is not magic — it's signal processing plus statistics, deployed close to the machine. The pipeline is always the same: sense → transform → detect → decide → act. Node-RED's visual flow model makes each stage visible and debuggable, which matters when a maintenance engineer — not a data scientist — needs to understand why the system flagged a machine.
 
-The most common mistake is jumping straight to complex ML models. Start with RMS trending and Z-Score alerts. That alone catches 80% of developing failures. Add FFT-based fault frequency monitoring next. Only bring in Isolation Forest and RUL prediction when you have enough failure history to validate the models.
+The most common mistake is jumping straight to complex ML models. Start with RMS trending and Z-Score alerts. That alone catches a large share of developing failures. Add FFT-based fault frequency monitoring next. Only bring in Isolation Forest and RUL prediction when you have enough failure history to validate the models.
 
 A sensor on a bearing is cheap. An unplanned line stop is not. The gap between the two is software — and that software doesn't need to be complicated.
