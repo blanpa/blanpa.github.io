@@ -70,6 +70,8 @@
           {{ $featuredURL = .RelPermalink }}
         {{ end }}
       {{ end }}
+      {{/* No own image → fall back to the generated branded card. */}}
+      {{ if not $featuredURL }}{{ $featuredURL = partial "og-image.html" . }}{{ end }}
 
       <a href="{{ .RelPermalink }}" class="blog-featured" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
         {{ with $featuredURL }}
@@ -111,6 +113,8 @@
               {{ $featuredURL = .RelPermalink }}
             {{ end }}
           {{ end }}
+          {{/* No own image → fall back to the generated branded card. */}}
+          {{ if not $featuredURL }}{{ $featuredURL = partial "og-image.html" . }}{{ end }}
 
           <a href="{{ .RelPermalink }}" class="blog-feed-item" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
             {{ with $featuredURL }}
