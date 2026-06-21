@@ -4,6 +4,7 @@ tags: [iiot, node-red, machine-learning, python]
 description: "Building a complete predictive maintenance pipeline in Node-RED — signal processing, anomaly detection, and health scoring."
 date: 2026-03-07
 series: ["IIoT"]
+series_order: 3
 ---
 
 A bearing doesn't fail without warning. It screams — in frequencies you can't hear. The trick is listening at the right frequency, recognizing the pattern, and acting before the $80 bearing destroys the $40,000 spindle.

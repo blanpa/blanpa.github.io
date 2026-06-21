@@ -4,6 +4,7 @@ tags: [iiot, node-red, embedded-linux, can-bus, raspberry-pi]
 description: "Setting up a CompuLab IoT gateway with Node-RED for industrial data collection — GPIO, CAN bus, RS485, and cellular connectivity."
 date: 2026-03-28
 series: ["IIoT"]
+series_order: 6
 ---
 
 A Raspberry Pi can read a temperature sensor. It cannot survive 60°C ambient heat inside a control cabinet, run off 24V DC, talk CAN bus to a robot controller, fall back to 4G when Ethernet dies, and keep running for 10 years without maintenance. That's what industrial gateways are built for.

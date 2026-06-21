@@ -4,6 +4,7 @@ tags: [iiot, security, opc-ua, networking, plc]
 description: "A practical OT security primer for IIoT developers — the Purdue model, network segmentation, securing OPC-UA and MQTT, and the realities of patching a 20-year-old PLC."
 date: 2026-07-18
 series: ["IIoT"]
+series_order: 19
 ---
 
 Every other post in this series has been about *connecting* things — [PLCs to dashboards](/blog/siemens-s7-opcua-node-red/), [protocols to brokers](/blog/unified-namespace-sparkplug-node-red/), [edge to cloud](/blog/nats-edge-to-cloud-pipeline/). This one is about the uncomfortable flip side: every connection you add is also an attack surface. Industrial systems were designed in an era of physical isolation, and we've spent the last decade enthusiastically networking them without always asking what that means for security. This is the post I wish more IIoT developers read *before* their first deployment, not after their first incident.

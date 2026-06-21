@@ -6,11 +6,11 @@
     <span class="home-proof__label">npm downloads / mo</span>
   </div>
   <div class="home-proof__item">
-    <span class="home-proof__num">{{ len site.Data.npm_packages }}</span>
+    <span class="home-proof__num" data-count>{{ len site.Data.npm_packages }}</span>
     <span class="home-proof__label">open-source packages</span>
   </div>
   <div class="home-proof__chips" aria-label="Supported protocols">
-    {{ range slice "OPC-UA" "Siemens S7" "Allen-Bradley" "Modbus" "NATS" "Kafka" "Node-RED" }}
+    {{ range slice "OPC-UA" "Siemens S7" "Allen-Bradley" "NATS" "Kafka" }}
       <span class="home-proof__chip">{{ . }}</span>
     {{ end }}
   </div>

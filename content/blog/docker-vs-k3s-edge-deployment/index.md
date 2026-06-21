@@ -4,6 +4,7 @@ tags: [iiot, docker, kubernetes]
 description: "When to use plain Docker and when to deploy K3s for industrial edge computing — with practical deployment examples."
 date: 2026-04-18
 series: ["IIoT"]
+series_order: 9
 ---
 
 Containers on the shop floor used to be a hard sell. "Why not just install the software directly?" plant engineers would ask. After rolling back a failed manual update at 2 AM for the third time, the answer becomes obvious: reproducibility, isolation, and the ability to roll back in seconds instead of hours.

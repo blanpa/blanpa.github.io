@@ -4,6 +4,7 @@ tags: [iiot, rest-api, node-red, javascript]
 description: "How the i3x open manufacturing standard by CESMII provides vendor-agnostic access to industrial data — with practical Node-RED examples."
 date: 2026-03-05
 series: ["IIoT"]
+series_order: 2
 ---
 
 Every factory I've worked in has the same problem: data is everywhere, but accessible nowhere. The historian speaks SQL. The MES has a SOAP API. The SCADA system uses OPC-UA. The new IoT platform wants REST. Connecting all of them means writing custom adapters for each combination — and maintaining them forever.

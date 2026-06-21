@@ -4,6 +4,7 @@ tags: [iiot, modbus, node-red, plc]
 description: "A practical guide to reading and writing Modbus TCP and RTU devices from Node-RED — register maps, data type decoding, byte ordering, and the gotchas that waste afternoons."
 date: 2026-07-11
 series: ["IIoT"]
+series_order: 18
 ---
 
 I've written about [OPC-UA](/blog/siemens-s7-opcua-node-red/), [EtherNet/IP](/blog/allen-bradley-ethernet-ip-node-red/), and [a whole zoo of modern protocols](/blog/mqtt-vs-sparkplug-vs-nats-vs-opcua/). But if I had to bet on which protocol you'll actually encounter most often on a real shop floor, my money is on the oldest one in the room: **Modbus**. Designed by Modicon in 1979, it's on power meters, VFDs, temperature controllers, flow meters, HVAC gear, and ten thousand other devices. It's gloriously simple, slightly maddening, and absolutely everywhere. Here's how to talk to it from Node-RED.

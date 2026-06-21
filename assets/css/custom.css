@@ -36,8 +36,7 @@
 /* Hero elements break out of the profile layout's narrow .prose column
    (max-width: 65ch) and centre in the viewport, capped responsively. */
 .home-tagline,
-.home-proof,
-.home-cards {
+.home-proof {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -106,68 +105,6 @@
 }
 :root:not(.dark) .home-proof__chip {
   color: var(--accent-on-light);
-}
-
-.home-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  width: min(60rem, 92vw);
-  margin: 0 auto;
-}
-
-.home-card {
-  padding: 2.5rem 2rem;
-  border: 1px solid var(--border-soft);
-  border-radius: 16px;
-  background: var(--surface);
-  backdrop-filter: blur(8px);
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.home-card:hover {
-  border-color: var(--border-strong);
-  background: var(--surface-hover);
-  transform: translateY(-4px);
-}
-.home-card:hover .home-card__icon {
-  transform: scale(1.08) rotate(-3deg);
-}
-.home-card__icon {
-  transition: transform 0.25s ease;
-}
-
-.home-card__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  color: #fff;
-  margin-bottom: 1rem;
-  flex-shrink: 0;
-}
-
-.home-card h2 {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.3rem;
-}
-
-.home-card p {
-  margin: 0;
-  opacity: 0.7;
-  line-height: 1.6;
-  font-size: 0.92rem;
 }
 
 /* Support FAB — intentionally a quiet, neutral pill (defined by the theme's
@@ -452,13 +389,6 @@
 }
 
 @media (max-width: 768px) {
-  .home-cards {
-    grid-template-columns: 1fr;
-  }
-  .home-card {
-    padding: 1.5rem 1.2rem;
-    min-height: auto;
-  }
   .home-proof {
     gap: 1rem 1.75rem;
   }
@@ -1664,7 +1594,6 @@
 }
 
 /* Card description text — better contrast */
-.home-card p,
 .project-featured__content p,
 .project-card__content p,
 .blog-featured__content p,
@@ -1675,7 +1604,6 @@
   opacity: 0.85;
   color: rgba(245, 245, 245, 0.85);
 }
-:root:not(.dark) .home-card p,
 :root:not(.dark) .project-featured__content p,
 :root:not(.dark) .project-card__content p,
 :root:not(.dark) .blog-featured__content p,
@@ -1967,3 +1895,194 @@ body.mermaid-lightbox-open {
     transition: none;
   }
 }
+
+/* ==============================================
+   HOMEPAGE LIVELINESS — entrance reveal, rotating
+   keyword, card sheen + icon breathe, edge→cloud flow
+   All motion is gated behind prefers-reduced-motion.
+   ============================================== */
+
+/* ---- Staggered entrance reveal ---------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Breakout elements keep their translateX(-50%) centring, so they
+     animate with a dedicated keyframe that preserves it. */
+  .home-tagline { animation: reveal-breakout 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+  .home-proof   { animation: reveal-breakout 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+
+  /* Fade only (no transform) so the button's hover-lift transform keeps
+     working — a finished transform animation would otherwise lock the
+     element and override :hover. */
+  .home-contact-btn { animation: reveal-fade 0.7s ease 0.30s both; }
+}
+
+@keyframes reveal-breakout {
+  from { opacity: 0; transform: translate(-50%, 18px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- Scroll-reveal for the recent-articles list ----------------- */
+/* The .reveal-on-scroll class is added by JS only (so non-JS users see
+   the content), then .is-visible animates each item in as it enters. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Rotating keyword in the tagline ---------------------------- */
+.rotor {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap; /* keep multi-word terms (e.g. "Siemens S7") intact */
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+:root:not(.dark) .rotor {
+  color: var(--accent-on-light);
+}
+
+/* ==============================================
+   ABOUT — hero photo, actions, stat band, CV
+   ============================================== */
+.about-hero {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+}
+.about-hero__photo {
+  width: 128px;
+  height: 128px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 200, 165, 0.35);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+.about-hero__body { min-width: 0; }
+.about-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+.about-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
+}
+.about-btn--primary {
+  background: linear-gradient(135deg, #00c8a5, #0099cc);
+  color: #06121a;
+}
+.about-btn--primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.about-btn--ghost {
+  border: 1px solid rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+}
+.about-btn--ghost:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+:root:not(.dark) .about-btn--ghost { color: #008a70; border-color: rgba(0, 138, 112, 0.4); }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 0 0 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+}
+:root:not(.dark) .about-stats {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+.about-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+.about-stat__num {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #00c8a5;
+}
+:root:not(.dark) .about-stat__num { color: #008a70; }
+.about-stat__label {
+  font-size: 0.72rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cv-button {
+  display: inline-block;
+  margin: 0 0 2rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.cv-button:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+
+/* Skill chips that link to a deep-dive get a subtle outbound affordance. */
+a.skill-chip { text-decoration: none; cursor: pointer; }
+a.skill-chip::after { content: " \2197"; font-size: 0.72em; opacity: 0.45; }
+a.skill-chip:hover::after { opacity: 1; }
+
+/* RSS subscribe button on the blog list. */
+.rss-subscribe {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.rss-subscribe:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+.rss-subscribe svg { flex-shrink: 0; }
+:root:not(.dark) .rss-subscribe { color: #008a70; border-color: rgba(0, 138, 112, 0.4); }
+
+/* Architecture diagram: dashed connector lines "flow" downward. */
+.tech-arch__connector svg path:first-child {
+  animation: arch-flow 1.2s linear infinite;
+}
+@keyframes arch-flow { to { stroke-dashoffset: -16; } }
+
+@media (max-width: 640px) {
+  .about-hero { flex-direction: column; text-align: center; }
+  .about-hero__actions { justify-content: center; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-arch__connector svg path:first-child { animation: none; }
+}
+

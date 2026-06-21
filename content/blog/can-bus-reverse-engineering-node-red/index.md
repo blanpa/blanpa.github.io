@@ -4,6 +4,7 @@ tags: [iiot, can-bus, node-red, raspberry-pi, python]
 description: "How to sniff, decode, and integrate CAN bus data from industrial machines using a Raspberry Pi and Node-RED."
 date: 2026-05-02
 series: ["IIoT"]
+series_order: 11
 ---
 
 If you've ever stared at a VFD or servo drive and thought "I know this thing has useful data — I just can't get to it," CAN bus is probably the answer. Most industrial drives, controllers, and even some sensors speak CAN internally. With a Raspberry Pi, a $15 CAN hat, and some patience, you can tap into that data stream and make it visible in Node-RED.

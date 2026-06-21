@@ -4,6 +4,7 @@ tags: [iiot, mqtt, sparkplug, node-red, architecture]
 description: "What a Unified Namespace actually is, why Sparkplug B is the natural transport for it, and how to build one incrementally with Node-RED instead of rebuilding your whole plant."
 date: 2026-07-04
 series: ["IIoT"]
+series_order: 17
 ---
 
 "Unified Namespace" is the most over-hyped and under-explained term in industrial IoT right now. Vendors sell it as a product, consultants sell it as a transformation, and engineers quietly wonder whether it's anything more than "an MQTT broker with good topic names." Having built a few, my honest answer is: it's a *pattern*, not a product — and a genuinely good one. This post strips away the hype and shows how to build a real Unified Namespace incrementally, using [Sparkplug B](/blog/mqtt-vs-sparkplug-vs-nats-vs-opcua/) and Node-RED.

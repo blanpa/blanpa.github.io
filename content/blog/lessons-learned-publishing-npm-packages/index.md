@@ -4,6 +4,7 @@ tags: [node-red, javascript, iiot]
 description: "What I learned building and maintaining open-source Node-RED packages — from first commit to thousands of downloads."
 date: 2026-05-23
 series: ["IIoT"]
+series_order: 14
 ---
 
 Over the past two years, I've published seven npm packages for Node-RED, all targeting the IIoT space. Some took off, some needed multiple rewrites, and all taught me things I couldn't have learned from tutorials alone. This post is the honest rundown: what worked, what didn't, and what I'd do differently.

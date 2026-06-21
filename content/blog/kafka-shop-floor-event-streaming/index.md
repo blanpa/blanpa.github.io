@@ -4,6 +4,7 @@ tags: [iiot, kafka, node-red, javascript]
 description: "When does Apache Kafka make sense in a factory, how it compares to NATS and MQTT, and how to wire it into Node-RED with a Schema Registry for real data contracts."
 date: 2026-06-20
 series: ["IIoT"]
+series_order: 15
 ---
 
 Kafka has a reputation problem in manufacturing. Half the people I talk to think it's the answer to everything; the other half think it's a heavyweight cloud thing that has no business near a PLC. Both are wrong. Kafka is a fantastic tool for a *specific* set of shop-floor problems — and a terrible choice for the rest. This post is about telling the two apart, and then actually wiring Kafka into a Node-RED stack once you've decided it fits.

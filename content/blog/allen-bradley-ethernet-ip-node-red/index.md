@@ -4,6 +4,7 @@ tags: [iiot, node-red, allen-bradley, ethernet-ip, plc]
 description: "A practical guide to reading and writing Allen-Bradley ControlLogix, CompactLogix, and legacy SLC/PLC-5 tags from Node-RED over EtherNet/IP and CIP."
 date: 2026-06-27
 series: ["IIoT"]
+series_order: 16
 ---
 
 I've written about getting a [Siemens S7 onto a dashboard via OPC-UA](/blog/siemens-s7-opcua-node-red/). But walk into a North American plant and you're far more likely to find an Allen-Bradley PLC — a ControlLogix in the big cells, a CompactLogix on the smaller machines, maybe a dusty SLC 500 still running a line nobody dares touch. And Allen-Bradley doesn't speak OPC-UA out of the box. It speaks **EtherNet/IP** and **CIP**. This is the guide to bridging that gap with Node-RED.

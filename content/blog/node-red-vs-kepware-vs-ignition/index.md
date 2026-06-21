@@ -4,6 +4,7 @@ tags: [iiot, node-red, opc-ua]
 description: "An honest comparison of three popular IIoT platforms — open-source flexibility vs enterprise features vs SCADA power."
 date: 2026-04-04
 series: ["IIoT"]
+series_order: 7
 ---
 
 Choosing an IIoT platform is one of those decisions that haunts you for years. Pick the wrong one, and you're locked into expensive licenses, limited integrations, or a tool that doesn't scale. Pick the right one — or the right *combination* — and you've built a foundation that grows with your factory.

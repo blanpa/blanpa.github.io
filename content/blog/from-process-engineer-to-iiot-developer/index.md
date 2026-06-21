@@ -4,6 +4,7 @@ tags: [career, iiot]
 description: "How my Industrial Engineering background became my biggest advantage in IIoT software development."
 date: 2026-05-16
 series: ["IIoT"]
+series_order: 13
 ---
 
 Two years ago, I was a process engineer in a manufacturing plant. I wore steel-toed boots, carried a clipboard, and spent my days optimizing cycle times and reducing scrap rates. Today, I build Node-RED modules for industrial IoT, maintain open-source packages, and write code that connects factory machines to dashboards and analytics systems.

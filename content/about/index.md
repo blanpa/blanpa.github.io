@@ -5,9 +5,18 @@ layout: "simple"
 ---
 
 <div class="about-hero">
-  <h2 class="about-hero__title">Building the bridge between <span class="accent">shop floor</span> and <span class="accent">cloud</span></h2>
-  <p class="about-hero__text">I am an IIoT Software Developer with an Industrial Engineering background. I build industrial connectivity solutions — from edge gateways and fieldbus protocols to real-time messaging and predictive maintenance. My focus is on open-source Node-RED modules for condition monitoring, OPC-UA, NATS, S7, CIP/EtherNet-IP, and IoT gateway integration.</p>
+  <img class="about-hero__photo" src="/img/author.png" alt="blanpa — IIoT Software Developer" width="128" height="128">
+  <div class="about-hero__body">
+    <h2 class="about-hero__title">Building the bridge between <span class="accent">shop floor</span> and <span class="accent">cloud</span></h2>
+    <p class="about-hero__text">I am an IIoT Software Developer with an Industrial Engineering background. I build industrial connectivity solutions — from edge gateways and fieldbus protocols to real-time messaging and predictive maintenance. My focus is on open-source Node-RED modules for condition monitoring, OPC-UA, NATS, S7, CIP/EtherNet-IP, and IoT gateway integration.</p>
+    <div class="about-hero__actions">
+      <a class="about-btn about-btn--primary" href="/projects/">View Projects</a>
+      <a class="about-btn about-btn--ghost" href="/blog/">Read the Blog</a>
+    </div>
+  </div>
 </div>
+
+{{< about-stats >}}
 
 ## Skills
 
@@ -26,9 +35,9 @@ layout: "simple"
   <div class="skill-group">
     <h3 class="skill-group__title">Platforms & Tools</h3>
     <div class="skill-chips">
-      <span class="skill-chip">Node-RED</span>
-      <span class="skill-chip">Docker</span>
-      <span class="skill-chip">Kubernetes / K3s</span>
+      <a class="skill-chip" href="/blog/node-red-vs-kepware-vs-ignition/">Node-RED</a>
+      <a class="skill-chip" href="/blog/docker-vs-k3s-edge-deployment/">Docker</a>
+      <a class="skill-chip" href="/blog/docker-vs-k3s-edge-deployment/">Kubernetes / K3s</a>
       <span class="skill-chip">Linux / Embedded Linux</span>
       <span class="skill-chip">Terraform</span>
       <span class="skill-chip">Ansible</span>
@@ -42,15 +51,15 @@ layout: "simple"
   <div class="skill-group">
     <h3 class="skill-group__title">Industrial Protocols</h3>
     <div class="skill-chips">
-      <span class="skill-chip chip--proto">OPC-UA</span>
-      <span class="skill-chip chip--proto">NATS / JetStream</span>
-      <span class="skill-chip chip--proto">MQTT</span>
-      <span class="skill-chip chip--proto">Siemens S7</span>
+      <a class="skill-chip chip--proto" href="/blog/siemens-s7-opcua-node-red/">OPC-UA</a>
+      <a class="skill-chip chip--proto" href="/blog/nats-edge-to-cloud-pipeline/">NATS / JetStream</a>
+      <a class="skill-chip chip--proto" href="/blog/mqtt-vs-sparkplug-vs-nats-vs-opcua/">MQTT</a>
+      <a class="skill-chip chip--proto" href="/blog/siemens-s7-opcua-node-red/">Siemens S7</a>
       <span class="skill-chip chip--proto">EtherNet/IP (CIP)</span>
-      <span class="skill-chip chip--proto">CAN Bus</span>
+      <a class="skill-chip chip--proto" href="/blog/can-bus-reverse-engineering-node-red/">CAN Bus</a>
       <span class="skill-chip chip--proto">RS485 / Modbus</span>
       <span class="skill-chip chip--proto">Sparkplug B</span>
-      <span class="skill-chip chip--proto">REST / gRPC / WebSocket</span>
+      <a class="skill-chip chip--proto" href="/blog/rest-vs-opcua-vs-graphql-manufacturing/">REST / gRPC / WebSocket</a>
     </div>
   </div>
   <div class="skill-group">
@@ -150,6 +159,7 @@ I maintain several open-source Node-RED packages for industrial IoT on [npm](htt
       <span class="timeline-date">2024 — present</span>
       <h3>IIoT Software Developer</h3>
       <p>Designing and implementing software solutions for industrial applications — IoT, cloud computing, and data analytics. Building real-time data collection, processing, and analysis systems for industrial devices and systems.</p>
+      <p class="timeline-impact">Published and maintain 8 open-source Node-RED packages — OPC-UA, Siemens S7, CIP/EtherNet-IP, NATS, Kafka, condition monitoring, i3x, and Containerlab interfaces — distributed via npm to the Node-RED community.</p>
     </div>
   </div>
   <div class="timeline-item">
@@ -187,15 +197,15 @@ Interested in working together or have a question? Feel free to reach out.
 ## Support My Work
 
 <div class="support-cards">
-  <a href="https://ko-fi.com/blanpa" target="_blank" class="support-card">
+  <a href="https://ko-fi.com/blanpa" target="_blank" rel="noopener noreferrer" class="support-card">
     <span class="support-card__icon">&#9749;</span>
     <span class="support-card__label">Ko-fi</span>
   </a>
-  <a href="https://github.com/sponsors/blanpa" target="_blank" class="support-card">
+  <a href="https://github.com/sponsors/blanpa" target="_blank" rel="noopener noreferrer" class="support-card">
     <span class="support-card__icon">&#10084;</span>
     <span class="support-card__label">GitHub Sponsors</span>
   </a>
-  <a href="https://buymeacoffee.com/blanpa" target="_blank" class="support-card">
+  <a href="https://buymeacoffee.com/blanpa" target="_blank" rel="noopener noreferrer" class="support-card">
     <span class="support-card__icon">&#127861;</span>
     <span class="support-card__label">Buy Me a Coffee</span>
   </a>

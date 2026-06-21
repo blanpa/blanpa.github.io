@@ -4,6 +4,7 @@ tags: [iiot, node-red, javascript, docker]
 description: "How to version control, test, and automatically deploy Node-RED flows — treating flows as code."
 date: 2026-05-09
 series: ["IIoT"]
+series_order: 12
 ---
 
 Node-RED is fantastic for building IIoT integrations quickly. Drag, drop, wire, deploy — you have a working MQTT-to-database pipeline in minutes. But then comes the question every production deployment forces you to answer: *how do I version this? How do I test it? How do I deploy it without clicking buttons?*

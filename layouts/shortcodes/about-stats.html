@@ -1,0 +1,25 @@
+{{- /* About-page proof band. Reuses the homepage npm count-up JS via the
+       data-npm-packages / data-npm-total / data-count hooks. */ -}}
+{{- $pkgs := slice -}}
+{{- range site.Data.npm_packages -}}{{- $pkgs = $pkgs | append .pkg -}}{{- end -}}
+<div class="about-stats" data-npm-packages="{{ delimit $pkgs "," }}">
+  <div class="about-stat">
+    <span class="about-stat__num" data-npm-total aria-live="polite">—</span>
+    <span class="about-stat__label">npm downloads / mo</span>
+  </div>
+  <div class="about-stat">
+    <span class="about-stat__num" data-count>{{ len site.Data.npm_packages }}</span>
+    <span class="about-stat__label">open-source packages</span>
+  </div>
+  <div class="about-stat">
+    <span class="about-stat__num">5</span>
+    <span class="about-stat__label">protocol suites</span>
+  </div>
+  <div class="about-stat">
+    <span class="about-stat__num">2024</span>
+    <span class="about-stat__label">building IIoT since</span>
+  </div>
+</div>
+{{- if os.FileExists "static/cv.pdf" -}}
+<a class="cv-button" href="/cv.pdf" download>↓ Download CV (PDF)</a>
+{{- end -}}

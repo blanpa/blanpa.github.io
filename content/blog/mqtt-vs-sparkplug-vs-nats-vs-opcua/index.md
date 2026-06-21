@@ -4,6 +4,7 @@ tags: [iiot, mqtt, nats, opc-ua, node-red]
 description: "A practical comparison of four industrial messaging protocols — when to use which, with architecture examples and code snippets."
 date: 2026-03-05
 series: ["IIoT"]
+series_order: 1
 ---
 
 Choosing the right messaging protocol for an Industrial IoT project is one of the most impactful architectural decisions you'll make. Pick the wrong one and you'll spend months working around its limitations. Pick the right one and data flows effortlessly from sensor to cloud.

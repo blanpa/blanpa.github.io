@@ -1,0 +1,51 @@
+{{- /* Branded OG card: overlays the page title (and a series/section kicker)
+       on the og-base canvas. Returns the generated image's permalink, or ""
+       if the base assets are missing. Used as a fallback for pages that have
+       no feature image of their own. */ -}}
+{{- $base := resources.Get "img/og-base.png" -}}
+{{- $font := resources.Get "fonts/og-title.ttf" -}}
+{{- $out := "" -}}
+{{- if and $base $font -}}
+  {{- $img := $base -}}
+
+  {{- /* Kicker line: "Series · Part N", else the section, else the brand. */ -}}
+  {{- $kicker := "blanpa" -}}
+  {{- if .Params.series -}}
+    {{- $s := index .Params.series 0 -}}
+    {{- if .Params.series_order -}}
+      {{- $kicker = printf "%s · Part %v" $s .Params.series_order -}}
+    {{- else -}}
+      {{- $kicker = $s -}}
+    {{- end -}}
+  {{- else if .Section -}}
+    {{- $kicker = .Section | title -}}
+  {{- end -}}
+  {{- $img = $img.Filter (images.Text $kicker (dict "color" "#00c8a5" "size" 30 "x" 82 "y" 118 "font" $font)) -}}
+
+  {{- /* Word-wrap the title to ~24 chars per line, capped at 4 lines. */ -}}
+  {{- $lines := slice -}}
+  {{- $cur := "" -}}
+  {{- range $w := split .Title " " -}}
+    {{- $try := cond (eq $cur "") $w (printf "%s %s" $cur $w) -}}
+    {{- if gt (len $try) 24 -}}
+      {{- if eq $cur "" -}}
+        {{- $lines = $lines | append $try -}}
+      {{- else -}}
+        {{- $lines = $lines | append $cur -}}{{- $cur = $w -}}
+      {{- end -}}
+    {{- else -}}
+      {{- $cur = $try -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if ne $cur "" -}}{{- $lines = $lines | append $cur -}}{{- end -}}
+  {{- if gt (len $lines) 4 -}}{{- $lines = first 4 $lines -}}{{- end -}}
+
+  {{- $y := 185 -}}
+  {{- range $line := $lines -}}
+    {{- $img = $img.Filter (images.Text $line (dict "color" "#F2F5F7" "size" 64 "x" 80 "y" $y "font" $font)) -}}
+    {{- $y = add $y 84 -}}
+  {{- end -}}
+
+  {{- $out = $img.Permalink -}}
+{{- end -}}
+{{- return $out -}}

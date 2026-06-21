@@ -4,6 +4,7 @@ tags: [iiot, opc-ua, node-red, plc]
 description: "Step-by-step tutorial: reading data from a Siemens S7-1500 PLC via OPC-UA and displaying it on a Node-RED dashboard."
 date: 2026-04-25
 series: ["IIoT"]
+series_order: 10
 ---
 
 This is the tutorial I wish I had when I first tried connecting a Siemens PLC to Node-RED. It took me two days of frustration — fighting with certificates, firewall rules, and data type mismatches — before I got a single value to appear on a dashboard. With this guide, you'll do it in 30 minutes.

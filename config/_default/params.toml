@@ -4,7 +4,8 @@ autoSwitchAppearance = true
 
 enableSearch = true
 enableCodeCopy = true
-defaultSocialImage = "img/og-default.png"
+# defaultSocialImage intentionally unset: extend-head-uncached.html supplies
+# og:image (rich default on home, generated title cards on image-less pages).
 mainSections = ["blog"]
 disableImageOptimization = false
 highlightCurrentMenuArea = true
@@ -46,7 +47,7 @@ smartTOC = true
   showTaxonomies = true
   showWordCount = false
   showZenMode = false
-  sharingLinks = ["linkedin", "twitter", "reddit", "email"]
+  sharingLinks = ["linkedin", "reddit", "email"]
 
 [list]
   showHero = true

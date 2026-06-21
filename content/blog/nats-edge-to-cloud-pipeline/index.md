@@ -4,6 +4,7 @@ tags: [iiot, nats, node-red, docker]
 description: "Architecture guide for connecting factory floor sensors to cloud analytics using NATS leaf nodes, JetStream, and key-value stores."
 date: 2026-03-21
 series: ["IIoT"]
+series_order: 5
 ---
 
 MQTT got us far. Every IIoT project I've worked on started with Mosquitto, some topics, and QoS 1. It works — until you need message replay, exactly-once delivery, or synchronizing configuration across 30 factory sites. Then you start bolting on Kafka for persistence, Redis for key-value state, and a custom sync mechanism for edge-to-cloud. Three systems to operate, three failure modes to debug at 2 AM.

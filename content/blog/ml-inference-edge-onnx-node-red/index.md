@@ -4,6 +4,7 @@ tags: [iiot, node-red, machine-learning, python, raspberry-pi]
 description: "How to deploy trained ML models directly on edge devices using ONNX, TensorFlow Lite, and Google Coral — no cloud required."
 date: 2026-03-14
 series: ["IIoT"]
+series_order: 4
 ---
 
 Every time I hear "just send the data to the cloud for inference," I think about the CNC spindle that threw a bearing 200 ms after the anomaly appeared. The round-trip to AWS takes 150 ms on a good day — and that's assuming the factory Wi-Fi doesn't drop the packet. By the time the cloud responds, the spindle is already damaged.

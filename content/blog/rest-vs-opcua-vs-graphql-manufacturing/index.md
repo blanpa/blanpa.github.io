@@ -4,6 +4,7 @@ tags: [iiot, opc-ua, rest-api]
 description: "Choosing the right API paradigm for industrial data access — practical comparison with manufacturing examples."
 date: 2026-04-11
 series: ["IIoT"]
+series_order: 8
 ---
 
 "Just give me the temperature and status of that machine" — simple enough, right? But the *how* matters enormously. Do you poll a REST endpoint? Subscribe via OPC-UA? Query a GraphQL schema? Each paradigm makes different trade-offs between simplicity, performance, and expressiveness, and in manufacturing those trade-offs have real consequences.
