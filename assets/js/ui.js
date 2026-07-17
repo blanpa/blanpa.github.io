@@ -83,78 +83,51 @@
   }
 
   /* ---- Homepage proof band: animated count-up stats ---------------- */
-  /* Counts the package count and the live npm-download total up from
-     zero the first time the band scrolls into view. The npm total is
-     fetched async; whichever happens last (visibility or fetch) kicks
-     off its animation. Respects prefers-reduced-motion. */
+  /* The real values are baked into the HTML at build time (data-count),
+     so the numbers are correct even without JS. This only animates the
+     count-up the first time the band scrolls into view. Respects
+     prefers-reduced-motion (no animation, values already rendered). */
   function initProofCounters() {
-    var band = document.querySelector("[data-npm-packages]");
-    if (!band) return;
-
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var pkgEl = band.querySelector("[data-count]");
-    var npmEl = band.querySelector("[data-npm-total]");
-    var npmTarget = null; // numeric target once fetched (null = pending)
-    var visible = false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     function countUp(el, target) {
-      if (!el) return;
-      if (reduce) { el.textContent = target.toLocaleString("en"); return; }
-      var dur = 1200, from = 0, start = 0;
+      var dur = 1200, start = 0;
       function step(ts) {
         if (!start) start = ts;
         var p = Math.min((ts - start) / dur, 1);
         var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(from + (target - from) * eased).toLocaleString("en");
+        el.textContent = Math.round(target * eased).toLocaleString("en");
         if (p < 1) requestAnimationFrame(step);
         else el.textContent = target.toLocaleString("en");
       }
       requestAnimationFrame(step);
     }
 
-    function runNpm() {
-      if (!visible || npmTarget === null || npmTarget < 0 || !npmEl) return;
-      if (npmTarget > 0) countUp(npmEl, npmTarget);
-      else npmEl.textContent = "8+";
-      npmTarget = -1; // mark consumed so it only runs once
-    }
+    document.querySelectorAll(".home-proof, .about-stats").forEach(function (band) {
+      var els = band.querySelectorAll("[data-count]");
+      if (!els.length) return;
 
-    // Fetch the live npm download totals.
-    var pkgs = band.getAttribute("data-npm-packages").split(",").filter(Boolean);
-    if (pkgs.length) {
-      Promise.all(pkgs.map(function (p) {
-        return fetch("https://api.npmjs.org/downloads/point/last-month/" + p)
-          .then(function (r) { return r.json(); })
-          .then(function (d) { return d.downloads || 0; })
-          .catch(function () { return 0; });
-      })).then(function (counts) {
-        npmTarget = counts.reduce(function (a, b) { return a + b; }, 0);
-        runNpm();
-      });
-    } else if (npmEl) {
-      npmEl.textContent = "8+";
-    }
-
-    function start() {
-      if (visible) return;
-      visible = true;
-      if (pkgEl) {
-        var t = parseInt(pkgEl.textContent.replace(/[^\d]/g, ""), 10) || 0;
-        countUp(pkgEl, t);
-      }
-      runNpm();
-    }
-
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { start(); io.disconnect(); }
+      var started = false;
+      function start() {
+        if (started) return;
+        started = true;
+        els.forEach(function (el) {
+          var t = parseInt(el.getAttribute("data-count"), 10);
+          if (t > 0) countUp(el, t);
         });
-      }, { threshold: 0.35 });
-      io.observe(band);
-    } else {
-      start();
-    }
+      }
+
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { start(); io.disconnect(); }
+          });
+        }, { threshold: 0.35 });
+        io.observe(band);
+      } else {
+        start();
+      }
+    });
   }
 
   /* ---- Rotating keyword(s) in the tagline -------------------------- */

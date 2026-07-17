@@ -1,0 +1,5 @@
+# Baked-in npm download total, refreshed by the deploy workflow before every
+# build (daily cron + on push). This committed value is only the local-dev /
+# fallback baseline — CI overwrites it with live numbers.
+total_last_month: 4715
+updated: 2026-07-17
