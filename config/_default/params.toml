@@ -9,6 +9,9 @@ enableCodeCopy = true
 mainSections = ["blog"]
 disableImageOptimization = false
 highlightCurrentMenuArea = true
+# Cookieless analytics: create an account at goatcounter.com, then set your
+# site code here (e.g. "blanpa") to enable the tracker in extend-head.html.
+# goatcounter = ""
 smartTOC = true
 
 [header]
@@ -73,13 +76,6 @@ smartTOC = true
   groupByYear = false
   cardView = true
   cardViewScreenWidth = false
-
-[buymeacoffee]
-  identifier = "blanpa"
-  globalWidget = false
-  globalWidgetMessage = ""
-  globalWidgetColor = "#FFDD00"
-  globalWidgetPosition = "right"
 
 [author]
   name = "blanpa"

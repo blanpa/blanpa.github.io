@@ -7,6 +7,8 @@ series: ["IIoT"]
 series_order: 14
 ---
 
+> **Update (July 2026):** the family has since grown to eight packages — [node-red-contrib-kafka-suite](https://github.com/blanpa/node-red-contrib-kafka-suite) joined after this post was written. Everything below still applies.
+
 Over the past two years, I've published seven npm packages for Node-RED, all targeting the IIoT space. Some took off, some needed multiple rewrites, and all taught me things I couldn't have learned from tutorials alone. This post is the honest rundown: what worked, what didn't, and what I'd do differently.
 
 ---
