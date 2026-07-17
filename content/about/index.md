@@ -205,4 +205,8 @@ Interested in working together or have a question? Feel free to reach out.
     <span class="support-card__icon">&#10084;</span>
     <span class="support-card__label">GitHub Sponsors</span>
   </a>
+  <a href="https://buymeacoffee.com/blanpa" target="_blank" rel="noopener noreferrer" class="support-card">
+    <span class="support-card__icon">&#127861;</span>
+    <span class="support-card__label">Buy Me a Coffee</span>
+  </a>
 </div>
