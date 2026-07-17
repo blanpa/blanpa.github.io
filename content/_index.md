@@ -8,3 +8,5 @@ description: "IIoT Software Developer — Building industrial connectivity solut
 {{< home-stats >}}
 
 {{< contact-modal id="mjgaaoww" >}}
+
+{{< home-featured-project >}}
