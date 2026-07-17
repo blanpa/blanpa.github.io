@@ -1,12 +1,53 @@
 /* ==============================================
+   TYPOGRAPHY — self-hosted (GDPR-safe, no CDN)
+   Space Grotesk: display/headings/numbers.
+   JetBrains Mono: technical micro-labels.
+   ============================================== */
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-600.woff2") format("woff2");
+}
+
+/* ==============================================
    DESIGN TOKENS
    ============================================== */
 :root {
-  /* Accent */
+  /* Accent — one colour, used solid. (The old teal→blue gradient washes
+     read as 2022 template aesthetics; solid reads calmer and passes
+     contrast checks.) */
   --accent: #00c8a5;
   --accent-2: #0099cc;
-  --accent-grad: linear-gradient(135deg, var(--accent), var(--accent-2));
+  --accent-grad: var(--accent);
+  --accent-ink: #04211b; /* dark text on accent surfaces */
   --accent-on-light: #008a70;
+
+  /* Fonts */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   /* Type scale (rem — scales with user font settings) */
   --text-xs: 0.78rem;
@@ -28,6 +69,35 @@
   --surface-hover: rgba(0, 0, 0, 0.04);
   --border-soft: rgba(0, 0, 0, 0.08);
   --border-strong: rgba(0, 0, 0, 0.16);
+}
+
+/* Display face for headings and stat numbers; body copy stays on the
+   theme's system stack for performance and neutrality. */
+h1, h2, h3, h4,
+.home-proof__num,
+.about-stat__num,
+.process-step__num {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Technical micro-labels get the mono face — the "engineering drawing"
+   register that fits the industrial subject matter. */
+.home-proof__label,
+.home-proof__chip,
+.project-tag,
+.skill-group__title,
+.timeline-date,
+.tech-arch__label,
+.about-stat__label,
+.blog-feed-item__meta time,
+.blog-featured__date,
+.blog-featured__badge,
+.project-featured__badge,
+.blog-feed-item__series,
+.npm-stats-table thead th,
+.mermaid-zoom-hint {
+  font-family: var(--font-mono);
 }
 
 /* ==============================================
@@ -74,18 +144,19 @@
 }
 .home-proof__num {
   font-size: var(--text-2xl);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
-  background: var(--accent-grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+:root:not(.dark) .home-proof__num {
+  color: var(--accent-on-light);
 }
 .home-proof__label {
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  opacity: 0.55;
+  opacity: 0.72;
 }
 .home-proof__chips {
   display: flex;
@@ -137,8 +208,8 @@
   transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .home-contact-btn:hover {
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  color: #fff;
+  background: var(--accent);
+  color: var(--accent-ink);
   border-color: transparent;
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0, 200, 165, 0.25);
@@ -152,7 +223,7 @@
   color: #008a70;
 }
 :root:not(.dark) .home-contact-btn:hover {
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
+  background: var(--accent-on-light);
   color: #fff;
   border-color: transparent;
   box-shadow: 0 8px 30px rgba(0, 160, 130, 0.2);
@@ -214,12 +285,12 @@
 
 .contact-dialog__inner > h2 {
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 700;
   margin: 0 0 1.5rem 0;
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent);
+}
+:root:not(.dark) .contact-dialog__inner > h2 {
+  color: var(--accent-on-light);
 }
 
 .contact-dialog__close {
@@ -357,15 +428,16 @@
   padding: 0.9rem 2rem;
   border-radius: 12px;
   font-size: 0.95rem;
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  color: #fff;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
   border: none;
   margin-top: 0.5rem;
   transition: all 0.25s ease;
   box-sizing: border-box;
 }
 .contact-dialog .contact-submit:hover {
-  background: linear-gradient(135deg, #00ddb8, #00aadd);
+  background: #00ddb8;
   box-shadow: 0 6px 24px rgba(0, 200, 165, 0.3);
   transform: translateY(-2px);
 }
@@ -403,13 +475,53 @@
 }
 
 /* ==============================================
+   HOMEPAGE FEATURED PROJECT
+   ============================================== */
+.home-featured {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(50rem, 92vw);
+  margin: 0 auto 2rem;
+  text-align: left;
+}
+.home-featured__kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+:root:not(.dark) .home-featured__kicker {
+  color: var(--accent-on-light);
+}
+.home-featured .project-featured {
+  margin: 0.5rem 0 0.75rem;
+}
+.home-featured__all {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--accent);
+}
+.home-featured__all:hover {
+  text-decoration: underline;
+}
+:root:not(.dark) .home-featured__all {
+  color: var(--accent-on-light);
+}
+
+/* ==============================================
    GLASSMORPHISM BASE — shared card style
    ============================================== */
 .glass {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass:hover {
@@ -470,7 +582,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .project-featured:hover {
@@ -512,13 +623,13 @@
   display: inline-block;
   width: fit-content;
   padding: 0.25rem 0.75rem;
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  color: #fff;
+  background: var(--accent);
+  color: var(--accent-ink);
   margin-bottom: 1rem;
 }
 .project-featured__content h2 {
@@ -571,7 +682,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .project-card:hover {
@@ -641,7 +751,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .blog-featured:hover {
@@ -687,19 +796,19 @@
   display: inline-block;
   width: fit-content;
   padding: 0.25rem 0.75rem;
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  color: #fff;
+  background: var(--accent);
+  color: var(--accent-ink);
   margin-bottom: 0.6rem;
 }
 .blog-featured__date {
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.65);
   margin-bottom: 0.6rem;
 }
 :root:not(.dark) .blog-featured__date {
@@ -752,7 +861,6 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(8px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .blog-feed-item:hover {
@@ -806,7 +914,7 @@
   margin-bottom: 0.3rem;
 }
 .blog-feed-item__meta time {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #00c8a5;
   text-transform: uppercase;
@@ -816,8 +924,8 @@
   color: #008a70;
 }
 .blog-feed-item__series {
-  font-size: 0.65rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 600;
   padding: 0.15rem 0.55rem;
   border-radius: 9999px;
   background: rgba(0, 153, 204, 0.12);
@@ -874,7 +982,6 @@
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
 }
 :root:not(.dark) .about-hero {
   border-color: rgba(0, 0, 0, 0.08);
@@ -888,10 +995,10 @@
   margin: 0 0 1rem 0;
 }
 .about-hero__title .accent {
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent);
+}
+:root:not(.dark) .about-hero__title .accent {
+  color: var(--accent-on-light);
 }
 .about-hero__text {
   margin: 0;
@@ -927,7 +1034,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
 }
 :root:not(.dark) .skill-group {
   border-color: rgba(0, 0, 0, 0.08);
@@ -1060,8 +1166,8 @@
 
 .timeline-date {
   display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #00c8a5;
@@ -1090,7 +1196,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .support-card:hover {
@@ -1185,11 +1290,8 @@
 .process-step__num {
   display: block;
   font-size: 1.8rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 700;
+  color: var(--accent);
   margin-bottom: 0.6rem;
   line-height: 1;
 }
@@ -1215,7 +1317,6 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
 }
 :root:not(.dark) .npm-stats-table {
   border-color: rgba(0, 0, 0, 0.08);
@@ -1229,8 +1330,8 @@
 .npm-stats-table thead th {
   padding: 0.9rem 1.25rem;
   text-align: left;
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #00c8a5;
@@ -1290,7 +1391,6 @@
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(8px);
 }
 :root:not(.dark) .tech-arch {
   border-color: rgba(0, 0, 0, 0.06);
@@ -1303,11 +1403,11 @@
 }
 .tech-arch__label {
   display: inline-block;
-  font-size: 0.68rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  opacity: 0.4;
+  opacity: 0.6;
   margin-bottom: 0.6rem;
 }
 
@@ -1420,7 +1520,6 @@
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 16px !important;
   background: rgba(20, 27, 36, 0.6) !important;
-  backdrop-filter: blur(10px);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -1652,7 +1751,6 @@
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(6px);
   overflow-x: auto;
   cursor: zoom-in;
   transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
@@ -1692,7 +1790,7 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.25rem 0.6rem;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1876,15 +1974,9 @@ body.mermaid-lightbox-open {
   display: block;
   height: 100%;
   width: 0;
-  background: linear-gradient(90deg, #00c8a5, #0099cc);
+  background: var(--accent);
   box-shadow: 0 0 8px rgba(0, 200, 165, 0.5);
   transition: width 0.1s linear;
-}
-
-/* Pause the animated background orbs when the tab is not visible
-   (saves CPU/battery; reduced-motion is already handled separately). */
-#blueprint-bg.bg-paused .bg-orb {
-  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1987,8 +2079,8 @@ body.mermaid-lightbox-open {
   transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
 }
 .about-btn--primary {
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  color: #06121a;
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 .about-btn--primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .about-btn--ghost {
@@ -2007,7 +2099,6 @@ body.mermaid-lightbox-open {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
 }
 :root:not(.dark) .about-stats {
   border-color: rgba(0, 0, 0, 0.08);
@@ -2027,8 +2118,8 @@ body.mermaid-lightbox-open {
 }
 :root:not(.dark) .about-stat__num { color: #008a70; }
 .about-stat__label {
-  font-size: 0.72rem;
-  opacity: 0.7;
+  font-size: 0.75rem;
+  opacity: 0.75;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

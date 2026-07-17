@@ -1,110 +1,76 @@
 <style>
-#blueprint-bg {
+/* ==============================================
+   SITE BACKGROUND — industrial blueprint grid
+   Pure CSS on body::before/::after: no DOM
+   injection, no blur filters, no animation —
+   renders for free even on low-end devices.
+   ============================================== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #0a0e14;
+  background-image:
+    /* major grid */
+    linear-gradient(rgba(0, 200, 165, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 165, 0.055) 1px, transparent 1px),
+    /* fine grid */
+    linear-gradient(rgba(148, 180, 193, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 180, 193, 0.03) 1px, transparent 1px);
+  background-size:
+    132px 132px,
+    132px 132px,
+    22px 22px,
+    22px 22px;
+}
+
+/* Vignette + a faint accent wash at the top, so the grid recedes toward
+   the edges and content stays the focus. Static — nothing to animate. */
+body::after {
+  content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-color: #0a0e14;
-  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 200, 165, 0.07), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(5, 8, 12, 0.6) 100%);
 }
 
-.bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0;
-  will-change: transform, opacity;
+html:not(.dark) body::before {
+  background-color: #f6f8fa;
+  background-image:
+    linear-gradient(rgba(0, 122, 100, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 122, 100, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(30, 50, 60, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 50, 60, 0.035) 1px, transparent 1px);
 }
-
-.bg-orb--1 {
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(0, 200, 165, 0.28), transparent 70%);
-  top: -15%; left: -10%;
-  animation: orb-float-1 25s ease-in-out infinite, orb-fade-in 2s ease-out forwards;
-}
-.bg-orb--2 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(100, 70, 230, 0.22), transparent 70%);
-  bottom: -15%; right: -10%;
-  animation: orb-float-2 30s ease-in-out infinite, orb-fade-in 2s ease-out 0.3s forwards;
-}
-.bg-orb--3 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(0, 170, 220, 0.18), transparent 70%);
-  top: 35%; right: 15%;
-  animation: orb-float-3 22s ease-in-out infinite, orb-fade-in 2s ease-out 0.6s forwards;
-}
-
-#blueprint-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle 450px at var(--mx, 50%) var(--my, 50%), rgba(0, 200, 165, 0.04), transparent 70%);
-  transition: background 0.4s ease;
-}
-
-@keyframes orb-fade-in {
-  to { opacity: 1; }
-}
-
-@keyframes orb-float-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%      { transform: translate(80px, 60px) scale(1.1); }
-  66%      { transform: translate(-40px, 30px) scale(0.95); }
-}
-@keyframes orb-float-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%      { transform: translate(-70px, -50px) scale(1.08); }
-  66%      { transform: translate(50px, -30px) scale(0.92); }
-}
-@keyframes orb-float-3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%      { transform: translate(60px, -40px) scale(1.05); }
-  66%      { transform: translate(-50px, 50px) scale(0.97); }
-}
-
-html:not(.dark) #blueprint-bg {
-  background-color: #f5f7fa;
-}
-html:not(.dark) .bg-orb--1 {
-  background: radial-gradient(circle, rgba(0, 200, 165, 0.18), transparent 70%);
-}
-html:not(.dark) .bg-orb--2 {
-  background: radial-gradient(circle, rgba(100, 70, 230, 0.14), transparent 70%);
-}
-html:not(.dark) .bg-orb--3 {
-  background: radial-gradient(circle, rgba(0, 170, 220, 0.12), transparent 70%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bg-orb { animation: orb-fade-in 1s ease-out forwards !important; }
+html:not(.dark) body::after {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 138, 112, 0.05), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 60%, rgba(210, 220, 226, 0.5) 100%);
 }
 </style>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  var bg = document.createElement("div");
-  bg.id = "blueprint-bg";
-  bg.innerHTML = '<div class="bg-orb bg-orb--1"></div><div class="bg-orb bg-orb--2"></div><div class="bg-orb bg-orb--3"></div>';
-  document.body.prepend(bg);
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var tx = 50, ty = 50, rafM = 0;
-  document.addEventListener("mousemove", function (e) {
-    tx = (e.clientX / window.innerWidth) * 100;
-    ty = (e.clientY / window.innerHeight) * 100;
-    if (!rafM) {
-      rafM = requestAnimationFrame(function () {
-        bg.style.setProperty("--mx", tx + "%");
-        bg.style.setProperty("--my", ty + "%");
-        rafM = 0;
-      });
+{{/* Speculation Rules — prefetch same-site links on hover/viewport so blog
+     and project navigation feels instant. Progressive enhancement: browsers
+     without support ignore the script block entirely. */}}
+<script type="speculationrules">
+{
+  "prefetch": [
+    {
+      "where": { "href_matches": "/*" },
+      "eagerness": "moderate"
     }
-  }, { passive: true });
-
-  // Pause orb animations while the tab is hidden to save CPU/battery.
-  document.addEventListener("visibilitychange", function () {
-    bg.classList.toggle("bg-paused", document.hidden);
-  });
-});
+  ]
+}
 </script>
+
+{{/* Privacy-friendly, cookieless analytics (GoatCounter). Off by default:
+     set goatcounter = "<your-code>" in config/_default/params.toml after
+     creating the account at goatcounter.com to enable it. */}}
+{{ with site.Params.goatcounter }}
+<script data-goatcounter="https://{{ . }}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+{{ end }}
