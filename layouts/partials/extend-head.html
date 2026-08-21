@@ -1,6 +1,15 @@
 {{/* The blueprint-grid site background lives in assets/css/custom.css
      (SITE BACKGROUND section) — bundled, minified, and cacheable there. */}}
 
+{{/* Preload the heading face. Without this the browser only discovers the
+     font once it has parsed the CSS and matched a heading, so every page
+     starts with a fallback-rendered headline and swaps a beat later. This is
+     the one face worth the extra connection: 12 KB, and it paints the largest
+     element on most pages. crossorigin is required even same-origin — fonts
+     are always fetched in CORS mode, and without it the preload is discarded
+     and fetched a second time. */}}
+<link rel="preload" as="font" type="font/woff2" href="{{ "fonts/space-grotesk-700.woff2" | relURL }}" crossorigin>
+
 {{/* Speculation Rules — prefetch same-site links on hover/viewport so blog
      and project navigation feels instant. Progressive enhancement: browsers
      without support ignore the script block entirely. */}}
