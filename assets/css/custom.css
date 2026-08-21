@@ -1379,6 +1379,18 @@ h1, h2, h3, h4,
   font-variant-numeric: tabular-nums;
 }
 
+.npm-stats-table .npm-stats-updated {
+  margin: 0;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+:root:not(.dark) .npm-stats-table .npm-stats-updated {
+  color: rgba(0, 0, 0, 0.45);
+  border-top-color: rgba(0, 0, 0, 0.05);
+}
+
 /* ==============================================
    TECH ARCHITECTURE DIAGRAM
    ============================================== */
@@ -2177,3 +2189,57 @@ a.skill-chip:hover::after { opacity: 1; }
   .tech-arch__connector svg path:first-child { animation: none; }
 }
 
+
+/* ==============================================
+   SITE BACKGROUND — industrial blueprint grid
+   Pure CSS on body::before/::after: no DOM
+   injection, no blur filters, no animation —
+   renders for free even on low-end devices.
+   ============================================== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #0a0e14;
+  background-image:
+    /* major grid */
+    linear-gradient(rgba(0, 200, 165, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 165, 0.055) 1px, transparent 1px),
+    /* fine grid */
+    linear-gradient(rgba(148, 180, 193, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 180, 193, 0.03) 1px, transparent 1px);
+  background-size:
+    132px 132px,
+    132px 132px,
+    22px 22px,
+    22px 22px;
+}
+
+/* Vignette + a faint accent wash at the top, so the grid recedes toward
+   the edges and content stays the focus. Static — nothing to animate. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 200, 165, 0.07), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(5, 8, 12, 0.6) 100%);
+}
+
+html:not(.dark) body::before {
+  background-color: #f6f8fa;
+  background-image:
+    linear-gradient(rgba(0, 122, 100, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 122, 100, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(30, 50, 60, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 50, 60, 0.035) 1px, transparent 1px);
+}
+html:not(.dark) body::after {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 138, 112, 0.05), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 60%, rgba(210, 220, 226, 0.5) 100%);
+}

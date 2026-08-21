@@ -1,0 +1,18 @@
+{{- /* Resolve a page's card image URL: first image resource matching
+       feature, cover, or thumbnail, resized to the given width. SVGs and
+       sites with image optimization disabled pass through unresized. Returns
+       "" when the page has no matching image. Params: page, width (int). */ -}}
+{{- $url := "" -}}
+{{- $images := .page.Resources.ByType "image" -}}
+{{- $img := "" -}}
+{{- range slice "*feature*" "*cover*" "*thumbnail*" -}}
+  {{- if not $img }}{{ $img = $images.GetMatch . }}{{ end -}}
+{{- end -}}
+{{- with $img -}}
+  {{- if or (site.Store.Get "disableImageOptimization") (eq .MediaType.SubType "svg") -}}
+    {{- $url = .RelPermalink -}}
+  {{- else -}}
+    {{- $url = (.Resize (printf "%dx" (int $.width))).RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+{{- return $url -}}

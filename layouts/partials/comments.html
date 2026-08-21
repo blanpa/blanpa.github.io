@@ -19,18 +19,4 @@
   crossorigin="anonymous"
   async>
 </script>
-<script>
-(function() {
-  const observer = new MutationObserver(function() {
-    const isDark = document.documentElement.classList.contains('dark');
-    const iframe = document.querySelector('iframe.giscus-frame');
-    if (iframe) {
-      iframe.contentWindow.postMessage(
-        { giscus: { setConfig: { theme: isDark ? 'noborder_dark' : 'noborder_light' } } },
-        'https://giscus.app'
-      );
-    }
-  });
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-})();
-</script>
+{{- /* Theme sync (light/dark) lives in assets/js/ui.js (initGiscusThemeSync). */ -}}

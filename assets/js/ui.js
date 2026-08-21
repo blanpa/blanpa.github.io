@@ -248,6 +248,182 @@
     });
   }
 
+  /* ---- Support FAB (footer) ---------------------------------------- */
+  function initSupportFab() {
+    var fab = document.getElementById("support-fab-btn");
+    var options = document.getElementById("support-options");
+    var icon = document.getElementById("support-fab-icon");
+    if (!fab || !options) return;
+    var open = false;
+
+    function setOpen(next) {
+      open = next;
+      fab.setAttribute("aria-expanded", open ? "true" : "false");
+      options.classList.toggle("opacity-0", !open);
+      options.classList.toggle("translate-y-4", !open);
+      options.classList.toggle("pointer-events-none", !open);
+      options.classList.toggle("invisible", !open);
+      options.classList.toggle("opacity-100", open);
+      options.classList.toggle("translate-y-0", open);
+      options.classList.toggle("pointer-events-auto", open);
+      if (icon) icon.style.transform = open ? "rotate(45deg)" : "rotate(0deg)";
+    }
+
+    fab.addEventListener("click", function () { setOpen(!open); });
+    document.addEventListener("click", function (e) {
+      if (open && !document.getElementById("support-fab").contains(e.target)) {
+        setOpen(false);
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && open) setOpen(false);
+    });
+  }
+
+  /* ---- Mermaid diagram lightbox ------------------------------------ */
+  function initMermaidLightbox() {
+    if (!document.querySelector(".mermaid-wrapper")) return;
+    var lightbox = null;
+    var inner = null;
+    var zoom = 1;
+    var minZoom = 0.5;
+    var maxZoom = 5;
+    var zoomStep = 0.25;
+
+    function ensureLightbox() {
+      if (lightbox) return lightbox;
+      lightbox = document.createElement("div");
+      lightbox.className = "mermaid-lightbox";
+      lightbox.innerHTML =
+        '<button type="button" class="mermaid-lightbox__close" aria-label="Close">&times;</button>' +
+        '<div class="mermaid-lightbox__inner"></div>' +
+        '<div class="mermaid-lightbox__controls">' +
+          '<button type="button" data-action="out" aria-label="Zoom out">&minus;</button>' +
+          '<button type="button" data-action="reset" aria-label="Reset zoom">100%</button>' +
+          '<button type="button" data-action="in" aria-label="Zoom in">+</button>' +
+        '</div>';
+      document.body.appendChild(lightbox);
+      inner = lightbox.querySelector(".mermaid-lightbox__inner");
+
+      lightbox.addEventListener("click", function (e) {
+        if (e.target === lightbox) close();
+      });
+      lightbox.querySelector(".mermaid-lightbox__close").addEventListener("click", close);
+      lightbox.querySelectorAll(".mermaid-lightbox__controls button").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var action = btn.getAttribute("data-action");
+          if (action === "in") setZoom(zoom + zoomStep);
+          else if (action === "out") setZoom(zoom - zoomStep);
+          else setZoom(1);
+        });
+      });
+      inner.addEventListener("wheel", function (e) {
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          setZoom(zoom + (e.deltaY < 0 ? zoomStep : -zoomStep));
+        }
+      }, { passive: false });
+      return lightbox;
+    }
+
+    function setZoom(z) {
+      zoom = Math.max(minZoom, Math.min(maxZoom, z));
+      if (inner) inner.style.setProperty("--mermaid-zoom", zoom);
+      if (lightbox) {
+        var resetBtn = lightbox.querySelector('[data-action="reset"]');
+        if (resetBtn) resetBtn.textContent = Math.round(zoom * 100) + "%";
+      }
+    }
+
+    function open(wrapper) {
+      var svg = wrapper.querySelector("svg");
+      if (!svg) return;
+      ensureLightbox();
+      inner.innerHTML = "";
+      var stage = document.createElement("div");
+      stage.className = "mermaid-lightbox__svg-stage";
+      var clone = svg.cloneNode(true);
+      clone.removeAttribute("style");
+      clone.setAttribute("preserveAspectRatio", "xMidYMid meet");
+      stage.appendChild(clone);
+      inner.appendChild(stage);
+      setZoom(1);
+      lightbox.classList.add("is-open");
+      document.body.classList.add("mermaid-lightbox-open");
+    }
+
+    function close() {
+      if (!lightbox) return;
+      lightbox.classList.remove("is-open");
+      document.body.classList.remove("mermaid-lightbox-open");
+      inner.innerHTML = "";
+    }
+
+    function bind() {
+      document.querySelectorAll(".mermaid-wrapper").forEach(function (w) {
+        if (w.dataset.mermaidBound) return;
+        w.dataset.mermaidBound = "1";
+        w.addEventListener("click", function () { open(w); });
+        w.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            open(w);
+          }
+        });
+      });
+    }
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+
+    bind();
+    /* Re-bind after Mermaid renders (it may take a moment) */
+    setTimeout(bind, 800);
+    setTimeout(bind, 2500);
+  }
+
+  /* ---- Blog list: tag filter chips --------------------------------- */
+  function initBlogFilter() {
+    var chips = document.querySelectorAll(".blog-filter-chip");
+    if (!chips.length) return;
+    var items = document.querySelectorAll("[data-tags]");
+
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        chips.forEach(function (c) { c.classList.remove("is-active"); });
+        chip.classList.add("is-active");
+        var filter = chip.getAttribute("data-filter");
+
+        items.forEach(function (item) {
+          if (filter === "all") {
+            item.style.display = "";
+          } else {
+            var tags = item.getAttribute("data-tags").split(",");
+            item.style.display = tags.indexOf(filter) !== -1 ? "" : "none";
+          }
+        });
+      });
+    });
+  }
+
+  /* ---- Giscus comments: follow the site's light/dark theme --------- */
+  function initGiscusThemeSync() {
+    if (!document.querySelector('script[src^="https://giscus.app"]')) return;
+    var observer = new MutationObserver(function () {
+      var isDark = document.documentElement.classList.contains("dark");
+      var iframe = document.querySelector("iframe.giscus-frame");
+      if (iframe) {
+        iframe.contentWindow.postMessage(
+          { giscus: { setConfig: { theme: isDark ? "noborder_dark" : "noborder_light" } } },
+          "https://giscus.app"
+        );
+      }
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  }
+
   function init() {
     initDialogs();
     initForms();
@@ -257,6 +433,10 @@
     initScrollReveal();
     initSectionReveal();
     initSearchHotkey();
+    initSupportFab();
+    initMermaidLightbox();
+    initBlogFilter();
+    initGiscusThemeSync();
   }
 
   if (document.readyState === "loading") {

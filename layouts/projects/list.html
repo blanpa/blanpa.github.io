@@ -22,25 +22,11 @@
   </header>
 
   {{ $pages := .Pages.ByWeight }}
-  {{ $featured := index $pages 0 }}
   {{ $rest := after 1 $pages }}
 
   {{/* Featured Project */}}
-  {{ with $featured }}
-    {{ $disableImageOptimization := site.Store.Get "disableImageOptimization" }}
-    {{ $featuredURL := "" }}
-    {{ $images := .Resources.ByType "image" }}
-    {{ $img := "" }}
-    {{ range slice "*feature*" "*cover*" "*thumbnail*" }}
-      {{ if not $img }}{{ $img = $images.GetMatch . }}{{ end }}
-    {{ end }}
-    {{ with $img }}
-      {{ if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) }}
-        {{ $featuredURL = (.Resize "900x").RelPermalink }}
-      {{ else }}
-        {{ $featuredURL = .RelPermalink }}
-      {{ end }}
-    {{ end }}
+  {{ range first 1 $pages }}
+    {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 900) }}
 
     <a href="{{ .RelPermalink }}" class="project-featured">
       {{ with $featuredURL }}
@@ -67,20 +53,7 @@
   {{ if gt (len $rest) 0 }}
     <section class="project-grid">
       {{ range $rest }}
-        {{ $disableImageOptimization := site.Store.Get "disableImageOptimization" }}
-        {{ $featuredURL := "" }}
-        {{ $images := .Resources.ByType "image" }}
-        {{ $img := "" }}
-        {{ range slice "*feature*" "*cover*" "*thumbnail*" }}
-          {{ if not $img }}{{ $img = $images.GetMatch . }}{{ end }}
-        {{ end }}
-        {{ with $img }}
-          {{ if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) }}
-            {{ $featuredURL = (.Resize "600x").RelPermalink }}
-          {{ else }}
-            {{ $featuredURL = .RelPermalink }}
-          {{ end }}
-        {{ end }}
+        {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 600) }}
 
         <a href="{{ .RelPermalink }}" class="project-card">
           {{ with $featuredURL }}

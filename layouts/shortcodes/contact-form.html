@@ -1,5 +1,5 @@
-{{ $formspreeId := .Get "id" }}
-{{ if not $formspreeId }}{{ errorf "contact-form shortcode requires an 'id' (Formspree form id) — called from %s" .Page.File.Path }}{{ end }}
+{{ $formspreeId := .Get "id" | default site.Params.formspreeId }}
+{{ if not $formspreeId }}{{ errorf "contact-form shortcode needs a Formspree id: set formspreeId in params.toml or pass id — called from %s" .Page.File.Path }}{{ end }}
 
 {{ partial "contact-form.html" (dict "id" $formspreeId "uid" .Page.File.UniqueID) }}
 
