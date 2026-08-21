@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Runs the content tests before every commit. Enable once with:
+#
+#     git config core.hooksPath .githooks
+#
+# Skip a single commit with `git commit --no-verify` when you know better.
+#
+# The fast suite (~10 s) always runs. Diagram rendering drives a headless
+# browser and takes ~1.5 s per diagram, so it only runs for the posts whose
+# mermaid blocks you are actually committing.
+
+set -uo pipefail
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+# Prefer the project venv, fall back to whatever python has pytest.
+if [ -x .venv/bin/python ]; then
+  PYTHON=.venv/bin/python
+elif python3 -c "import pytest" 2>/dev/null; then
+  PYTHON=python3
+else
+  cat >&2 <<'MSG'
+pre-commit: pytest is not available.
+
+    python3 -m venv .venv && .venv/bin/pip install -r tests/requirements.txt
+
+Then commit again (or use --no-verify to skip the checks).
+MSG
+  exit 1
+fi
+
+staged_content=$(git diff --cached --name-only --diff-filter=ACM -- 'content/**/*.md')
+
+echo "pre-commit: content tests"
+if ! "$PYTHON" -m pytest -q -p no:cacheprovider \
+     --deselect tests/test_links_and_diagrams.py::test_mermaid_diagram_parses; then
+  echo "pre-commit: content tests failed — commit aborted." >&2
+  exit 1
+fi
+
+# Diagram check, limited to the staged posts that contain diagrams. Note the
+# condition is "the file has a mermaid block", not "the diff adds a mermaid
+# fence" — editing a line *inside* an existing diagram is the common case, and
+# the narrower check missed exactly that.
+if [ -n "$staged_content" ] && command -v mmdc >/dev/null 2>&1; then
+  slugs=""
+  while IFS= read -r file; do
+    [ -n "$file" ] || continue
+    git show ":$file" 2>/dev/null | grep -q '^```mermaid' || continue
+    slug=$(basename "$(dirname "$file")")
+    slugs="${slugs}${slugs:+ or }${slug}"
+  done <<< "$staged_content"
+
+  if [ -n "$slugs" ]; then
+    echo "pre-commit: rendering diagrams in: ${slugs//" or "/, }"
+    if ! "$PYTHON" -m pytest -q -p no:cacheprovider \
+         tests/test_links_and_diagrams.py -k "mermaid and ($slugs)"; then
+      echo "pre-commit: a diagram does not render — commit aborted." >&2
+      exit 1
+    fi
+  fi
+fi
+
+exit 0

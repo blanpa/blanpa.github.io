@@ -49,6 +49,17 @@ npm download counts shown on the site are baked into `data/npm_stats.yml` by the
 
 Diagrams are authored as ` ```mermaid ` fenced blocks — `layouts/_markup/render-codeblock-mermaid.html` renders them and `assets/js/ui.js` loads the mermaid runtime only when a diagram nears the viewport.
 
+## Tests
+
+The content tests (front matter, code samples, links, diagrams, and the technical claims in the posts) run **locally before each commit**, not in CI. Enable the hook once:
+
+```bash
+git config core.hooksPath .githooks
+tests/run.sh
+```
+
+See [tests/README.md](tests/README.md) for what is covered and how to run them by hand.
+
 ## CI
 
 - `ci.yml` builds every pull request and branch, checks internal links with lychee, and fails on unrendered diagrams or unexpanded shortcodes.

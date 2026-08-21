@@ -5,9 +5,24 @@ with a wrong port number, a JSON sample that doesn't parse, a diagram that
 renders as an error box, or a bearing frequency that doesn't follow from the
 geometry the same paragraph states. These tests are not.
 
+They run **locally, not in CI** — before the commit, through a git hook.
+
+## Setup (once)
+
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -r tests/requirements.txt
-.venv/bin/python -m pytest            # ~11 s
+git config core.hooksPath .githooks
+tests/run.sh                          # creates .venv on first run
+```
+
+From then on every `git commit` runs the fast suite (~10 s) and refuses the
+commit if something fails. `git commit --no-verify` skips it.
+
+## Running them by hand
+
+```bash
+tests/run.sh            # fast suite — everything except diagrams
+tests/run.sh diagrams   # render every mermaid diagram (~8 min)
+tests/run.sh all        # both
 ```
 
 `node` and `bash` are used to check JavaScript and shell samples; tests that
@@ -24,16 +39,17 @@ need a missing tool skip rather than fail.
 
 ## Diagram tests
 
-`test_mermaid_diagram_parses` needs mermaid-cli and runs a headless browser per
-diagram, so it takes minutes rather than seconds:
+`test_mermaid_diagram_parses` needs mermaid-cli and renders each diagram in a
+headless browser — about 1.5 s per diagram, so ~8 minutes for the whole site:
 
 ```bash
 npm install -g @mermaid-js/mermaid-cli
-.venv/bin/python -m pytest tests/test_links_and_diagrams.py -k mermaid
+tests/run.sh diagrams
 ```
 
-It is skipped automatically when `mmdc` is not on `PATH`, and CI runs it as its
-own job.
+It is skipped automatically when `mmdc` is not on `PATH`. The pre-commit hook
+does not run all of them: it renders only the diagrams in the posts you are
+committing, which is a few seconds.
 
 ## When a test fails
 
