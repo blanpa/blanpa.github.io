@@ -28,7 +28,7 @@ Switch backends in the config node — your flows stay the same.
 
 ## 6 Nodes
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     R["s7-read"]
     W["s7-write"]
@@ -43,7 +43,7 @@ flowchart TB
     CFG --> PLC
     CFG --> BR
     CFG --> CTL
-{{< /mermaid >}}
+```
 
 - **s7-config** — Manages PLC connections with backend selection and auto-reconnection
 - **s7-read** — Read multiple PLC addresses in a single request

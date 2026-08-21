@@ -20,7 +20,7 @@ A comprehensive **Node-RED package for EtherNet/IP** that covers the full range 
 
 Three node families share a single CIP/EtherNet/IP transport layer and route to the right protocol for each PLC generation:
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph NR["Node-RED Flows"]
         SYM["CIP Symbolic Nodes<br/>read / write / browse / subscribe"]
@@ -39,7 +39,7 @@ flowchart TB
     EIP --> LOGIX
     EIP --> LEGACY
     EIP --> DEV
-{{< /mermaid >}}
+```
 
 ## Supported Hardware
 

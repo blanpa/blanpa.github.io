@@ -20,7 +20,7 @@ A comprehensive **Node-RED integration for NATS** — the cloud-native messaging
 
 The 8 nodes cover the three NATS surfaces — core messaging, persistent JetStream, and the KV store — and can run against an external cluster or an embedded server right inside Node-RED:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph NR["Node-RED Flow"]
         PUB["nats-suite-publish<br/>(pub · request/reply)"]
@@ -51,7 +51,7 @@ flowchart LR
     SRVM -. provides .-> KVE
     MQTT --> SRVM
     WS --> SRVM
-{{< /mermaid >}}
+```
 
 ## Why NATS over MQTT?
 

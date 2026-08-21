@@ -193,7 +193,7 @@ def get_all_running_machines() -> list[dict]:
 
 OPC-UA (Open Platform Communications Unified Architecture) is the industrial automation standard. It provides a rich information model with types, methods, events, and subscriptions — all over a binary TCP protocol (or optionally HTTP/JSON).
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     AS["OPC-UA Address Space"] --> Obj["Objects"]
     AS --> Tps["Types"]
@@ -217,7 +217,7 @@ flowchart LR
     CMT --> CSt["Status<br/>MultiStateDiscreteType, Int32"]
 
     Vws --> MV["MaintenanceView<br/>(filtered for maintenance staff)"]
-{{< /mermaid >}}
+```
 
 ### JavaScript Example (node-opcua)
 
@@ -482,7 +482,7 @@ result = client.execute(query, variable_values={
 
 Real-time data is critical in manufacturing. Here's how each paradigm handles it:
 
-{{< mermaid >}}
+```mermaid
 sequenceDiagram
     autonumber
     participant C as Client
@@ -511,7 +511,7 @@ sequenceDiagram
     S-->>C: { value: 42.7 } initial
     S-->>C: { value: 43.1 } on change
     S-->>C: { value: 43.8 } on change
-{{< /mermaid >}}
+```
 
 OPC-UA subscriptions are the most efficient — the server samples internally and only sends changes that exceed a deadband (configurable). This is critical when you have thousands of tags.
 
@@ -544,7 +544,7 @@ No standard. Every API inventor reinvents how to represent units, ranges, and en
 
 ### OPC-UA: Typed Address Space (standardized)
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     Root["CNC-001<br/>(CNCMachineType)"]
     Root --> T["Temperature"]
@@ -563,7 +563,7 @@ flowchart LR
 
     St --> StV["Value: 1 (Int32)"]
     St --> StE["EnumStrings: Off / Running / Error / Maintenance"]
-{{< /mermaid >}}
+```
 
 Rich, standardized metadata. Any OPC-UA client knows how to interpret `EURange` and `EngineeringUnits` without reading documentation.
 
@@ -647,7 +647,7 @@ GraphQL sits in the middle — efficient queries but JSON overhead and no binary
 
 In practice, most factories use a combination:
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph SF["Shop Floor"]
         direction LR
@@ -679,7 +679,7 @@ flowchart TB
 
     BR --> DP
     GQL --> AGW
-{{< /mermaid >}}
+```
 
 **OPC-UA** handles the PLC-to-edge layer where performance and type safety matter. **MQTT** carries data from edge to server. **GraphQL** provides a flexible query layer for dashboards and applications. **REST** exposes simple endpoints for external integrations and cloud services.
 

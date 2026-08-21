@@ -19,14 +19,14 @@ I've worked with all three platforms extensively: Node-RED as my daily driver fo
 
 Node-RED is a flow-based programming tool built on Node.js. Originally created by IBM for IoT prototyping, it has grown into a serious integration platform used in production environments worldwide.
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph nr["Node-RED — visual flow editor · 5000+ community nodes"]
         direction TB
         OPC[OPC-UA] --> TF["Transform<br/>& Filter"] --> MQ[MQTT Publish]
         REST[REST API] --> AGG["Aggregate<br/>& Enrich"] --> DB[Database Write]
     end
-{{< /mermaid >}}
+```
 
 **Strengths:** Zero licensing cost, massive ecosystem, rapid prototyping, runs on anything from a Raspberry Pi to a Kubernetes cluster.
 
@@ -36,14 +36,14 @@ flowchart LR
 
 Kepware, now part of PTC's ThingWorx ecosystem, is a connectivity server that specializes in one thing: talking to industrial equipment. It supports 150+ device drivers — from Siemens S7 to Allen-Bradley to Modbus to BACnet.
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph kep["KEPServerEX"]
         direction LR
         D["Drivers<br/>• Siemens S7<br/>• AB Ethernet<br/>• Modbus TCP<br/>• BACnet<br/>• MQTT Client<br/>• 150+ more"] --> TS[Tags Store]
         TS --> S["Server Interfaces<br/>• OPC-UA<br/>• OPC-DA<br/>• MQTT<br/>• REST API<br/>• ODBC"]
     end
-{{< /mermaid >}}
+```
 
 **Strengths:** Unmatched driver library, battle-tested in thousands of factories, excellent PLC communication performance, certified drivers.
 
@@ -53,7 +53,7 @@ flowchart LR
 
 Ignition by Inductive Automation is a full SCADA/MES platform with built-in historian, alarming, reporting, and visualization. It's Java-based and uses a modular architecture with unlimited client licensing.
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph ig["Ignition"]
         direction TB
@@ -63,7 +63,7 @@ flowchart TB
         TDB["Tag DB<br/>+ Alarm"] --> H["Historian<br/>(SQL DB)"]
         TDB --> OPC["OPC-UA Drivers"]
     end
-{{< /mermaid >}}
+```
 
 **Strengths:** Unlimited clients/tags, built-in historian, powerful HMI/SCADA designer, Perspective module for mobile-friendly web UIs, strong scripting with Python (Jython).
 
@@ -126,13 +126,13 @@ Node-RED wins on IT-side protocols. REST APIs, MQTT, WebSockets, GraphQL, gRPC �
 
 ### Learning Curve
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     A["Easy"] --> NR["Node-RED<br/>visual flows · web-based · JavaScript"]
     NR --> KW["Kepware<br/>tag config · driver setup"]
     KW --> IG["Ignition<br/>Jython scripting · tag provider model · Vision vs Perspective"]
     IG --> Z["Hard"]
-{{< /mermaid >}}
+```
 
 Node-RED is the easiest to start with. Drag nodes, connect wires, deploy. A developer with web experience is productive in hours.
 
@@ -190,7 +190,7 @@ return msg;
 
 In practice, the best architectures often combine all three. Each platform handles what it does best:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph SF["Shop Floor"]
         S7["Siemens S7-1500"]
@@ -222,7 +222,7 @@ flowchart LR
     NR --> GR
     GR -->|REST| CA
     IGN --> CA
-{{< /mermaid >}}
+```
 
 ### Architecture Pattern 1: Kepware + Node-RED
 
@@ -252,7 +252,7 @@ volumes:
 
 **Use case:** Ignition handles SCADA/HMI, Node-RED handles IT integrations that Ignition struggles with (REST APIs, cloud services, custom protocols).
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph IG["Ignition Gateway"]
         TH["Tags + Historian"]
@@ -270,7 +270,7 @@ flowchart LR
     TH -->|OPC-UA| CU
     ERP -->|MQTT| SS
     RP -->|SQL| CR
-{{< /mermaid >}}
+```
 
 ### Architecture Pattern 3: All Three
 

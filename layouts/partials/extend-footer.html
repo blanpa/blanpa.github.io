@@ -37,6 +37,11 @@
 
 <div class="reading-progress" aria-hidden="true"><span></span></div>
 
+{{/* Note: Blowfish calls this partial through partialCached WITHOUT a cache
+     key (themes/blowfish/layouts/partials/footer.html), so its output is
+     rendered once and reused on every page — keep everything here static.
+     Page-specific markup belongs in a render hook or shortcode instead. */}}
+
 {{ with resources.Get "js/ui.js" }}
   {{ $ui := . | minify | fingerprint }}
   <script src="{{ $ui.RelPermalink }}" integrity="{{ $ui.Data.Integrity }}" defer></script>

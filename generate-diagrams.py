@@ -2,7 +2,8 @@
 """Convert ASCII art diagrams in markdown blog posts to Mermaid diagrams via Claude API.
 
 Finds fenced code blocks without a language (or language `text`) that contain
-box-drawing characters and rewrites them as Blowfish `{{< mermaid >}}` shortcodes.
+box-drawing characters and rewrites them as ```mermaid fenced blocks (rendered
+by layouts/_markup/render-codeblock-mermaid.html).
 
 Usage:
   ANTHROPIC_API_KEY=... python generate-diagrams.py                 # all files
@@ -161,7 +162,7 @@ def process_file(path: Path, api_key: str, dry_run: bool) -> tuple[int, int]:
             skipped += 1
             continue
 
-        replacement = f"{{{{< mermaid >}}}}\n{mermaid_src}\n{{{{< /mermaid >}}}}"
+        replacement = f"```mermaid\n{mermaid_src}\n```"
         out_parts.append(replacement)
         converted += 1
         print(f"    OK ({len(mermaid_src)} chars Mermaid)")

@@ -17,7 +17,7 @@ The answer is treating Node-RED flows as code — putting them in Git, writing a
 
 In a typical Node-RED setup, flows live inside the running instance:
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph NR["Node-RED Instance (Server) — ~/.node-red/"]
         F["flows.json — your logic"]
@@ -27,7 +27,7 @@ flowchart TB
         M["node_modules/ — dependencies"]
     end
     NR --> OPS["Deployment: click 'Deploy'<br/>Versioning: ¯\_(ツ)_/¯<br/>Testing: 'it works on my Pi'<br/>Rollback: hope you exported"]
-{{< /mermaid >}}
+```
 
 This leads to real problems:
 
@@ -142,13 +142,13 @@ module.exports = {
 
 For CI/CD, manage credentials through environment variables:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     DEV["Developer<br/>.env file (local)"]
     CI["GitHub Actions<br/>GitHub Secrets (CI/CD)"]
     PROD["Production<br/>K8s Secrets or .env"]
     DEV --- CI --- PROD
-{{< /mermaid >}}
+```
 
 All three use the same env var names:
 
@@ -627,7 +627,7 @@ jobs:
 
 ### Pipeline Visualization
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     L["Lint<br/>ESLint · JSON valid."]
     T["Test<br/>Mocha · Unit · Integ."]
@@ -637,7 +637,7 @@ flowchart LR
     L --> T --> B --> S --> P
     S -. Health check .-> S
     P -. Health check .-> P
-{{< /mermaid >}}
+```
 
 ---
 
@@ -702,14 +702,14 @@ When updating flows, you can't just swap `flows.json` — nodes may have runtime
 
 ### Blue-Green Deployment
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     LB["Load Balancer<br/>Traefik / Nginx"]
     BLUE["Blue (v1.2)<br/>Active"]
     GREEN["Green (v1.3)<br/>Standby"]
     LB --> BLUE
     LB --> GREEN
-{{< /mermaid >}}
+```
 
 1. Deploy new version to Green
 2. Run health checks on Green

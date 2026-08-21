@@ -19,7 +19,7 @@ Every factory I've worked in has the same problem: data is everywhere, but acces
 
 A typical manufacturing IT landscape looks something like this:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     PI["OSIsoft PI<br/>(Historian)"] -->|Proprietary API| APP["Your App<br/>(Dashboard,<br/>Analytics,<br/>ML Model)"]
     SAP["SAP MES"] -->|SOAP / XML| APP
@@ -27,7 +27,7 @@ flowchart LR
 
     note["3 protocols · 3 data models · 3 adapters to maintain"]
     style note fill:none,stroke:none
-{{< /mermaid >}}
+```
 
 Now imagine adding a fourth data source. Or a fifth. Each new connection multiplies the integration effort. This is the **N×M problem** — N data sources times M consuming applications.
 
@@ -43,7 +43,7 @@ i3x is an **open REST API specification** developed by [CESMII](https://www.cesm
 
 The key insight: i3x sits **between** your applications and your data sources as a unified abstraction layer.
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     PI["OSIsoft PI"] --> I3X["i3x API"]
     SAP["SAP MES"] --> I3X
@@ -52,7 +52,7 @@ flowchart LR
 
     note["1 protocol (REST) · 1 data model · 1 adapter to maintain"]
     style note fill:none,stroke:none
-{{< /mermaid >}}
+```
 
 ## The Information Model
 

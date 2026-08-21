@@ -116,11 +116,11 @@ CAN bus is the lingua franca of industrial automation — robots, motor drives, 
 
 ### Hardware Setup
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     R["Robot Controller<br/>(Kuka KRC)"] -->|"CAN Bus<br/>120 Ω term."| GW["IOT-GATE<br/>can0"]
     GW -->|NATS| NR["Node-RED<br/>Dashboard"]
-{{< /mermaid >}}
+```
 
 Both ends of the CAN bus need 120Ω termination resistors. The IOT-GATE has a built-in termination jumper.
 
@@ -271,12 +271,12 @@ while True:
 
 The `node-red-contrib-modbus` package handles all the heavy lifting:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     I["Inject<br/>(every 5 s)"] --> MR["Modbus Read<br/>FC3: 0x0000 · Qty 2 · Unit 1<br/>Serial /dev/ttyS1 · 9600 8N1"]
     MR --> PF["Parse Float<br/>Big-Endian"]
     PF --> NP["NATS Publish"]
-{{< /mermaid >}}
+```
 
 ---
 
@@ -383,7 +383,7 @@ sudo nmcli connection modify "Wired connection 1" \
 
 ### Failover Architecture
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     LAN["Factory LAN"] --> ETH["eth0<br/>metric 100"]
     LTE["4G / LTE"] --> WWAN["wwan0<br/>metric 700"]
@@ -397,7 +397,7 @@ flowchart LR
     end
 
     AF --> CL["Cloud NATS"]
-{{< /mermaid >}}
+```
 
 NetworkManager handles failover automatically. Combined with NATS leaf nodes (which reconnect transparently), the gateway switches from Ethernet to 4G without losing messages.
 
@@ -503,7 +503,7 @@ services:
 
 ### DIN Rail Mounting
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph CC["Control Cabinet"]
         direction TB
@@ -516,7 +516,7 @@ flowchart TB
         CE["Cable entries:<br/>• Ethernet (shielded Cat6)<br/>• CAN bus (twisted pair, shielded)<br/>• RS-485 (twisted pair, shielded)<br/>• 4G antenna (SMA, external mount)<br/>• Power (24 V DC from PSU)"]
         style CE fill:none,stroke:none
     end
-{{< /mermaid >}}
+```
 
 ### Power
 

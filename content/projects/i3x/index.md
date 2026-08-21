@@ -20,7 +20,7 @@ Node-RED nodes for the **i3X API** — an open REST specification developed by [
 
 i3X defines a common REST API for accessing manufacturing information, regardless of the underlying platform. Instead of building separate integrations for each historian or MES system, you connect through i3X and access all data through a unified information model.
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     H["Historian"]
     M["MES"]
@@ -31,7 +31,7 @@ flowchart TB
     M --> API
     S --> API
     API --> NR
-{{< /mermaid >}}
+```
 
 ## Data Access
 

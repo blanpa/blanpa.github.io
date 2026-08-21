@@ -20,7 +20,7 @@ A comprehensive **Node-RED integration for Apache Kafka** with producer/consumer
 
 Three node families talk to a Kafka cluster through a shared, ref-counted broker connection — with optional Schema Registry and a choice of two backends:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph NR["Node-RED Flow"]
         P["Producer"]
@@ -39,7 +39,7 @@ flowchart LR
     P -. encode .-> SR
     C -. decode .-> SR
     BC --> K
-{{< /mermaid >}}
+```
 
 ## Producer
 

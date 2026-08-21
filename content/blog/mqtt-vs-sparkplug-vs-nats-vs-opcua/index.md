@@ -36,13 +36,13 @@ MQTT is the lingua franca of IoT. Lightweight, simple, and supported by virtuall
 
 MQTT uses a **broker-based publish/subscribe** model. Clients publish messages to topics, and other clients subscribe to those topics. The broker handles routing.
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     SA[Sensor A] -->|publish| B["Broker<br/>(Mosquitto)"]
     SB[Sensor B] -->|publish| B
     B --> S1[Subscriber 1]
     B --> S2[Subscriber 2]
-{{< /mermaid >}}
+```
 
 ### Example: Temperature Sensor
 
@@ -193,7 +193,7 @@ NATS comes from the cloud-native world (it's a CNCF project) but is increasingly
 
 Unlike MQTT's broker model, NATS uses a **mesh of servers** that form a cluster. There's no single point of failure.
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     E1[Edge Device 1] --> N1[NATS-1]
     E2[Edge Device 2] --> N2[NATS-2]
@@ -203,7 +203,7 @@ flowchart LR
     N1 --> CSA[Cloud Service A]
     N2 --> CSB[Cloud Service B]
     N3 --> DASH[Dashboard]
-{{< /mermaid >}}
+```
 
 ### Example: Pub/Sub
 
@@ -315,7 +315,7 @@ OPC-UA is the **established standard** in factory automation. Every major PLC ve
 
 OPC-UA's killer feature is its **rich information model**. It's not just values — it's a browsable tree of objects with types, relationships, and metadata:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     Root --> Objects
     Root --> Types
@@ -332,7 +332,7 @@ flowchart LR
     Methods --> Start["Start()"]
     Methods --> Stop["Stop()"]
     Types --> MT["MachineType<br/>(defines structure)"]
-{{< /mermaid >}}
+```
 
 ### Example: Reading Values
 
@@ -419,7 +419,7 @@ print(f"Method result: {result}")
 
 ## Decision Matrix
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     Q["What's your primary use case?"]
     Q --> ST["Sensor Telemetry<br/>(edge devices)"]
@@ -441,19 +441,19 @@ flowchart TB
     P -->|no| MQ3["MQTT (+DB)"]
     CN -->|yes| N1["NATS"]
     CN -->|no| N2["NATS"]
-{{< /mermaid >}}
+```
 
 ## Combining Protocols
 
 In practice, most industrial architectures use **multiple protocols**. Here's a pattern I use frequently:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     PLC["Siemens<br/>PLC"] -->|OPC-UA| NR["Node-RED<br/>(Edge)"]
     ESP["ESP32<br/>Sensors"] -->|MQTT| NR
     NR -->|NATS| CA["Cloud<br/>Analytics"]
     NR -->|MQTT| DB["Dashboard"]
-{{< /mermaid >}}
+```
 
 - **OPC-UA** talks to the PLCs (typed data, methods, browse)
 - **MQTT** collects data from constrained sensors

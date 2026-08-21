@@ -17,7 +17,7 @@ This post walks through the entire process: hardware setup, Linux socketcan conf
 
 **Controller Area Network (CAN)** was developed by Bosch in 1986 for in-vehicle communication. The idea was simple: let microcontrollers talk to each other without a central host. Every node on the bus sees every message, and hardware-level arbitration prevents collisions.
 
-{{< mermaid >}}
+```mermaid
 timeline
     title CAN Bus Timeline
     1986 : Bosch develops CAN for automotive
@@ -26,7 +26,7 @@ timeline
     2012 : CAN-FD (Flexible Data Rate) introduced by Bosch
     2015 : CAN-FD standardized as ISO 11898-1:2015
     Today : CAN in cars, trucks, elevators, medical devices, industrial drives, agricultural equipment, robots
-{{< /mermaid >}}
+```
 
 ### Automotive vs Industrial CAN
 
@@ -48,7 +48,7 @@ In industrial settings, you'll most often encounter **CANopen** (used by SEW-Eur
 
 This is the cheapest and most flexible option. The MCP2515 is a standalone CAN controller that talks to the Pi via SPI.
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph PI["Raspberry Pi 4 — GPIO Header"]
         GPIO["SPI0_MOSI (GPIO 10)<br/>SPI0_MISO (GPIO 9)<br/>SPI0_SCLK (GPIO 11)<br/>SPI0_CE0 (GPIO 8)<br/>INT (GPIO 25)<br/>GND<br/>3.3 V / 5 V"]
@@ -58,7 +58,7 @@ flowchart LR
     end
     GPIO --- MCP
     MCP --> BUS["CAN_H / CAN_L<br/>(to bus)"]
-{{< /mermaid >}}
+```
 
 Popular hats: **Waveshare RS485 CAN HAT**, **PiCAN2**, **Seeed Studio 2-Channel CAN-BUS(FD) Shield**.
 
@@ -190,7 +190,7 @@ Each line: `interface  CAN_ID  [DLC]  DATA_BYTES`
 
 ### Understanding CAN Frames
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph CF["CAN Frame"]
         direction LR
@@ -203,7 +203,7 @@ flowchart LR
 
     note["ID: identifies message type AND priority (lower = higher)<br/>DLC: Data Length Code — how many bytes follow<br/>Data: the payload to decode"]
     style note fill:none,stroke:none
-{{< /mermaid >}}
+```
 
 ### Filtering by ID
 
@@ -411,14 +411,14 @@ With decoded CAN data arriving via MQTT, Node-RED can visualize and act on it.
 
 ### Architecture
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     DRV["Industrial Drive<br/>CAN_H / CAN_L"]
     PI["Raspberry Pi<br/>python-can + MQTT pub"]
     NR["Node-RED<br/>Dashboard · Alerts · Logging"]
     DRV <-->|CAN Bus| PI
     PI -->|MQTT| NR
-{{< /mermaid >}}
+```
 
 ### Dashboard Flow
 

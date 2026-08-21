@@ -20,7 +20,7 @@ A **Node-RED module** that turns raw sensor data into actionable maintenance ins
 
 The suite is designed as a modular pipeline where each node handles one responsibility:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     S["Sensors"]
     SA["Signal Analyzer"]
@@ -32,7 +32,7 @@ flowchart LR
     S --> SA --> AD --> HI --> DA
     SA --> TDC
     AD --> TP
-{{< /mermaid >}}
+```
 
 ## Anomaly Detection
 

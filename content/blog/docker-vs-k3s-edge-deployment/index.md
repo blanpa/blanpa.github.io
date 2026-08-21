@@ -15,7 +15,7 @@ The real question isn't *whether* to use containers in industrial environments �
 
 ## Why Containers on the Shop Floor?
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph wo["Without Containers — Industrial Edge PC"]
         direction TB
@@ -38,7 +38,7 @@ flowchart TB
         wis["State: version-pinned, isolated, reproducible"]
         style wis fill:none,stroke:none
     end
-{{< /mermaid >}}
+```
 
 The benefits are concrete:
 
@@ -524,7 +524,7 @@ services:
       - portainer_data:/data
 ```
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     PS["Portainer Server (Central Office)<br/><br/>Site Overview:<br/>Munich   ● Online   5 containers   CPU 23%<br/>Berlin   ● Online   4 containers   CPU 15%<br/>Hamburg  ● Offline   —              CPU —<br/>Dresden  ● Online   6 containers   CPU 31%"]
     AM["Agent<br/>Munich"]
@@ -533,7 +533,7 @@ flowchart TB
     PS --> AM
     PS --> AB
     PS --> AD
-{{< /mermaid >}}
+```
 
 ### K3s: Rancher
 
@@ -667,7 +667,7 @@ K3s rollback is more powerful — Kubernetes keeps revision history and can roll
 
 ### Docker Networking
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph br["Docker Bridge Network — docker0 (172.17.0.0/16)"]
         direction LR
@@ -687,7 +687,7 @@ flowchart TB
     end
 
     br --> host
-{{< /mermaid >}}
+```
 
 ### K3s Networking
 

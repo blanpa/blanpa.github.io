@@ -31,7 +31,7 @@ The data was there — machines had PLCs, sensors were measuring everything — 
 
 **My frustration loop:**
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     A["See a problem on the production line"]
     B["Realize the data exists in the PLC"]
@@ -39,7 +39,7 @@ flowchart TB
     D["Get told it requires a vendor project<br/>($50k, 6 months)"]
     E["Go back to clipboard and Excel"]
     A --> B --> C --> D --> E
-{{< /mermaid >}}
+```
 
 ### The Turning Point
 
@@ -61,11 +61,11 @@ Most software developers have never set foot on a factory floor. They don't know
 
 I knew all of this. When I started building IIoT solutions, I didn't have to *guess* what users needed — I had *been* the user.
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     DEV["What a typical developer builds:<br/><br/>Beautiful dashboard with 47 charts,<br/>3 dropdown menus, a sidebar,<br/>and a settings page<br/><br/>Operator: 'I can't find the machine status'"]
     OP["What the operator actually needs:<br/><br/>🟢 RUNNING — 2,450 RPM<br/><br/>Shift total: 847 / 1,000"]
-{{< /mermaid >}}
+```
 
 ### 2. Lean / Six Sigma Thinking
 
@@ -201,13 +201,13 @@ In tech, there's a bias toward pure engineering skill. But in IIoT, knowing the 
 
 **The IIoT developer skill stack:**
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     TOP["Domain Expertise<br/>Manufacturing, processes, OT<br/><i>← hardest to learn, takes years</i>"]
     MID["Industrial Protocols<br/>OPC-UA, MQTT, Modbus, CAN<br/><i>← moderate learning curve</i>"]
     BOT["Software Dev<br/>JS, Python, Docker, Git<br/><i>← learnable in months with dedication</i>"]
     TOP --- MID --- BOT
-{{< /mermaid >}}
+```
 
 Most developers have the bottom layer. Few have the top. Having all three is rare.
 

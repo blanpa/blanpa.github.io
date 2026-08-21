@@ -20,7 +20,7 @@ A Node-RED package that exposes **all hardware interfaces** of CompuLab IoT Gate
 
 Every hardware interface of the gateway is exposed as a Node-RED node — no shell scripts, no driver code:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph NR["Node-RED Flow"]
         IO["Industrial I/O Nodes<br/>GPIO · Analog · CAN · RS232/485"]
@@ -35,7 +35,7 @@ flowchart LR
     NET --> LIB
     LIB --> HW
     HW --- EXP
-{{< /mermaid >}}
+```
 
 ## Supported Devices
 

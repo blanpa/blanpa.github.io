@@ -26,12 +26,12 @@ Before starting, make sure you have:
 
 ### Architecture Overview
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     PLC["Siemens S7-1500<br/>OPC-UA Server<br/><i>192.168.1.100</i>"]
     NR["Node-RED<br/>Dashboard (Port 1880)<br/><i>192.168.1.50</i>"]
     PLC -->|"OPC-UA (TCP:4840)"| NR
-{{< /mermaid >}}
+```
 
 PLC runs the OPC-UA server. Node-RED is the OPC-UA client.
 
@@ -439,7 +439,7 @@ return msg;
 
 Here's the complete flow connecting all pieces:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph SRC["OPC-UA Items"]
         I1["Item: Temp"]
@@ -466,7 +466,7 @@ flowchart LR
     SUB --> G2
     SUB --> MAP --> ST
     SUB --> PC
-{{< /mermaid >}}
+```
 
 ---
 

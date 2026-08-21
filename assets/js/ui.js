@@ -280,21 +280,92 @@
     });
   }
 
-  /* ---- Mermaid diagram lightbox ------------------------------------ */
-  function initMermaidLightbox() {
-    if (!document.querySelector(".mermaid-wrapper")) return;
-    var lightbox = null;
-    var inner = null;
+  /* ---- Mermaid: lazy runtime + diagram lightbox --------------------- */
+  function initMermaid() {
+    var wrappers = document.querySelectorAll(".mermaid-wrapper");
+    if (!wrappers.length) return;
+
+    /* -- Runtime ---------------------------------------------------- */
+    /* The mermaid bundle is >3 MB — by far the heaviest asset here — so
+       extend-footer.html only hands us its URL and we fetch it once a
+       diagram is within a screen or so of the viewport. Blowfish's own
+       eager <script> (vendor.html, shortcode pages only) wins if present. */
+    var loader = document.getElementById("mermaid-loader");
+    var pending = [];
+    var state = "idle"; /* idle | loading | ready */
+
+    function ensureRuntime(callback) {
+      if (state === "ready" || window.mermaid) {
+        state = "ready";
+        if (callback) callback();
+        return;
+      }
+      if (callback) pending.push(callback);
+      if (state === "loading") return;
+
+      /* Shortcode pages get Blowfish's own eager <script defer>; wait for
+         that one rather than fetching three megabytes twice. */
+      var themeScript = document.querySelector('script[src*="mermaid.bundle"]');
+      if (themeScript) {
+        state = "loading";
+        themeScript.addEventListener("load", function () { onRuntimeReady(); });
+        return;
+      }
+      if (!loader) return;
+
+      state = "loading";
+      var script = document.createElement("script");
+      script.src = loader.getAttribute("data-src");
+      var integrity = loader.getAttribute("data-integrity");
+      if (integrity) script.integrity = integrity;
+      script.onload = onRuntimeReady;
+      script.onerror = function () {
+        state = "idle";
+        pending.length = 0;
+      };
+      document.head.appendChild(script);
+    }
+
+    function onRuntimeReady() {
+      state = "ready";
+      /* Blowfish's appearance.js owns mermaid's light/dark configuration and
+         re-runs it on every theme switch. Its DOMContentLoaded call no-opped
+         (mermaid was absent then), so trigger the first render here. */
+      if (typeof window.updateMermaidTheme === "function") window.updateMermaidTheme();
+      var queued = pending.slice();
+      pending.length = 0;
+      queued.forEach(function (fn) { fn(); });
+    }
+
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          io.disconnect();
+          ensureRuntime();
+        });
+      }, { rootMargin: "800px 0px" });
+      Array.prototype.forEach.call(wrappers, function (w) { io.observe(w); });
+    } else {
+      ensureRuntime();
+    }
+
+    /* -- Lightbox --------------------------------------------------- */
+    /* A native <dialog>: focus trap, Escape, inert background, and focus
+       restore on close all come from the platform. */
+    var dialog = null;
+    var stageHost = null;
     var zoom = 1;
     var minZoom = 0.5;
     var maxZoom = 5;
     var zoomStep = 0.25;
 
-    function ensureLightbox() {
-      if (lightbox) return lightbox;
-      lightbox = document.createElement("div");
-      lightbox.className = "mermaid-lightbox";
-      lightbox.innerHTML =
+    function ensureDialog() {
+      if (dialog) return dialog;
+      dialog = document.createElement("dialog");
+      dialog.className = "mermaid-lightbox";
+      dialog.setAttribute("aria-label", "Zoomed diagram");
+      dialog.innerHTML =
         '<button type="button" class="mermaid-lightbox__close" aria-label="Close">&times;</button>' +
         '<div class="mermaid-lightbox__inner"></div>' +
         '<div class="mermaid-lightbox__controls">' +
@@ -302,14 +373,17 @@
           '<button type="button" data-action="reset" aria-label="Reset zoom">100%</button>' +
           '<button type="button" data-action="in" aria-label="Zoom in">+</button>' +
         '</div>';
-      document.body.appendChild(lightbox);
-      inner = lightbox.querySelector(".mermaid-lightbox__inner");
+      document.body.appendChild(dialog);
+      stageHost = dialog.querySelector(".mermaid-lightbox__inner");
 
-      lightbox.addEventListener("click", function (e) {
-        if (e.target === lightbox) close();
+      /* Click outside the diagram (on the dialog's own padding) closes. */
+      dialog.addEventListener("click", function (e) {
+        if (e.target === dialog) dialog.close();
       });
-      lightbox.querySelector(".mermaid-lightbox__close").addEventListener("click", close);
-      lightbox.querySelectorAll(".mermaid-lightbox__controls button").forEach(function (btn) {
+      dialog.querySelector(".mermaid-lightbox__close").addEventListener("click", function () {
+        dialog.close();
+      });
+      dialog.querySelectorAll(".mermaid-lightbox__controls button").forEach(function (btn) {
         btn.addEventListener("click", function (e) {
           e.stopPropagation();
           var action = btn.getAttribute("data-action");
@@ -318,70 +392,61 @@
           else setZoom(1);
         });
       });
-      inner.addEventListener("wheel", function (e) {
+      stageHost.addEventListener("wheel", function (e) {
         if (e.ctrlKey || e.metaKey) {
           e.preventDefault();
           setZoom(zoom + (e.deltaY < 0 ? zoomStep : -zoomStep));
         }
       }, { passive: false });
-      return lightbox;
+      dialog.addEventListener("close", function () {
+        document.body.classList.remove("mermaid-lightbox-open");
+        stageHost.innerHTML = "";
+      });
+      return dialog;
     }
 
     function setZoom(z) {
       zoom = Math.max(minZoom, Math.min(maxZoom, z));
-      if (inner) inner.style.setProperty("--mermaid-zoom", zoom);
-      if (lightbox) {
-        var resetBtn = lightbox.querySelector('[data-action="reset"]');
+      if (stageHost) stageHost.style.setProperty("--mermaid-zoom", zoom);
+      if (dialog) {
+        var resetBtn = dialog.querySelector('[data-action="reset"]');
         if (resetBtn) resetBtn.textContent = Math.round(zoom * 100) + "%";
       }
     }
 
     function open(wrapper) {
-      var svg = wrapper.querySelector("svg");
-      if (!svg) return;
-      ensureLightbox();
-      inner.innerHTML = "";
+      /* Scoped to the <pre>: the wrapper also holds the zoom-hint icon, and
+         picking that up would zoom a magnifying glass instead of a diagram. */
+      var svg = wrapper.querySelector("pre.mermaid svg");
+      /* Clicked before the runtime arrived: load it, then open. */
+      if (!svg) {
+        ensureRuntime(function () { open(wrapper); });
+        return;
+      }
+      ensureDialog();
+      stageHost.innerHTML = "";
       var stage = document.createElement("div");
       stage.className = "mermaid-lightbox__svg-stage";
       var clone = svg.cloneNode(true);
       clone.removeAttribute("style");
       clone.setAttribute("preserveAspectRatio", "xMidYMid meet");
       stage.appendChild(clone);
-      inner.appendChild(stage);
+      stageHost.appendChild(stage);
       setZoom(1);
-      lightbox.classList.add("is-open");
       document.body.classList.add("mermaid-lightbox-open");
+      if (typeof dialog.showModal === "function") dialog.showModal();
+      else dialog.setAttribute("open", "");
     }
 
-    function close() {
-      if (!lightbox) return;
-      lightbox.classList.remove("is-open");
-      document.body.classList.remove("mermaid-lightbox-open");
-      inner.innerHTML = "";
-    }
-
-    function bind() {
-      document.querySelectorAll(".mermaid-wrapper").forEach(function (w) {
-        if (w.dataset.mermaidBound) return;
-        w.dataset.mermaidBound = "1";
-        w.addEventListener("click", function () { open(w); });
-        w.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            open(w);
-          }
-        });
+    Array.prototype.forEach.call(wrappers, function (w) {
+      w.addEventListener("click", function () { open(w); });
+      w.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          open(w);
+        }
       });
-    }
-
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") close();
     });
-
-    bind();
-    /* Re-bind after Mermaid renders (it may take a moment) */
-    setTimeout(bind, 800);
-    setTimeout(bind, 2500);
   }
 
   /* ---- Blog list: tag filter chips --------------------------------- */
@@ -434,7 +499,7 @@
     initSectionReveal();
     initSearchHotkey();
     initSupportFab();
-    initMermaidLightbox();
+    initMermaid();
     initBlogFilter();
     initGiscusThemeSync();
   }

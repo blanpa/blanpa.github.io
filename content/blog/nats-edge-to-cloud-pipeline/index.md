@@ -17,7 +17,7 @@ This post walks through a complete NATS-based architecture for industrial IoT.
 
 ## Architecture Overview
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph cloud["Cloud NATS Cluster"]
         direction TB
@@ -51,7 +51,7 @@ flowchart TB
     EA -. "TLS / WebSocket<br/>(NAT-friendly)" .-> cloud
     EB -. TLS / WebSocket .-> cloud
     EC -. TLS / WebSocket .-> cloud
-{{< /mermaid >}}
+```
 
 Each factory runs a local NATS server as a **leaf node**. Sensors and PLCs publish to the local server with sub-millisecond latency. The leaf node selectively forwards messages to the cloud cluster over a single TLS connection — NAT-friendly, firewall-friendly, resumable on disconnect.
 
@@ -400,7 +400,7 @@ through a mirrored/sourced JetStream stream** (see the warning above). The
 diagram below assumes the edge writes to a local JetStream stream that mirrors
 the cloud; plain core-NATS publishes would simply be dropped during the outage.
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph normal["Normal operation"]
         direction LR
@@ -423,7 +423,7 @@ flowchart TB
     end
 
     normal --> drop --> recover
-{{< /mermaid >}}
+```
 
 Local edge applications (Node-RED dashboards, local alerts) continue working because they subscribe to the local NATS server. The cloud just receives data late — but in order and without gaps.
 
@@ -594,13 +594,13 @@ Twenty-three hours of offline buffering. Enough to survive a full business day o
 
 Use a core-NATS/JetStream Node-RED node — such as `node-red-contrib-nats` (built on the `nats.js` client) — or a custom NATS node to integrate. (Avoid `node-red-contrib-nats-streaming`: it targets NATS Streaming / STAN, which reached end-of-life in June 2023 and is superseded by JetStream.)
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     OPC["OPC-UA<br/>Client"] --> TR["Transform<br/>to JSON"]
     TR --> PUB["NATS<br/>Publish"]
     PUB --> LOCAL["Local NATS<br/>Server"]
     LOCAL -. "Leaf Node" .-> CLOUD["Cloud NATS<br/>Cluster"]
-{{< /mermaid >}}
+```
 
 Node-RED function node for NATS subject construction:
 
@@ -630,7 +630,7 @@ return msg;
 
 Three ways to connect edge to cloud — and when to use each:
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     subgraph star["Star Topology (Leaf Nodes) — most IIoT, simple, scalable"]
         direction TB
@@ -652,7 +652,7 @@ flowchart TB
         LGW --> FE[Factory Edge]
         FE --> TC[Cloud]
     end
-{{< /mermaid >}}
+```
 
 For most industrial IoT deployments, the **star topology with leaf nodes** is the right choice. It's simple, scales linearly, and the cloud cluster never becomes a single point of failure for local operations.
 

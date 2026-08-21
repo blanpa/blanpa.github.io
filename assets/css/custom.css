@@ -1824,7 +1824,9 @@ h1, h2, h3, h4,
   border-color: rgba(0, 0, 0, 0.08);
 }
 
-/* Lightbox / zoomed mode */
+/* Lightbox / zoomed mode — a native <dialog>, so the platform handles the
+   focus trap, Escape, and focus restore. The dialog itself stays
+   transparent and the scrim is painted by ::backdrop. */
 .mermaid-lightbox {
   position: fixed;
   inset: 0;
@@ -1832,16 +1834,26 @@ h1, h2, h3, h4,
   display: none;
   align-items: center;
   justify-content: center;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
   padding: 2rem;
-  background: rgba(10, 10, 10, 0.92);
-  backdrop-filter: blur(10px);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: hidden;
   cursor: zoom-out;
+}
+.mermaid-lightbox[open] {
+  display: flex;
   animation: mermaid-fade-in 0.2s ease-out;
 }
-.mermaid-lightbox.is-open {
-  display: flex;
+.mermaid-lightbox::backdrop {
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(10px);
 }
-:root:not(.dark) .mermaid-lightbox {
+:root:not(.dark) .mermaid-lightbox::backdrop {
   background: rgba(245, 245, 245, 0.96);
 }
 

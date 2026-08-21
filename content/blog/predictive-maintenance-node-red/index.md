@@ -31,7 +31,7 @@ The math is straightforward: a single unplanned stop on a CNC line costs €5,00
 
 The full pipeline in Node-RED looks like this:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     A["Accelerometer<br/>(MQTT / OPC)"] --> B["Signal Processing<br/>(FFT, RMS)"]
     B --> C["Anomaly Detection<br/>(Z-Score, CUSUM, IF)"]
@@ -40,7 +40,7 @@ flowchart LR
     E --> F["RUL Prediction"]
     F --> G["Alert Engine"]
     G --> H["Dashboard<br/>& Reports"]
-{{< /mermaid >}}
+```
 
 Each stage transforms data: raw acceleration → frequency spectrum → anomaly flags → health percentage → remaining useful life → maintenance work orders.
 
@@ -83,12 +83,12 @@ For a standard 6205 bearing at 1800 RPM: BPFO ≈ 107 Hz, BPFI ≈ 163 Hz, BSF �
 
 Most industrial vibration sensors publish via MQTT or OPC-UA. A typical Node-RED ingestion flow:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     M["MQTT In<br/>vibration / machine1"] --> JP["JSON Parse"]
     JP --> BUF["Buffer 1024 samples"]
     BUF --> FFT["FFT Node"]
-{{< /mermaid >}}
+```
 
 The buffer node collects 1024 samples before sending a complete block to the FFT node. At 25.6 kHz sampling, that's a new FFT every 40 ms — fast enough for real-time monitoring.
 
@@ -431,7 +431,7 @@ The output: "This bearing has approximately 340 ± 80 hours of useful life remai
 
 The complete flow in Node-RED, using the [node-red-contrib-condition-monitoring](https://flows.nodered.org/node/node-red-contrib-condition-monitoring) package:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     MQ["MQTT In<br/>vibration"] --> BUF[Buffer]
     BUF --> PFFT[Python FFT]
@@ -451,7 +451,7 @@ flowchart LR
     IF --> AD
     AD --> EM[Email]
     AD --> CMMS[CMMS Work Order]
-{{< /mermaid >}}
+```
 
 ### Key Node-RED Nodes Used
 

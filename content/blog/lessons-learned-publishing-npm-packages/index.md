@@ -80,7 +80,7 @@ My first version of `opcua-suite` had a single "OPC-UA" node that tried to do ev
 
 I split it into focused nodes:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph BEFORE["Before (v0.1)"]
         AIO["opcua-all-in-one<br/>Browse? Read? Write?<br/>Subscribe? Monitor?<br/>30 config fields<br/>Confused users"]
@@ -94,7 +94,7 @@ flowchart LR
         MC["opcua-method-call"]
     end
     BEFORE --> AFTER
-{{< /mermaid >}}
+```
 
 **Rule of thumb:** If a node needs a dropdown to select its mode of operation, split it. Each node should do one thing well.
 
@@ -102,7 +102,7 @@ flowchart LR
 
 Every package that connects to an external service (NATS broker, OPC-UA server, i3x API) uses a **config node** for the connection. The config node manages the connection lifecycle, and operation nodes reference it:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     subgraph FLOW["Node-RED Flow — 3 operation nodes, 1 shared connection"]
         PUB["nats-pub"]
@@ -113,7 +113,7 @@ flowchart LR
         SUB --> CONN
         REQ --> CONN
     end
-{{< /mermaid >}}
+```
 
 This pattern prevents connection sprawl (ten nodes opening ten separate TCP connections) and centralizes credential management.
 
@@ -131,13 +131,13 @@ The challenge with IIoT nodes: they interact with real hardware and services. Yo
 
 My approach: **three testing layers**.
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     L1["Layer 1: Pure Logic Tests (fast)<br/>• Data parsing, encoding, validation<br/>• Math (FFT, RMS, thresholds)<br/>• No external dependencies<br/>• 80% of tests live here"]
     L2["Layer 2: Node Behavior Tests (medium)<br/>• node-red-node-test-helper<br/>• Mocked connections<br/>• Input/output message validation<br/>• Status and error handling"]
     L3["Layer 3: Integration Tests (slow)<br/>• Docker Compose with real services<br/>• NATS server, OPC-UA simulator<br/>• End-to-end message flow<br/>• Run manually or nightly in CI"]
     L1 --> L2 --> L3
-{{< /mermaid >}}
+```
 
 ### Example: Testing the Condition Monitoring FFT Node
 
@@ -581,13 +581,13 @@ For `condition-monitoring`, I wrote tests first. The difference was dramatic —
 
 **`node-red-contrib-condition-monitoring` — monthly downloads**
 
-{{< mermaid >}}
+```mermaid
 xychart-beta
     title "Monthly downloads over 24 months"
     x-axis "Month" [1, 3, 6, 9, 12, 18, 24]
     y-axis "Downloads / month" 0 --> 250
     line [30, 80, 120, 160, 180, 210, 230]
-{{< /mermaid >}}
+```
 
 **Key moments:**
 

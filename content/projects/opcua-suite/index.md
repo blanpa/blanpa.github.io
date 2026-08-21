@@ -20,7 +20,7 @@ A modern OPC-UA suite for Node-RED that uses **shared connections**, **batch ope
 
 **OPC Unified Architecture** is the interoperability standard for secure, reliable data exchange in industrial automation. It's platform-independent, vendor-neutral, and supported by virtually every major PLC, SCADA, and MES vendor.
 
-{{< mermaid >}}
+```mermaid
 flowchart TB
     S["Siemens PLC"]
     B["Beckhoff PLC"]
@@ -35,7 +35,7 @@ flowchart TB
     NR --> D
     NR --> DB
     NR --> C
-{{< /mermaid >}}
+```
 
 ## 11 Nodes
 
@@ -59,14 +59,14 @@ Unlike legacy packages that open one TCP connection per node, this suite uses **
 
 Single OPC-UA service calls handle multiple variables simultaneously. Chain `opcua-item` nodes to visually build batch configurations:
 
-{{< mermaid >}}
+```mermaid
 flowchart LR
     I1["item<br/>Temp"]
     I2["item<br/>Pressure"]
     I3["item<br/>Speed"]
     C["opcua-client<br/>(batch read)"]
     I1 --> I2 --> I3 --> C
-{{< /mermaid >}}
+```
 
 ## Security
 
