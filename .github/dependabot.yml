@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Pinned action versions go stale quietly; a bumped major usually means the
+  # old one stops working on the runner at some point.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: chore(ci)
+
+  # themes/blowfish is a submodule pinned to a tag, so theme updates are
+  # invisible unless something asks for them. Monthly, and CI builds the PR
+  # before it can be merged.
+  - package-ecosystem: gitsubmodule
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: chore(theme)
