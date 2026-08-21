@@ -11,7 +11,7 @@ Every factory I've worked in has the same problem: data is everywhere, but acces
 
 **i3x** changes this. It's an open REST API specification that gives you **one interface to all manufacturing data**, regardless of what platform stores it. I built a [Node-RED integration](https://github.com/blanpa/node-red-contrib-i3x) for it, and in this post I'll explain what i3x is, how it works, and why it matters.
 
-> **Note:** i3x is a new and rapidly evolving CESMII specification. It launched in public beta in early 2026 and is still maturing, so the API surface and exact payloads may change. The Node-RED integration and the examples below track the evolving spec — always check the official [i3x docs](https://i3x.dev/) and live OpenAPI definition for the authoritative, current shape.
+> **Note (updated August 2026):** this post was written while i3x was in public beta in early 2026. CESMII has since released **version 1.0**, so some payloads and endpoint details below may lag the released specification. The Node-RED integration tracks the spec — always check the official [i3x docs](https://i3x.dev/) and the live [OpenAPI definition](https://api.i3x.dev/v1/docs) for the authoritative, current shape.
 
 ---
 
