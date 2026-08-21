@@ -70,7 +70,9 @@ The transceiver varies by board: the Waveshare RS485 CAN HAT uses the SN65HVD230
 sudo raspi-config
 # Interface Options → SPI → Enable
 
-sudo nano /boot/config.txt
+# Raspberry Pi OS Bookworm and later — on older releases this is /boot/config.txt,
+# which is now a placeholder file telling you it moved here.
+sudo nano /boot/firmware/config.txt
 ```
 
 Add these lines:
@@ -78,10 +80,11 @@ Add these lines:
 ```ini
 dtparam=spi=on
 dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
-dtoverlay=spi-bcm2835-overlay
 ```
 
 The `oscillator` value depends on your hat — check the crystal frequency (8 MHz or 16 MHz). Reboot after saving.
+
+`dtparam=spi=on` is all the SPI setup you need; the `mcp2515-can0` overlay pulls in the rest.
 
 ### Option B: USB CAN Adapter
 

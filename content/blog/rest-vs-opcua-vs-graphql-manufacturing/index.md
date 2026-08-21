@@ -144,6 +144,8 @@ const data = await getMultipleMachines(['cnc-001', 'cnc-002', 'cnc-003']);
 ### Python Example
 
 ```python
+import os
+
 import requests
 
 BASE_URL = "https://factory.local/api/v1"
@@ -305,7 +307,7 @@ asyncio.run(read_machine_data())
 
 ### OPC-UA Weaknesses in Manufacturing
 
-- **Complexity** — the spec is 1400+ pages, the learning curve is steep
+- **Complexity** — the spec is 1,200+ pages, the learning curve is steep
 - **Firewall issues** — binary TCP on port 4840 doesn't traverse web proxies easily
 - **Heavy client libraries** — no simple `curl` equivalent, need dedicated SDK
 - **Session management** — stateful connections require keepalive handling
@@ -403,6 +405,8 @@ const lineData = await client.request(GET_LINE_STATUS, { line: 'Line1' });
 ### Python Example
 
 ```python
+import os
+
 from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 

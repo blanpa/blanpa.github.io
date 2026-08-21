@@ -337,6 +337,9 @@ leafnodes {
             deny_exports: []
         }
     ]
+
+    # Reconnect behaviour for the leaf link
+    reconnect_delay: "5s"
 }
 
 authorization {
@@ -355,12 +358,13 @@ authorization {
         }
     ]
 }
-
-# Reconnect behaviour for the leaf link
-leafnodes {
-    reconnect_delay: "5s"
-}
 ```
+
+> **One block only.** `leafnodes` (like every top-level block) may appear once
+> — a second `leafnodes { ... }` later in the file silently *replaces* the
+> first instead of extending it, taking `remotes` with it. The config still
+> passes `nats-server -t`, and the gateway then quietly never connects to the
+> cloud. Same rule for `jetstream` and `authorization`.
 
 > **Important:** A leaf node connection alone does *not* buffer locally-published
 > core-NATS messages and replay them after an outage. Plain core-NATS traffic that
@@ -580,7 +584,7 @@ Even 10 factories with 200 machines each only generate ~600 KB/s to the cloud cl
 
 ### Edge Buffer Sizing
 
-How long can the edge operate offline? With a 5 GB JetStream store and 200 machines at 200 KB/s compressed:
+How long can the edge operate offline? With a 5 GB JetStream store and 200 machines at 60 KB/s compressed (the single-factory row above):
 
 ```
 5 GB / 60 KB/s ≈ 83,333 seconds ≈ 23 hours

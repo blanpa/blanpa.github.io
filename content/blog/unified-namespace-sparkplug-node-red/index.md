@@ -66,7 +66,9 @@ You *can* build a UNS on raw MQTT. People do. But plain MQTT gives you a dumb pi
 | Payloads are arbitrary blobs | Defined Protobuf payload with typed metrics, timestamps, quality |
 | Subscriber that connects late has no current state | **State on (re)birth** — the birth certificate carries all current values, and a late host can request a Rebirth |
 
-That third and fourth points are the killers. With raw MQTT, a dashboard that connects at 09:00 has no idea what the temperature is until the next time it happens to change. Sparkplug's **birth certificate** publishes the full current state of an edge node the moment *that node* connects (the NBIRTH). A subscriber that joins later resyncs either from the retained birth certificate or by having the primary host issue a **Rebirth** request (an `NCMD` with `Node Control/Rebirth`), which forces the edge node to re-publish its full state — so no late subscriber is left guessing.
+That third and fourth points are the killers. With raw MQTT, a dashboard that connects at 09:00 has no idea what the temperature is until the next time it happens to change. Sparkplug's **birth certificate** publishes the full current state of an edge node the moment *that node* connects (the NBIRTH).
+
+A subscriber that joins later can't just pick that message up again: the spec requires every non-`STATE` message — NBIRTH included — to be published with the MQTT **retain flag set to false**, so there is no retained copy sitting on the broker. Resync happens the other way round: the primary host issues a **Rebirth** request (an `NCMD` with `Node Control/Rebirth`), which forces the edge node to re-publish its full state. In practice the primary host application keeps the current state for everyone else, which is exactly why Sparkplug defines a primary host at all.
 
 ### The Birth/Death Model
 
