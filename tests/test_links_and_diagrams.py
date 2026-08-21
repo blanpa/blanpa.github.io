@@ -72,8 +72,24 @@ def test_mermaid_diagram_parses(mermaid, tmp_path):
     source = tmp_path / "diagram.mmd"
     source.write_text(mermaid.code, encoding="utf-8")
     out = tmp_path / "diagram.svg"
+
+    # mermaid-cli renders through headless Chrome, which cannot start its
+    # sandbox on a CI runner ("No usable sandbox!"). The browser only ever
+    # opens diagram files from this repository, so dropping the sandbox costs
+    # nothing here and is what makes the check runnable in CI at all.
+    puppeteer_config = tmp_path / "puppeteer.json"
+    puppeteer_config.write_text(
+        '{"args": ["--no-sandbox", "--disable-dev-shm-usage"]}', encoding="utf-8"
+    )
+
     result = subprocess.run(
-        [MMDC, "--input", str(source), "--output", str(out), "--quiet"],
+        [
+            MMDC,
+            "--input", str(source),
+            "--output", str(out),
+            "--puppeteerConfigFile", str(puppeteer_config),
+            "--quiet",
+        ],
         capture_output=True,
         text=True,
         timeout=180,

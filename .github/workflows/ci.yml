@@ -96,21 +96,25 @@ jobs:
           set -euo pipefail
           fail=0
 
-          # A ```mermaid fence that reaches the browser unrendered means the
+          # A mermaid fence that reaches the browser unrendered means the
           # codeblock render hook stopped matching — the diagram then shows up
           # as its own source code. This is exactly how 11 diagrams silently
           # broke once already.
-          if grep -rl "language-mermaid" public --include="*.html" >/dev/null 2>&1; then
-            echo "::error::unrendered ```mermaid fences in:"
-            grep -rl "language-mermaid" public --include="*.html"
+          #
+          # Note: single quotes below. A backtick inside a double-quoted string
+          # opens a command substitution, which is how this step first shipped
+          # broken.
+          if grep -rl 'language-mermaid' public --include='*.html' >/dev/null 2>&1; then
+            echo '::error::unrendered mermaid fences in:'
+            grep -rl 'language-mermaid' public --include='*.html'
             fail=1
           fi
 
           # Shortcodes that were never expanded (typo in the name, missing
           # template) are printed verbatim into the page.
-          if grep -rn "{{[<%]" public --include="*.html" >/dev/null 2>&1; then
-            echo "::error::unexpanded shortcode delimiters in the output:"
-            grep -rn "{{[<%]" public --include="*.html" | head -20
+          if grep -rnF -e '{{<' -e '{{%' public --include='*.html' >/dev/null 2>&1; then
+            echo '::error::unexpanded shortcode delimiters in the output:'
+            grep -rnF -e '{{<' -e '{{%' public --include='*.html' | head -20
             fail=1
           fi
 
