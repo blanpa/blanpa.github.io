@@ -1,3 +1,7 @@
+{{- /* Per-package download table. Counts are baked in at build time from
+       data/npm_stats.yml (refreshed by the deploy workflow) — no client-side
+       requests to npmjs, which also keeps the third-party surface small. */ -}}
+{{- $stats := site.Data.npm_stats.packages | default dict -}}
 <div class="npm-stats-table">
   <table>
     <thead>
@@ -7,37 +11,19 @@
         <th>Downloads</th>
       </tr>
     </thead>
-    <tbody id="npm-stats-body">
+    <tbody>
       {{ range site.Data.npm_packages }}
-      <tr data-pkg="{{ .pkg }}">
+      <tr>
         <td><a href="https://www.npmjs.com/package/{{ .pkg }}" target="_blank" rel="noopener">{{ .pkg }}</a></td>
         <td>{{ .desc }}</td>
-        <td class="npm-dl">—</td>
+        <td class="npm-dl">
+          {{- with index $stats .pkg }}{{ lang.FormatNumber 0 . }} / mo{{ else }}n/a{{ end -}}
+        </td>
       </tr>
       {{ end }}
     </tbody>
   </table>
+  {{- with site.Data.npm_stats.updated }}
+  <p class="npm-stats-updated">Download counts: last 30 days, as of {{ . }}.</p>
+  {{- end }}
 </div>
-
-<script>
-(function () {
-  const rows = document.querySelectorAll("#npm-stats-body tr[data-pkg]");
-  rows.forEach(function (row) {
-    const pkg = row.dataset.pkg;
-    fetch("https://api.npmjs.org/downloads/point/last-month/" + pkg)
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        const dl = data.downloads;
-        const cell = row.querySelector(".npm-dl");
-        if (dl !== undefined) {
-          cell.textContent = dl.toLocaleString("en") + " / mo";
-        } else {
-          cell.textContent = "n/a";
-        }
-      })
-      .catch(function () {
-        row.querySelector(".npm-dl").textContent = "n/a";
-      });
-  });
-})();
-</script>

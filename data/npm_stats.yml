@@ -1,5 +1,14 @@
-# Baked-in npm download total, refreshed by the deploy workflow before every
-# build (daily cron + on push). This committed value is only the local-dev /
-# fallback baseline — CI overwrites it with live numbers.
-total_last_month: 4715
-updated: 2026-07-17
+# Baked-in npm download stats, refreshed by the deploy workflow before every
+# build (daily cron + on push). These committed values are only the local-dev /
+# fallback baseline — CI overwrites the file with live numbers.
+total_last_month: 1998
+updated: 2026-08-03
+packages:
+  node-red-contrib-condition-monitoring: 136
+  node-red-contrib-nats-suite: 111
+  node-red-contrib-kafka-suite: 119
+  node-red-contrib-cip-suite: 500
+  node-red-contrib-s7-suite: 434
+  node-red-contrib-opcua-suite: 596
+  node-red-contrib-clab-interfaces: 32
+  node-red-contrib-i3x: 70
