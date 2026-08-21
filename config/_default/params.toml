@@ -27,7 +27,10 @@ smartTOC = true
   showScrollToTop = true
 
 [homepage]
-  layout = "profile"
+  # "custom" renders layouts/partials/home/custom.html — a two-column hero
+  # (copy and actions left, portrait right) instead of Blowfish's centred
+  # identity card.
+  layout = "custom"
   homepageImage = ""
   showRecent = true
   showRecentItems = 5

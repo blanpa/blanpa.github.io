@@ -1,0 +1,79 @@
+{{- /* Homepage.
+
+       Replaces Blowfish's "profile" layout, which opened with a portrait, a
+       name and a headline — an identity card. A visitor deciding whether to
+       hire someone wants the opposite order: what gets solved, what proves it,
+       how to get in touch. So the hero is two columns (copy and actions left,
+       portrait right), the proof band sits directly under it, and the strongest
+       project follows before the article list.
+
+       The copy lives in content/_index.md under `hero:` so it stays editable
+       without touching the template. */ -}}
+
+{{- $hero := .Params.hero | default dict -}}
+{{- $disableImageOptimization := .Site.Params.disableImageOptimization | default false -}}
+
+<article class="home">
+  <section class="home-hero">
+    <div class="home-hero__text">
+      <h1 class="home-hero__title">
+        {{ $hero.title | default (.Site.Params.Author.name | default .Site.Title) | markdownify }}
+      </h1>
+
+      {{- with $hero.lede }}
+      <p class="home-hero__lede">{{ . | safeHTML }}</p>
+      {{- end }}
+
+      <div class="home-hero__actions">
+        {{- with .Site.Params.formspreeId }}
+          {{ partial "contact-modal.html" (dict "id" .) }}
+        {{- end }}
+        {{- with site.GetPage "/projects" }}
+        <a class="home-hero__secondary" href="{{ .RelPermalink }}">
+          View projects
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+        {{- end }}
+      </div>
+
+      <div class="home-hero__links">{{ partialCached "author-links.html" . }}</div>
+    </div>
+
+    {{- with .Site.Params.Author.image }}
+      {{- $image := "" -}}
+      {{- if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") -}}
+        {{- $image = resources.GetRemote . -}}
+      {{- else -}}
+        {{- $image = resources.Get . -}}
+      {{- end -}}
+      {{- with $image }}
+        {{- $rendered := . -}}
+        {{- if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) -}}
+          {{- $rendered = .Fill (print "480x480 q" ($.Site.Params.Author.imagequality | default "96")) -}}
+        {{- end }}
+        <div class="home-hero__portrait">
+          <img
+            src="{{ $rendered.RelPermalink }}"
+            width="240" height="240"
+            alt="{{ $.Site.Params.Author.name | default `Author` }}"
+            fetchpriority="high"
+            decoding="async">
+        </div>
+      {{- end }}
+    {{- end }}
+  </section>
+
+  {{ partial "home-stats.html" . }}
+
+  {{- with .Content }}
+  <section class="home-prose prose dark:prose-invert">{{ . }}</section>
+  {{- end }}
+
+  {{ partial "home-featured-project.html" . }}
+</article>
+
+{{- if .Site.Params.homepage.showRecent }}
+<section class="home-recent">
+  {{ partial "recent-articles/main.html" . }}
+</section>
+{{- end }}
