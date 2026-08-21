@@ -2,6 +2,8 @@
 title: "Services"
 description: "Freelance IIoT development — custom Node-RED modules, industrial protocol integration, and edge-to-cloud architectures."
 layout: "simple"
+# See content/about/index.md — no date means no <lastmod> in the sitemap.
+date: 2026-03-17
 ---
 
 <div class="about-hero">

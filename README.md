@@ -46,3 +46,14 @@ Two helper scripts for authoring (both need Python 3; not part of the build):
 - `generate-diagrams.py` — converts ASCII diagrams in posts to Mermaid shortcodes via the Claude API (needs `ANTHROPIC_API_KEY`)
 
 npm download counts shown on the site are baked into `data/npm_stats.yml` by the deploy workflow (daily cron); the committed values are just a local-dev fallback baseline.
+
+Diagrams are authored as ` ```mermaid ` fenced blocks — `layouts/_markup/render-codeblock-mermaid.html` renders them and `assets/js/ui.js` loads the mermaid runtime only when a diagram nears the viewport.
+
+## CI
+
+- `ci.yml` builds every pull request and branch, checks internal links with lychee, and fails on unrendered diagrams or unexpanded shortcodes.
+- `deploy.yml` publishes `main` to GitHub Pages and refreshes the npm stats.
+
+## License
+
+Code is MIT, content is CC BY 4.0 — see [LICENSE](LICENSE).

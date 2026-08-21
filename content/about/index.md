@@ -2,6 +2,9 @@
 title: "About"
 description: "IIoT Software Developer with an Industrial Engineering background — building connectivity solutions from edge to cloud."
 layout: "simple"
+# Without a date these pages ship no <lastmod> in the sitemap, so crawlers
+# have nothing to judge freshness by. Bump it when the page is rewritten.
+date: 2026-03-05
 ---
 
 <div class="about-hero">

@@ -1,8 +1,10 @@
+# Hugo build output. Any --destination used for a local check belongs here
+# too, otherwise a stray `git add -A` commits a whole rendered site.
 public/
 _site/
-resources/_gen/
+.check/
+resources/
 .hugo_build.lock
-hugo-site/
 vendor/
 node_modules/
 *.log
