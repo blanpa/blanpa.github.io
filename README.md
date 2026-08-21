@@ -27,14 +27,22 @@ hugo server -D
 
 ## Projects
 
-- **node-red-contrib-condition-monitoring** — Condition monitoring nodes for Node-RED
-- **node-red-contrib-nats-suite** — NATS messaging integration for Node-RED
-- **node-red-contrib-i3x** — i3x gateway nodes for Node-RED
-- **node-red-contrib-clab-interfaces** — Containerlab interface nodes for Node-RED
-- **node-red-contrib-opcua-suite** — OPC-UA communication nodes for Node-RED
-- **Conveyor Belt Sorting System** — Automated sorting with PLC and image recognition
-- **Automated Table Soccer** — University project with 3D-printed components and Raspberry Pi
+The site showcases 8 open-source npm packages (the canonical list lives in `data/npm_packages.yml`):
 
-## License
+- **node-red-contrib-condition-monitoring** — Vibration analysis & predictive maintenance
+- **node-red-contrib-nats-suite** — NATS messaging with JetStream support
+- **node-red-contrib-kafka-suite** — Apache Kafka integration with Schema Registry
+- **node-red-contrib-cip-suite** — Allen-Bradley PLC & EtherNet/IP communication
+- **node-red-contrib-s7-suite** — Siemens S7 PLC communication
+- **node-red-contrib-opcua-suite** — OPC-UA industrial data exchange
+- **node-red-contrib-clab-interfaces** — CompuLab IoT Gateway hardware interfaces
+- **node-red-contrib-i3x** — i3x open manufacturing API integration
 
-See [LICENSE](LICENSE) for details.
+## Content Tooling
+
+Two helper scripts for authoring (both need Python 3; not part of the build):
+
+- `generate-thumbnails.py` — generates AI hero images for blog posts via the Hugging Face Inference API (needs `HF_TOKEN` and Pillow: `pip install Pillow`)
+- `generate-diagrams.py` — converts ASCII diagrams in posts to Mermaid shortcodes via the Claude API (needs `ANTHROPIC_API_KEY`)
+
+npm download counts shown on the site are baked into `data/npm_stats.yml` by the deploy workflow (daily cron); the committed values are just a local-dev fallback baseline.

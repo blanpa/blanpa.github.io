@@ -7,6 +7,8 @@ enableCodeCopy = true
 # defaultSocialImage intentionally unset: extend-head-uncached.html supplies
 # og:image (rich default on home, generated title cards on image-less pages).
 mainSections = ["blog"]
+# Formspree form id used by the contact-form / contact-modal shortcodes.
+formspreeId = "mjgaaoww"
 disableImageOptimization = false
 highlightCurrentMenuArea = true
 # Cookieless analytics: create an account at goatcounter.com, then set your

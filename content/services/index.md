@@ -84,4 +84,4 @@ layout: "simple"
 
 Interested in working together? Fill out the form below and I'll get back to you as soon as possible.
 
-{{< contact-form id="mjgaaoww" >}}
+{{< contact-form >}}

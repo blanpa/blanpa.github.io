@@ -1,6 +1,6 @@
 ---
 title: "Predictive Maintenance with Node-RED — From Vibration Sensor to Health Score"
-tags: [iiot, node-red, machine-learning, python]
+tags: ["IIoT", "Node-RED", "Machine Learning", "Python"]
 description: "Building a complete predictive maintenance pipeline in Node-RED — signal processing, anomaly detection, and health scoring."
 date: 2026-03-07
 series: ["IIoT"]

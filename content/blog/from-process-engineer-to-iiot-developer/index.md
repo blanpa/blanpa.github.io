@@ -1,6 +1,6 @@
 ---
 title: "From Process Engineer to IIoT Developer — My Career Switch"
-tags: [career, iiot]
+tags: ["Career", "IIoT"]
 description: "How my Industrial Engineering background became my biggest advantage in IIoT software development."
 date: 2026-05-16
 series: ["IIoT"]

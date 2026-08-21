@@ -1,6 +1,6 @@
 ---
 title: "CompuLab IoT Gateway — Embedded Linux for Industrial Edge Computing"
-tags: [iiot, node-red, embedded-linux, can-bus, raspberry-pi]
+tags: ["IIoT", "Node-RED", "Embedded Linux", "CAN Bus", "Raspberry Pi"]
 description: "Setting up a CompuLab IoT gateway with Node-RED for industrial data collection — GPIO, CAN bus, RS485, and cellular connectivity."
 date: 2026-03-28
 series: ["IIoT"]

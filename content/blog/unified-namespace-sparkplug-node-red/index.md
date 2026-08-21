@@ -1,6 +1,6 @@
 ---
 title: "Building a Unified Namespace with Sparkplug B and Node-RED"
-tags: [iiot, mqtt, sparkplug, node-red, architecture]
+tags: ["IIoT", "MQTT", "Sparkplug", "Node-RED", "Architecture"]
 description: "What a Unified Namespace actually is, why Sparkplug B is the natural transport for it, and how to build one incrementally with Node-RED instead of rebuilding your whole plant."
 date: 2026-07-04
 series: ["IIoT"]

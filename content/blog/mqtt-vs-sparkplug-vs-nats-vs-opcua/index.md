@@ -1,6 +1,6 @@
 ---
 title: "MQTT vs Sparkplug B vs NATS vs OPC-UA — Which Protocol for Industrial IoT?"
-tags: [iiot, mqtt, nats, opc-ua, node-red]
+tags: ["IIoT", "MQTT", "NATS", "OPC-UA", "Node-RED"]
 description: "A practical comparison of four industrial messaging protocols — when to use which, with architecture examples and code snippets."
 date: 2026-03-05
 series: ["IIoT"]

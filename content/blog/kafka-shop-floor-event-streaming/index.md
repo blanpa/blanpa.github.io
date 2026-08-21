@@ -1,6 +1,6 @@
 ---
 title: "Apache Kafka on the Shop Floor — Event Streaming for Manufacturing"
-tags: [iiot, kafka, node-red, javascript]
+tags: ["IIoT", "Kafka", "Node-RED", "JavaScript"]
 description: "When does Apache Kafka make sense in a factory, how it compares to NATS and MQTT, and how to wire it into Node-RED with a Schema Registry for real data contracts."
 date: 2026-06-20
 series: ["IIoT"]
