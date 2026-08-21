@@ -132,9 +132,12 @@ jobs:
           # theme's skip link and back-to-top link are bare "#main-content" /
           # "#the-top" hrefs, which lychee resolves against --base-url instead
           # of the containing page — 1858 false failures on this site.
+          # --root-dir, not --base-url: base-url wants a full URL or an
+          # absolute path, and is not what resolves root-relative hrefs in
+          # local files. It must be absolute, hence github.workspace.
           args: >-
             --offline
-            --base-url public
+            --root-dir ${{ github.workspace }}/public
             --no-progress
             public/**/*.html
           fail: true
