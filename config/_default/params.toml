@@ -39,7 +39,10 @@ smartTOC = true
   showHero = true
   heroStyle = "background"
   layoutBackgroundBlur = true
-  layoutBackgroundHeaderSpace = true
+  # false: with a blurred background hero the image is dimmed to almost
+  # nothing, so the reserved header space was 337px of empty grid above every
+  # article title — a third of a laptop screen, and it read as a layout bug.
+  layoutBackgroundHeaderSpace = false
   showBreadcrumbs = true
   showDraftLabel = true
   showEdit = false

@@ -43,7 +43,9 @@
   --accent-2: #0099cc;
   --accent-grad: var(--accent);
   --accent-ink: #04211b; /* dark text on accent surfaces */
-  --accent-on-light: #008a70;
+  /* Accent for light backgrounds. Dark enough that body-sized text on white
+     clears WCAG AA (4.5:1) — #008a70 measured 4.31:1 and did not. */
+  --accent-on-light: #007a63;
 
   /* Fonts */
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -184,6 +186,40 @@ h1, h2, h3, h4,
    primary "Get in Touch" CTA. */
 #support-fab-btn #support-fab-icon {
   color: var(--accent);
+}
+
+/* The options panel is taken out of flow: hidden, it still reserved its full
+   height, which made the fixed container 158x240px — 11.5% of a phone
+   viewport, sitting on top of the tagline and three protocol chips. */
+#support-fab {
+  position: fixed;
+}
+#support-options {
+  position: absolute;
+  bottom: calc(100% + 0.75rem);
+  right: 0;
+}
+
+/* On phones the pill shrinks to the heart alone. A donation prompt should not
+   be the largest permanent element on a page whose primary action is
+   "Get in Touch". */
+@media (max-width: 640px) {
+  #support-fab-btn {
+    padding: 0.85rem;
+    border-radius: 9999px;
+  }
+  #support-fab-btn > span:not(#support-fab-icon) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  #support-options {
+    width: min(17rem, calc(100vw - 3rem));
+  }
 }
 
 /* ==============================================
@@ -1610,17 +1646,15 @@ h1, h2, h3, h4,
   border: 0;
 }
 
+/* Wrap rather than scroll. Horizontally scrolling filters hid 17 of 25 chips
+   with no affordance that anything was there — the row simply ended
+   mid-chip. Two or three wrapped rows show the whole vocabulary at once. */
 .blog-filter-chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  overflow-x: auto;
   padding: 0.25rem 0 1.5rem;
   margin: 1rem 0 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.blog-filter-chips::-webkit-scrollbar {
-  display: none;
 }
 .blog-filter-chip {
   display: inline-flex;
@@ -1712,10 +1746,32 @@ h1, h2, h3, h4,
   }
 }
 
-/* Brighter active TOC link */
+/* Active TOC link. The accent has to switch with the theme — the bright teal
+   measures 1.91:1 on the light background, which is unreadable. */
 #TableOfContents a.active {
-  color: #00d4ad !important;
+  color: var(--accent) !important;
   font-weight: 600;
+}
+:root:not(.dark) #TableOfContents a.active {
+  color: var(--accent-on-light) !important;
+}
+
+/* Links in article prose. The Blowfish noir scheme's primary-600 is a
+   blue-grey that measures 2.73:1 on white — links were the least readable
+   text on the page in light mode. Scoped to prose so heading anchors and
+   card links keep their own styling. */
+:root:not(.dark) .article-content p a,
+:root:not(.dark) .article-content li a,
+:root:not(.dark) .article-content td a,
+:root:not(.dark) .article-content blockquote a {
+  color: var(--accent-on-light);
+  text-decoration-color: rgba(0, 122, 99, 0.4);
+}
+:root:not(.dark) .article-content p a:hover,
+:root:not(.dark) .article-content li a:hover,
+:root:not(.dark) .article-content td a:hover,
+:root:not(.dark) .article-content blockquote a:hover {
+  text-decoration-color: currentColor;
 }
 
 /* Card description text — better contrast */

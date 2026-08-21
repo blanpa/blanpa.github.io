@@ -38,6 +38,11 @@
       {{ $tagMap = merge $tagMap (dict $key (dict "name" $entry.name "count" (add $entry.count 1))) }}
     {{ end }}
   {{ end }}
+  {{/* A chip that filters to a single article is a link dressed as a filter,
+       and there were 11 of them — two thirds of the row scrolled off-screen
+       as a result. Tags below the threshold stay reachable through the tag
+       pages on each post. */}}
+  {{ $minPosts := 2 }}
   {{ if gt (len $tagMap) 0 }}
     {{/* Toggle buttons, not links: aria-pressed is what tells a screen
          reader which filter is on. ui.js mirrors the active filter into
@@ -45,7 +50,9 @@
     <nav class="blog-filter-chips" aria-label="Filter articles by tag">
       <button type="button" class="blog-filter-chip is-active" data-filter="all" aria-pressed="true">All</button>
       {{ range $slug, $entry := $tagMap }}
-        <button type="button" class="blog-filter-chip" data-filter="{{ $slug }}" aria-pressed="false">{{ $entry.name }}<span class="blog-filter-chip__count">{{ $entry.count }}</span></button>
+        {{ if ge $entry.count $minPosts }}
+          <button type="button" class="blog-filter-chip" data-filter="{{ $slug }}" aria-pressed="false">{{ $entry.name }}<span class="blog-filter-chip__count">{{ $entry.count }}</span></button>
+        {{ end }}
       {{ end }}
     </nav>
     {{/* Cards vanishing is a silent event without this. */}}
