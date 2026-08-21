@@ -1596,6 +1596,20 @@ h1, h2, h3, h4,
 /* ==============================================
    BLOG CATEGORY FILTER CHIPS
    ============================================== */
+/* Announces the result count to screen readers when a filter changes;
+   sighted users already see the cards move. */
+.blog-filter-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .blog-filter-chips {
   display: flex;
   gap: 0.5rem;

@@ -152,7 +152,7 @@
       el.style.textAlign = "left";
 
       var i = 0;
-      setInterval(function () {
+      function tick() {
         i = (i + 1) % words.length;
         el.style.opacity = "0";
         el.style.transform = "translateY(-4px)";
@@ -161,7 +161,18 @@
           el.style.opacity = "1";
           el.style.transform = "translateY(0)";
         }, 280);
-      }, 2400);
+      }
+
+      /* Stop while the tab is in the background — nobody is reading a word
+         swap they can't see, and a timer that keeps firing there keeps the
+         page from being frozen by the browser. */
+      var timer = null;
+      function start() { if (!timer) timer = setInterval(tick, 2400); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) stop(); else start();
+      });
+      start();
     });
   }
 
@@ -454,23 +465,65 @@
     var chips = document.querySelectorAll(".blog-filter-chip");
     if (!chips.length) return;
     var items = document.querySelectorAll("[data-tags]");
+    var status = document.querySelector(".blog-filter-status");
+
+    function known(filter) {
+      for (var i = 0; i < chips.length; i++) {
+        if (chips[i].getAttribute("data-filter") === filter) return true;
+      }
+      return false;
+    }
+
+    /* The filter lives in the URL, so a filtered view can be linked and the
+       back button undoes it — the browser's own idea of "go back one step". */
+    function fromURL() {
+      var tag = new URL(window.location.href).searchParams.get("tag");
+      return tag && known(tag) ? tag : "all";
+    }
+
+    function apply(filter, record) {
+      var label = "";
+      var shown = 0;
+
+      chips.forEach(function (chip) {
+        var active = chip.getAttribute("data-filter") === filter;
+        chip.classList.toggle("is-active", active);
+        chip.setAttribute("aria-pressed", active ? "true" : "false");
+        if (active) label = (chip.firstChild && chip.firstChild.textContent || "").trim();
+      });
+
+      items.forEach(function (item) {
+        var tags = (item.getAttribute("data-tags") || "").split(",");
+        var match = filter === "all" || tags.indexOf(filter) !== -1;
+        item.style.display = match ? "" : "none";
+        if (match) shown++;
+      });
+
+      /* Screen readers get no signal from cards disappearing. */
+      if (status) {
+        status.textContent = shown + (shown === 1 ? " article" : " articles") +
+          (filter === "all" ? "" : " tagged " + label);
+      }
+
+      if (record) {
+        var url = new URL(window.location.href);
+        if (filter === "all") url.searchParams.delete("tag");
+        else url.searchParams.set("tag", filter);
+        history.pushState({ tag: filter }, "", url);
+      }
+    }
 
     chips.forEach(function (chip) {
       chip.addEventListener("click", function () {
-        chips.forEach(function (c) { c.classList.remove("is-active"); });
-        chip.classList.add("is-active");
-        var filter = chip.getAttribute("data-filter");
-
-        items.forEach(function (item) {
-          if (filter === "all") {
-            item.style.display = "";
-          } else {
-            var tags = item.getAttribute("data-tags").split(",");
-            item.style.display = tags.indexOf(filter) !== -1 ? "" : "none";
-          }
-        });
+        apply(chip.getAttribute("data-filter"), true);
       });
     });
+
+    window.addEventListener("popstate", function () { apply(fromURL(), false); });
+
+    /* Restore a linked or bookmarked filter on load. */
+    var initial = fromURL();
+    if (initial !== "all") apply(initial, false);
   }
 
   /* ---- Giscus comments: follow the site's light/dark theme --------- */

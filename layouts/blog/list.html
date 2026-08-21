@@ -39,12 +39,17 @@
     {{ end }}
   {{ end }}
   {{ if gt (len $tagMap) 0 }}
-    <nav class="blog-filter-chips" aria-label="Filter by tag">
-      <button class="blog-filter-chip is-active" data-filter="all">All</button>
+    {{/* Toggle buttons, not links: aria-pressed is what tells a screen
+         reader which filter is on. ui.js mirrors the active filter into
+         ?tag= so the view can be linked and the back button undoes it. */}}
+    <nav class="blog-filter-chips" aria-label="Filter articles by tag">
+      <button type="button" class="blog-filter-chip is-active" data-filter="all" aria-pressed="true">All</button>
       {{ range $slug, $entry := $tagMap }}
-        <button class="blog-filter-chip" data-filter="{{ $slug }}">{{ $entry.name }}<span class="blog-filter-chip__count">{{ $entry.count }}</span></button>
+        <button type="button" class="blog-filter-chip" data-filter="{{ $slug }}" aria-pressed="false">{{ $entry.name }}<span class="blog-filter-chip__count">{{ $entry.count }}</span></button>
       {{ end }}
     </nav>
+    {{/* Cards vanishing is a silent event without this. */}}
+    <p class="blog-filter-status" role="status" aria-live="polite"></p>
   {{ end }}
 
   {{ if gt (len $allPages) 0 }}
