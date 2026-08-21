@@ -327,6 +327,31 @@ def test_own_package_names_are_real(pages, npm_packages):
     )
 
 
+def test_project_npm_mapping_resolves(pages, npm_packages):
+    """Project cards show a download count looked up by the page's `npm:`
+    field. A typo there renders nothing at all — the card silently loses its
+    evidence rather than failing — so check the name exists."""
+    known = {entry["pkg"] for entry in npm_packages}
+    wrong = {
+        page.rel: page.meta["npm"]
+        for page in pages
+        if page.meta.get("npm") and page.meta["npm"] not in known
+    }
+    assert not wrong, (
+        f"`npm:` values with no entry in data/npm_packages.yml: {wrong}"
+    )
+
+
+def test_every_project_declares_its_package(pages):
+    """Every project here ships as an npm package; a missing `npm:` means a
+    card without a download count."""
+    missing = [
+        page.rel for page in pages
+        if page.section == "projects" and not page.meta.get("npm")
+    ]
+    assert not missing, f"project pages without an `npm:` field: {missing}"
+
+
 def test_shared_figures_agree_across_posts(pages):
     """A number quoted in two posts must be the same number in both."""
     claims = {

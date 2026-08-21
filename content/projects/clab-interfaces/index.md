@@ -4,6 +4,8 @@ description: "Node-RED nodes for CompuLab IoT Gateway hardware — GPIO, serial,
 tags: ["Node-RED", "JavaScript", "CAN Bus", "Embedded Linux", "IIoT"]
 weight: 8
 date: 2026-01-12
+# npm package this project ships as — the card shows its download count.
+npm: "node-red-contrib-clab-interfaces"
 ---
 
 ## The Problem

@@ -4,6 +4,8 @@ description: "Node-RED nodes for Allen-Bradley PLCs and EtherNet/IP devices — 
 tags: ["Node-RED", "TypeScript", "Allen-Bradley", "EtherNet-IP", "IIoT"]
 weight: 4
 date: 2026-03-12
+# npm package this project ships as — the card shows its download count.
+npm: "node-red-contrib-cip-suite"
 ---
 
 ## The Problem

@@ -4,6 +4,8 @@ description: "Comprehensive Apache Kafka integration for Node-RED with Schema Re
 tags: ["Node-RED", "JavaScript", "Kafka", "IIoT"]
 weight: 3
 date: 2026-04-10
+# npm package this project ships as — the card shows its download count.
+npm: "node-red-contrib-kafka-suite"
 ---
 
 ## The Problem

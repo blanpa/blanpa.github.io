@@ -4,6 +4,8 @@ description: "Node-RED nodes for Siemens S7 PLC communication with dual backend 
 tags: ["Node-RED", "TypeScript", "Siemens", "IIoT"]
 weight: 5
 date: 2026-03-01
+# npm package this project ships as — the card shows its download count.
+npm: "node-red-contrib-s7-suite"
 ---
 
 ## The Problem

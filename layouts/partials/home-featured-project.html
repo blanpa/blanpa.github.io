@@ -14,7 +14,10 @@
     </div>
     {{- end }}
     <div class="project-featured__content">
-      <h2>{{ .Title }}</h2>
+      <div class="project-card__meta">
+        <h2>{{ .Title }}</h2>
+        {{ partial "npm-downloads.html" . }}
+      </div>
       <p>{{ .Description }}</p>
       {{- with .Params.tags }}
       <div class="project-tags">

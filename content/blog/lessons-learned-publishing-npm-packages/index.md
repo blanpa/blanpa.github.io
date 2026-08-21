@@ -9,21 +9,27 @@ series_order: 14
 
 > **Update (July 2026):** the family has since grown to eight packages — [node-red-contrib-kafka-suite](https://github.com/blanpa/node-red-contrib-kafka-suite) joined after this post was written. Everything below still applies.
 
-Over the past two years, I've published seven npm packages for Node-RED, all targeting the IIoT space. Some took off, some needed multiple rewrites, and all taught me things I couldn't have learned from tutorials alone. This post is the honest rundown: what worked, what didn't, and what I'd do differently.
+Since November 2025 I've published seven npm packages for Node-RED, all targeting the IIoT space. Some took off, some needed multiple rewrites, and all taught me things I couldn't have learned from tutorials alone. This post is the honest rundown: what worked, what didn't, and what I'd do differently.
 
 ---
 
 ## The Seven Packages
 
+Test counts and downloads below are the current state of each repository
+and the npm registry, not the figures from the day I first published.
+
 | Package | Purpose | Tests | Downloads |
 |---------|---------|-------|-----------|
-| **node-red-contrib-condition-monitoring** | Vibration analysis, FFT, alarm thresholds | 135 | 2,100+ |
-| **node-red-contrib-cip-suite** | Allen-Bradley PLC & EtherNet/IP communication | — | — |
-| **node-red-contrib-s7-suite** | Siemens S7 PLC communication | — | — |
-| **node-red-contrib-nats-suite** | NATS messaging (pub/sub, request/reply, JetStream) | 48 | 900+ |
-| **node-red-contrib-opcua-suite** | OPC-UA client with browse, read, write, subscribe | 156 | 1,400+ |
-| **node-red-contrib-clab-interfaces** | CompuLab IoT Gateway hardware interfaces | 28 | 350+ |
-| **node-red-contrib-i3x** | CESMII i3x open manufacturing API | 41 | 600+ |
+| **node-red-contrib-condition-monitoring** | Vibration analysis, FFT, alarm thresholds | 418 | 2,350+ |
+| **node-red-contrib-s7-suite** | Siemens S7 PLC communication | 441 | 2,950+ |
+| **node-red-contrib-opcua-suite** | OPC-UA client with browse, read, write, subscribe | 629 | 3,400+ |
+| **node-red-contrib-cip-suite** | Allen-Bradley PLC & EtherNet/IP communication | 99 | 1,880+ |
+| **node-red-contrib-i3x** | CESMII i3x open manufacturing API | 119 | 1,530+ |
+| **node-red-contrib-clab-interfaces** | CompuLab IoT Gateway hardware interfaces | 64 | 570+ |
+| **node-red-contrib-nats-suite** | NATS messaging (pub/sub, request/reply, JetStream) | 4 | 1,930+ |
+
+That last row is the honest one: `nats-suite` has the fewest tests and the
+third-most downloads. It is the package I would least like to refactor.
 
 Each one started the same way: I needed something for a project, couldn't find a good existing solution, and built it myself.
 
@@ -144,7 +150,7 @@ flowchart TB
 The condition monitoring package does real signal processing — Fast Fourier Transform, RMS calculation, threshold-based alarms. The math must be correct.
 
 ```javascript
-// test/fft_spec.js
+// test/signal-analyzer_spec.js
 const { expect } = require("chai");
 const { computeFFT, findPeaks, calculateRMS } = require("../lib/signal");
 
@@ -281,21 +287,23 @@ describe('nats-publish Node', function() {
 });
 ```
 
-### Test Count: 135 Tests in Condition Monitoring
+### Test Count: 418 Tests in Condition Monitoring
 
-The condition monitoring package has the most tests because it does the most math. Here's the breakdown:
+The condition monitoring package has the most tests because it does the most math. Here's the breakdown as of 0.3.1:
 
-| Test file                   | Tests | Coverage                |
-| --------------------------- | ----: | ----------------------- |
-| `fft_spec.js`               |    28 | FFT accuracy, edge cases |
-| `rms_spec.js`               |    12 | RMS calculation         |
-| `threshold_spec.js`         |    24 | Alarm logic             |
-| `envelope_spec.js`          |    18 | Envelope analysis       |
-| `trend_spec.js`             |    15 | Trend detection         |
-| `node_behavior_spec.js`     |    22 | Node-RED node I/O       |
-| `config_validation_spec.js` |    10 | Configuration checks    |
-| `integration_spec.js`       |     6 | End-to-end flow         |
-| **Total**                   | **135** |                       |
+| Test file                         | Tests | Covers                            |
+| --------------------------------- | ----: | --------------------------------- |
+| `llm-analyzer_spec.js`            |    79 | Prompting, parsing, failure modes  |
+| `websocket-manager_spec.js`       |    26 | Live streaming, reconnects         |
+| `signal-analyzer_spec.js`         |    25 | FFT, RMS, envelope, cepstrum       |
+| `training-data-collector_spec.js` |    24 | Labelled export, CSV/JSONL         |
+| `max-bridge-manager_spec.js`      |    24 | Bridge lifecycle                   |
+| `state-persistence_spec.js`       |    23 | Surviving a restart                |
+| `anomaly-detector_spec.js`        |    21 | Z-score, IQR, CUSUM, hysteresis    |
+| `pca-anomaly_spec.js`             |    20 | Multivariate detection             |
+| *16 further unit specs*           |   145 | Nodes, sources, utilities          |
+| `test/integration/*`              |    31 | End-to-end flows in a real runtime |
+| **Total**                         | **418** |                                  |
 
 Running them:
 
@@ -317,7 +325,7 @@ $ npm test
     ✓ should support hysteresis to prevent alarm flapping
     ...
 
-  135 passing (2.8s)
+  418 passing (6.1s)
 ```
 
 ---
@@ -538,10 +546,10 @@ v0.2 (simplified):
 
 ### Breaking Changes Without Major Version Bumps
 
-In `nats-suite` v0.4.0, I changed the output message format from `msg.payload` as a string to `msg.payload` as a parsed object. This broke existing flows for everyone who upgraded.
+In `nats-suite` 0.0.2, I changed the command interface from `msg.payload.command` to `msg.command`. This broke existing flows for everyone who upgraded.
 
 I should have:
-1. Released it as v1.0.0 (breaking change = major bump)
+1. Signalled it as a breaking change, not folded it into a patch release
 2. Added a migration guide
 3. Kept backward compatibility with a config option
 
@@ -596,7 +604,7 @@ xychart-beta
 |     1 | Published, posted on Node-RED forum    | 30              |
 |     3 | Someone blogged about it               | 80              |
 |     6 | Added example flows, improved README   | 120             |
-|     9 | v1.0 release with 135 tests            | 160             |
+|     7 | 0.3.0 — the LLM analyzer node          | 160             |
 |    18 | Referenced in a conference talk        | 210             |
 
 ### What Drove Downloads
@@ -644,4 +652,4 @@ The overarching theme: **do fewer things, better.** Every package has a feature 
 7. **Don't chase downloads.** Solve a real problem well, and users will find you.
 8. **Accept that most code will be rewritten.** v1 exists to teach you what v2 should be.
 
-Two years, seven packages, hundreds of tests, and thousands of downloads later — the most valuable thing I've built isn't the code. It's the practice of building, shipping, and maintaining software that other people depend on. That practice transfers to every project, every team, every role. Start your own package. Today.
+Half a year, seven packages, hundreds of tests, and thousands of downloads later — the most valuable thing I've built isn't the code. It's the practice of building, shipping, and maintaining software that other people depend on. That practice transfers to every project, every team, every role. Start your own package. Today.

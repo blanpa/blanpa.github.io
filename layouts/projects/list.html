@@ -35,7 +35,10 @@
         </div>
       {{ end }}
       <div class="project-featured__content">
-        <span class="project-featured__badge">Featured Project</span>
+        <div class="project-card__meta">
+          <span class="project-featured__badge">Featured Project</span>
+          {{ partial "npm-downloads.html" . }}
+        </div>
         <h2>{{ .Title }}</h2>
         <p>{{ .Description }}</p>
         {{ with .Params.tags }}
@@ -62,7 +65,10 @@
             </div>
           {{ end }}
           <div class="project-card__content">
-            <h3>{{ .Title }}</h3>
+            <div class="project-card__meta">
+              <h3>{{ .Title }}</h3>
+              {{ partial "npm-downloads.html" . }}
+            </div>
             <p>{{ .Description }}</p>
             {{ with .Params.tags }}
               <div class="project-tags">
