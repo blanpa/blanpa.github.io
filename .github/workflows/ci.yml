@@ -20,6 +20,52 @@ defaults:
     shell: bash
 
 jobs:
+  content:
+    name: Content tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt
+
+      # Checks the articles themselves: front matter, code samples, internal
+      # links, and the technical claims in the prose. See tests/README.md.
+      - name: Run content tests
+        run: python -m pytest
+
+  diagrams:
+    name: Mermaid diagrams
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Its own job: mermaid-cli renders each diagram in a headless browser,
+      # which takes minutes, and a broken diagram shows up as an error box on
+      # the page rather than as a build failure.
+      - name: Install mermaid-cli
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      - name: Install test dependencies
+        run: pip install -r tests/requirements.txt
+
+      - name: Validate every diagram
+        run: python -m pytest tests/test_links_and_diagrams.py -k mermaid
+
   build:
     name: Build & check
     runs-on: ubuntu-latest

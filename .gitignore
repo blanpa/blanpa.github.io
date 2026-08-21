@@ -9,3 +9,8 @@ vendor/
 node_modules/
 *.log
 *.bak
+
+# Content tests (tests/README.md)
+.venv/
+.pytest_cache/
+__pycache__/
