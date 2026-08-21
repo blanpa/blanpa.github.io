@@ -88,7 +88,7 @@ flowchart LR
 
 ## Quality
 
-- **120 unit tests** + **36 integration tests** with embedded test server
+- **600+ tests** across 30 spec files, including integration tests against an embedded test server
 - Docker support for local development and CI
 - Automatic datatype detection from JavaScript primitives
 - MIT licensed

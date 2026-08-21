@@ -279,6 +279,25 @@ def test_nats_config_declares_each_block_once(page):
 # Cross-post consistency
 # --------------------------------------------------------------------------
 
+def test_no_superseded_dependency_names(page):
+    """Names the site got wrong once, so it does not get them wrong again.
+
+    The Kafka suite's native backend is @confluentinc/kafka-javascript.
+    `node-rdkafka` is a different package by a different author — naming it
+    sends a reader to install the wrong thing.
+    """
+    banned = {
+        "node-rdkafka": "@confluentinc/kafka-javascript (the suite's actual native backend)",
+    }
+    found = {
+        name: hint for name, hint in banned.items()
+        if re.search(rf"(?<![\w/@-]){re.escape(name)}(?![\w-])", page.body)
+    }
+    assert not found, f"{page.rel}: " + "; ".join(
+        f"{name} — use {hint}" for name, hint in found.items()
+    )
+
+
 def test_own_package_names_are_real(pages, npm_packages):
     """A typo in one's own package name sends readers to a 404 on npm."""
     known = {entry["pkg"] for entry in npm_packages}
@@ -312,6 +331,7 @@ def test_shared_figures_agree_across_posts(pages):
     """A number quoted in two posts must be the same number in both."""
     claims = {
         "OPC-UA specification length": re.compile(r"spec(?:ification)? is ([\d,]+)\+? pages"),
+        "i3x endpoint count": re.compile(r"\*\*(\d+) API endpoints\*\*"),
     }
     for label, pattern in claims.items():
         found = {}

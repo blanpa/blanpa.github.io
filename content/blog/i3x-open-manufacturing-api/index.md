@@ -302,7 +302,7 @@ The key difference: i3x is not a replacement for OPC-UA or MQTT at the device le
 
 ## API Coverage
 
-The Node-RED i3x integration covers **20 API endpoints**:
+The Node-RED i3x integration covers **18 API endpoints**:
 
 | Category | Endpoints |
 |----------|-----------|

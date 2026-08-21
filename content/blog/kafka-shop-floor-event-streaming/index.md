@@ -92,7 +92,7 @@ The magic of that diagram: the anomaly model can fall behind by an hour, get red
 
 ## Wiring Kafka into Node-RED
 
-I built [`node-red-contrib-kafka-suite`](/projects/kafka-suite/) precisely because the existing Node-RED Kafka nodes didn't handle Schema Registry, managed-service auth presets, or dual-backend (KafkaJS / node-rdkafka) selection cleanly. Here's the minimal producer setup.
+I built [`node-red-contrib-kafka-suite`](/projects/kafka-suite/) precisely because the existing Node-RED Kafka nodes didn't handle Schema Registry, managed-service auth presets, or dual-backend (KafkaJS / `@confluentinc/kafka-javascript`) selection cleanly. Here's the minimal producer setup.
 
 ### 1. Install
 
@@ -107,7 +107,7 @@ npm install node-red-contrib-kafka-suite
 Kafka Broker Config
 ├── Brokers:        kafka-1:9092, kafka-2:9092, kafka-3:9092
 ├── Client ID:      line3-edge
-├── Backend:        KafkaJS (pure JS) | node-rdkafka (native, higher throughput)
+├── Backend:        KafkaJS (pure JS) | @confluentinc/kafka-javascript (native librdkafka)
 ├── Security:
 │   ├── Preset:     Confluent Cloud | Redpanda | Aiven | Self-managed
 │   ├── SASL:       scram-sha-512

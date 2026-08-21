@@ -58,13 +58,13 @@ packages/
 
 | Package                | Version |
 | ---------------------- | ------- |
-| `condition-monitoring` | v1.3.2  |
-| `nats-suite`           | v0.8.1  |
-| `opcua-suite`          | v0.5.0  |
-| `cip-suite`            | v0.1.0  |
-| `s7-suite`             | v0.1.0  |
-| `i3x`                  | v0.3.0  |
-| `clab-interfaces`      | v0.4.0  |
+| `condition-monitoring` | v0.3.1  |
+| `nats-suite`           | v0.2.2  |
+| `opcua-suite`          | v0.1.7  |
+| `cip-suite`            | v0.0.5  |
+| `s7-suite`             | v0.0.7  |
+| `i3x`                  | v0.0.8  |
+| `clab-interfaces`      | v0.0.1  |
 
 - ✓ Simple CI/CD per package
 - ✓ Independent versioning
