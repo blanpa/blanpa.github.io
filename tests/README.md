@@ -14,14 +14,14 @@ git config core.hooksPath .githooks
 tests/run.sh                          # creates .venv on first run
 ```
 
-From then on every `git commit` runs the fast suite (~10 s) and refuses the
+From then on every `git commit` runs the fast suite (~3 s) and refuses the
 commit if something fails. `git commit --no-verify` skips it.
 
 ## Running them by hand
 
 ```bash
 tests/run.sh            # fast suite — everything except diagrams
-tests/run.sh diagrams   # render every mermaid diagram (~8 min)
+tests/run.sh diagrams   # render every mermaid diagram (~5 min)
 tests/run.sh all        # both
 ```
 
@@ -34,13 +34,15 @@ need a missing tool skip rather than fail.
 |------|--------|
 | `test_frontmatter.py` | Required keys, description length, duplicate `series_order`, one spelling per tag site-wide |
 | `test_code_blocks.py` | Every fenced sample parses — JSON, YAML, TOML, Python, JavaScript, shell — and the fence language is one we recognise |
-| `test_links_and_diagrams.py` | Internal links resolve against `content/`; every ` ```mermaid ` block parses |
+| `test_links_and_diagrams.py` | Internal links resolve against `content/`; every ` ```mermaid ` block parses; every diagram has a pre-rendered SVG (`tools/render-diagrams.py`) |
 | `test_domain_facts.py` | The technical claims: port numbers, Sparkplug message types, hex↔decimal conversions, arithmetic stated in prose, table totals, own npm package names, figures quoted in more than one post, and the documented output of the posts' own code samples |
+| `test_repo_consistency.py` | Facts the repo states twice: the README's package list and count against `data/npm_packages.yml` (the canonical source) |
 
 ## Diagram tests
 
 `test_mermaid_diagram_parses` needs mermaid-cli and renders each diagram in a
-headless browser — about 1.5 s per diagram, so ~8 minutes for the whole site:
+headless browser — about 4 s per diagram, so ~5 minutes for the 72 diagrams on
+the site:
 
 ```bash
 npm install -g @mermaid-js/mermaid-cli

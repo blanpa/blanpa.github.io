@@ -6,10 +6,10 @@ box-drawing characters and rewrites them as ```mermaid fenced blocks (rendered
 by layouts/_markup/render-codeblock-mermaid.html).
 
 Usage:
-  ANTHROPIC_API_KEY=... python generate-diagrams.py                 # all files
-  ANTHROPIC_API_KEY=... python generate-diagrams.py --dry-run       # preview only
-  ANTHROPIC_API_KEY=... python generate-diagrams.py --file content/blog/foo/index.md
-  ANTHROPIC_API_KEY=... python generate-diagrams.py --section blog
+  ANTHROPIC_API_KEY=... python tools/generate-diagrams.py                 # all files
+  ANTHROPIC_API_KEY=... python tools/generate-diagrams.py --dry-run       # preview only
+  ANTHROPIC_API_KEY=... python tools/generate-diagrams.py --file content/blog/foo/index.md
+  ANTHROPIC_API_KEY=... python tools/generate-diagrams.py --section blog
 """
 
 import argparse

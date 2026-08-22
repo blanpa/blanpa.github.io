@@ -128,7 +128,7 @@ def generate_image(section, folder_name, prompt_text):
 
 
 def main():
-    # Usage: generate-thumbnails.py [section] [filter]
+    # Usage: tools/generate-thumbnails.py [section] [filter]
     # section: blog, projects, or all (default: all)
     # filter: substring to match folder names
     section = sys.argv[1] if len(sys.argv) > 1 else "all"

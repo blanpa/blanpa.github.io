@@ -32,8 +32,8 @@ from the HTML, the sitemap, `llms.txt` and the search index. `hugo server -D`
 
 Every number in `results:` has to be one the customer measured or would
 recognise. Leave an entry out rather than estimate it — the rest of this site
-publishes figures that can be checked (npm downloads, package versions, test
-counts), and one invented percentage undermines all of them.
+publishes figures that can be checked (npm downloads, package versions,
+release dates), and one invented percentage undermines all of them.
 
 Anonymised is fine and needs no approval: "a tier-one automotive supplier, 40
 machines" carries the same weight as a name.

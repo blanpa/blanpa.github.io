@@ -1,4 +1,50 @@
 /* ==============================================
+   CONTENTS — typography and tokens first, then components in the
+   order they were built.
+
+   Search for a heading to jump to it. No line numbers: they go stale
+   on the first edit, the names do not.
+
+     TYPOGRAPHY
+     DESIGN TOKENS
+     HOMEPAGE HERO
+     SUPPORT BUTTON
+     GET IN TOUCH
+     CONTACT MODAL
+     MODAL FORM
+     HOMEPAGE FEATURED PROJECT
+     GLASSMORPHISM BASE
+     TECH TAGS / BADGES
+     FEATURED PROJECT
+     CASE STUDIES
+     SERIES POSITION BAR + ARTICLE CTA
+     TAG CLOUD
+     GITHUB REPO GRID
+     SERIES CALLOUT IN ARTICLES
+     PROJECT PAGE HERO
+     PROJECT GRID
+     BLOG FEATURED
+     BLOG FEED
+     ABOUT & WORK PAGE
+     SKILLS
+     TIMELINE
+     SUPPORT CARDS
+     WORK PAGE CARDS
+     PROCESS STEPS
+     NPM STATS TABLE
+     TECH ARCHITECTURE DIAGRAM
+     GITHUB CARDS
+     BLOG CATEGORY FILTER CHIPS
+     GISCUS COMMENTS
+     POLISH PASS
+     MERMAID DIAGRAMS
+     MODERN UX
+     HOMEPAGE LIVELINESS
+     ABOUT
+     SITE BACKGROUND
+   ============================================== */
+
+/* ==============================================
    TYPOGRAPHY — self-hosted (GDPR-safe, no CDN)
    Space Grotesk: display/headings/numbers.
    JetBrains Mono: technical micro-labels.
@@ -1651,7 +1697,7 @@ main details > summary[class*="bg-primary-"]:hover {
 }
 
 /* ==============================================
-   ABOUT & SERVICES — Hero Intro
+   ABOUT & WORK PAGE — hero intro
    ============================================== */
 .about-hero {
   margin: 1.5rem 0 2.5rem;
@@ -1906,7 +1952,7 @@ main details > summary[class*="bg-primary-"]:hover {
 }
 
 /* ==============================================
-   SERVICE CARDS — 2x2 grid
+   WORK PAGE CARDS — 2x2 grid (.service-card)
    ============================================== */
 .service-grid {
   display: grid;
@@ -1955,7 +2001,7 @@ main details > summary[class*="bg-primary-"]:hover {
 }
 
 /* ==============================================
-   PROCESS STEPS — horizontal flow
+   PROCESS STEPS — horizontal flow (/work/)
    ============================================== */
 .process-steps {
   display: grid;

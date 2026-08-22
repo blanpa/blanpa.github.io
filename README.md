@@ -1,6 +1,10 @@
 # blanpa.github.io
 
-Personal portfolio website — IIoT Software Developer building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing.
+Personal portfolio website — IIoT Software Developer writing about industrial
+connectivity with Node-RED, OPC-UA, NATS, and edge computing.
+
+The site and the npm packages it documents are private open-source work,
+unrelated to my employment, published under the MIT licence.
 
 ## Tech Stack
 
@@ -23,7 +27,9 @@ If you have [Hugo Extended](https://gohugo.io/installation/) installed locally i
 hugo server -D
 ```
 
-> Note: CI builds with the pinned Hugo version in `.github/workflows/deploy.yml`.
+> Note: both workflows pin the Hugo version in their own `HUGO_VERSION` env
+> (currently 0.154.5, in `ci.yml` and `deploy.yml`). `docker-compose.yml` pins
+> the same version — keep the three in step when upgrading.
 
 ## Projects
 
@@ -38,16 +44,34 @@ The site showcases 8 open-source npm packages (the canonical list lives in `data
 - **node-red-contrib-clab-interfaces** — CompuLab IoT Gateway hardware interfaces
 - **node-red-contrib-i3x** — i3x open manufacturing API integration
 
+## Case Studies
+
+`content/case-studies/` is scaffolded but unpublished — the section index and
+the template both carry `draft: true`, so production builds skip them entirely.
+[content/case-studies/README.md](content/case-studies/README.md) describes how
+to publish one, including the rule that every figure has to be a measured one.
+
 ## Content Tooling
 
 Two helper scripts for authoring (both need Python 3; not part of the build):
 
-- `generate-thumbnails.py` — generates AI hero images for blog posts via the Hugging Face Inference API (needs `HF_TOKEN` and Pillow: `pip install Pillow`)
-- `generate-diagrams.py` — converts ASCII diagrams in posts to Mermaid shortcodes via the Claude API (needs `ANTHROPIC_API_KEY`)
+- `tools/generate-thumbnails.py` — generates AI hero images for blog posts via the Hugging Face Inference API (needs `HF_TOKEN` and Pillow: `pip install Pillow`)
+- `tools/generate-diagrams.py` — converts ASCII diagrams in posts to Mermaid shortcodes via the Claude API (needs `ANTHROPIC_API_KEY`)
+- `tools/render-diagrams.py` — renders the mermaid blocks to static SVG (see below); needs mermaid-cli
+- `tools/check-forks.sh` — compares the forked theme layouts against their recorded upstream versions
 
 npm download counts shown on the site are baked into `data/npm_stats.yml` by the deploy workflow (daily cron); the committed values are just a local-dev fallback baseline.
 
-Diagrams are authored as ` ```mermaid ` fenced blocks — `layouts/_markup/render-codeblock-mermaid.html` renders them and `assets/js/ui.js` loads the mermaid runtime only when a diagram nears the viewport.
+Diagrams are authored as ` ```mermaid ` fenced blocks and rendered to static SVG at build time:
+
+```bash
+tools/render-diagrams.py          # render what changed, prune orphans
+tools/render-diagrams.py --force  # re-render everything (e.g. after a palette change)
+```
+
+Each diagram becomes `assets/diagrams/<key>-light.svg` and `-dark.svg`, content-addressed by source and palette; `layouts/partials/mermaid-figure.html` inlines both and CSS shows the one matching the theme. That keeps the 3.2 MB mermaid runtime out of the page entirely and makes the diagrams work without JavaScript.
+
+Edit a diagram and forget to re-render, and the partial falls back to client-side rendering — a heavy page, not a broken one. The content tests fail on a missing SVG so it does not go unnoticed. Needs mermaid-cli (`npm install -g @mermaid-js/mermaid-cli`).
 
 ## Tests
 
@@ -62,7 +86,8 @@ See [tests/README.md](tests/README.md) for what is covered and how to run them b
 
 ## CI
 
-- `ci.yml` builds every pull request and branch, checks internal links with lychee, and fails on unrendered diagrams or unexpanded shortcodes.
+- `ci.yml` builds every pull request and every branch except `main`, checks internal links with lychee, and fails on unrendered diagrams or unexpanded shortcodes. It deliberately does not run the content tests — those are local (see below).
+- It also runs `tools/check-forks.sh`. Eight files under `layouts/` override a file of the same name in the theme; overriding is silent, so when Dependabot bumps the submodule and upstream has rewritten one of them, nothing would otherwise notice. The script compares each theme original against the hash recorded in `tools/forks.sha256` and fails with the exact `git diff` to run. Accept a reviewed change with `tools/check-forks.sh --update`.
 - `deploy.yml` publishes `main` to GitHub Pages and refreshes the npm stats.
 
 ## License
