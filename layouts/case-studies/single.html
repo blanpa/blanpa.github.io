@@ -1,0 +1,66 @@
+{{ define "main" }}
+  {{/* A case study is read in a fixed order — who, what it cost, what changed
+       — so the frame is rendered from front matter rather than left to prose:
+       the brief and the engagement shape above the fold, the measured results
+       as a band, the stack as chips. Everything between is the author's. */}}
+
+  {{ $showHero := .Params.showHero | default site.Params.article.showHero | default false }}
+  {{ if $showHero }}
+    {{ $heroStyle := print "hero/" (site.Params.article.heroStyle | default "basic") ".html" }}
+    {{ if templates.Exists (printf "partials/%s" $heroStyle) }}
+      {{ partial $heroStyle . }}
+    {{ end }}
+  {{ end }}
+
+  <article>
+    <header class="case-header">
+      {{ partial "breadcrumbs.html" . }}
+      <h1 class="case-header__title">{{ .Title }}</h1>
+
+      <dl class="case-facts">
+        {{ with .Params.client }}
+          <div><dt>Client</dt><dd>{{ . }}</dd></div>
+        {{ end }}
+        {{ with .Params.duration }}
+          <div><dt>Duration</dt><dd>{{ . }}</dd></div>
+        {{ end }}
+        {{ with .Params.role }}
+          <div><dt>Role</dt><dd>{{ . }}</dd></div>
+        {{ end }}
+      </dl>
+
+      {{ with .Params.brief }}
+        <p class="case-brief">{{ . }}</p>
+      {{ end }}
+    </header>
+
+    {{/* Only render the band once at least one result carries a value, so an
+         unfinished study shows nothing rather than empty boxes. */}}
+    {{ $results := where (.Params.results | default slice) "value" "!=" "" }}
+    {{ with $results }}
+      <section class="case-results" aria-label="Measured results">
+        {{ range . }}
+          <div class="case-result">
+            <span class="case-result__value">{{ .value }}</span>
+            <span class="case-result__label">{{ .label }}</span>
+          </div>
+        {{ end }}
+      </section>
+    {{ end }}
+
+    <section class="article-content max-w-prose prose dark:prose-invert">
+      {{ .Content }}
+    </section>
+
+    {{ with .Params.stack }}
+      <section class="case-stack" aria-label="Technology used">
+        <span class="case-stack__label">Built with</span>
+        <div class="case-stack__chips">
+          {{ range . }}<span class="project-tag">{{ . }}</span>{{ end }}
+        </div>
+      </section>
+    {{ end }}
+
+    {{ partial "related.html" . }}
+  </article>
+{{ end }}

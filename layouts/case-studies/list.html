@@ -1,0 +1,41 @@
+{{ define "main" }}
+  <header>
+    {{ partial "breadcrumbs.html" . }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    {{ with .Description }}<p class="tag-cloud__intro">{{ . }}</p>{{ end }}
+  </header>
+
+  {{ with .Content }}
+    <section class="prose dark:prose-invert max-w-prose mt-4">{{ . }}</section>
+  {{ end }}
+
+  {{ $pages := .Pages.ByWeight }}
+  {{ if $pages }}
+    <section class="case-list">
+      {{ range $pages }}
+        {{ $img := partial "card-image.html" (dict "page" . "width" 600) }}
+        <a class="case-card" href="{{ .RelPermalink }}">
+          {{ with $img }}
+            <div class="case-card__img"><img src="{{ . }}" loading="lazy" decoding="async" alt=""></div>
+          {{ end }}
+          <div class="case-card__body">
+            {{ with .Params.sector }}<span class="case-card__sector">{{ . }}</span>{{ end }}
+            <h2>{{ .Title }}</h2>
+            <p>{{ .Description }}</p>
+            {{/* The headline number does the selling on a list page. */}}
+            {{ $results := where (.Params.results | default slice) "value" "!=" "" }}
+            {{ with first 1 $results }}
+              {{ range . }}
+                <span class="case-card__result">
+                  <strong>{{ .value }}</strong> {{ .label }}
+                </span>
+              {{ end }}
+            {{ end }}
+          </div>
+        </a>
+      {{ end }}
+    </section>
+  {{ else }}
+    <p class="case-empty">No case studies published yet.</p>
+  {{ end }}
+{{ end }}

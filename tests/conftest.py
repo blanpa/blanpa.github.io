@@ -87,9 +87,10 @@ def _collect(pattern: str) -> list[Page]:
 
 POSTS = _collect("blog/*/index.md")
 PROJECTS = _collect("projects/*/index.md")
+CASE_STUDIES = _collect("case-studies/*/index.md")
 # Standalone pages: about, services, impressum, datenschutz.
 SINGLES = _collect("*/index.md")
-ALL_PAGES = POSTS + PROJECTS + SINGLES
+ALL_PAGES = POSTS + PROJECTS + CASE_STUDIES + SINGLES
 
 
 # Fixture name -> the fence languages it should receive. Parametrizing per

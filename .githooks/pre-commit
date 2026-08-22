@@ -52,8 +52,12 @@ if [ -n "$staged_content" ] && command -v mmdc >/dev/null 2>&1; then
 
   if [ -n "$slugs" ]; then
     echo "pre-commit: rendering diagrams in: ${slugs//" or "/, }"
-    if ! "$PYTHON" -m pytest -q -p no:cacheprovider \
-         tests/test_links_and_diagrams.py -k "mermaid and ($slugs)"; then
+    "$PYTHON" -m pytest -q -p no:cacheprovider \
+      tests/test_links_and_diagrams.py -k "mermaid and ($slugs)"
+    status=$?
+    # 5 is pytest's "no tests collected" — a staged page the suite does not
+    # cover (a draft, say) is not a failing diagram.
+    if [ $status -ne 0 ] && [ $status -ne 5 ]; then
       echo "pre-commit: a diagram does not render — commit aborted." >&2
       exit 1
     fi

@@ -896,6 +896,129 @@ h1, h2, h3, h4,
 }
 
 /* ==============================================
+   CASE STUDIES
+   ============================================== */
+.case-header__title {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+.case-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.25rem;
+  margin: 1rem 0 0;
+}
+.case-facts dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+.case-facts dd { margin: 0.15rem 0 0; font-size: var(--text-sm); font-weight: 600; }
+.case-brief {
+  margin: 1.1rem 0 0;
+  max-width: 46rem;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* The measured outcome, in the same visual register as the homepage proof
+   band — this is the part a prospect scans for. */
+/* Without a result band the brief ran straight into the first heading. */
+.case-header + .article-content { margin-top: 2rem; }
+
+.case-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 3rem;
+  margin: 2rem 0;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.case-result { display: flex; flex-direction: column; gap: 0.3rem; }
+.case-result__value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+:root:not(.dark) .case-result__value { color: var(--accent-on-light); }
+.case-result__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+.case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 2.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-soft);
+}
+.case-stack__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+.case-stack__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.case-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.25rem;
+  margin: 1.75rem 0 0;
+}
+.case-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.case-card:hover { border-color: rgba(0, 200, 165, 0.35); transform: translateY(-2px); }
+.case-card__img { aspect-ratio: 16 / 9; overflow: hidden; }
+.case-card__img img { width: 100%; height: 100%; object-fit: cover; }
+.case-card__body { padding: 1.25rem 1.4rem 1.5rem; }
+.case-card__sector {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+:root:not(.dark) .case-card__sector { color: var(--accent-on-light); }
+.case-card__body h2 { margin: 0.4rem 0 0; font-size: var(--text-xl); font-weight: 700; }
+.case-card__body p { margin: 0.5rem 0 0; font-size: var(--text-sm); opacity: 0.8; line-height: 1.6; }
+.case-card__result {
+  display: inline-block;
+  margin-top: 0.9rem;
+  font-size: var(--text-sm);
+}
+.case-card__result strong { color: var(--accent); font-family: var(--font-display); }
+:root:not(.dark) .case-card__result strong { color: var(--accent-on-light); }
+.case-empty { margin-top: 1.5rem; opacity: 0.6; }
+
+/* ==============================================
    SERIES POSITION BAR + ARTICLE CTA
    ============================================== */
 .series-nav {
