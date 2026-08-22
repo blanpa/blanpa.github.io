@@ -1,0 +1,30 @@
+{{- /* llms.txt — https://llmstxt.org/ conventions: a title, a one-line
+       summary, then linked sections an assistant can follow. Generated from
+       the content so it cannot drift out of date. */ -}}
+# {{ site.Title }} — {{ site.Params.author.headline }}
+
+> {{ site.Params.author.bio }} This site publishes technical articles on
+> industrial protocols and edge computing, plus the open-source Node-RED
+> packages behind them. Author: {{ site.Params.author.name }}.
+
+## Articles
+{{ range where site.RegularPages "Section" "blog" }}
+- [{{ .Title }}]({{ .Permalink }}): {{ .Description }}
+{{- end }}
+
+## Projects
+{{ range (where site.RegularPages "Section" "projects").ByWeight }}
+- [{{ .Title }}]({{ .Permalink }}){{ with .Params.npm }} (npm: {{ . }}){{ end }}: {{ .Description }}
+{{- end }}
+
+## Pages
+{{ range slice "/about" "/services" }}
+{{- with site.GetPage . }}
+- [{{ .Title }}]({{ .Permalink }}): {{ .Description }}
+{{- end }}
+{{- end }}
+
+## Notes
+- Full text of every article is available as HTML at the URLs above.
+- Machine-readable index of all pages: {{ site.BaseURL }}index.json
+- Feed: {{ site.BaseURL }}index.xml

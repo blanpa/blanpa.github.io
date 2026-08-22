@@ -1,0 +1,28 @@
+{{- /* Monthly npm downloads for a project, from data/npm_stats.yml (baked in
+       by the deploy workflow). Renders nothing when the page declares no
+       `npm:` package or the stats file has no entry for it, so a new project
+       or a failed refresh degrades to silence rather than to a zero.
+
+       Param: the project Page. */ -}}
+{{- $pkg := .Params.npm -}}
+{{- with $pkg -}}
+  {{- $downloads := index (site.Data.npm_stats.packages | default dict) . -}}
+  {{- $release := index (site.Data.npm_stats.versions | default dict) . -}}
+  {{- if or $downloads $release -}}
+    <span class="npm-facts">
+      {{- with $downloads }}
+      <span class="npm-downloads" title="npm downloads in the last 30 days">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        {{ lang.FormatNumber 0 . }}<span class="npm-downloads__unit">/mo</span>
+      </span>
+      {{- end }}
+      {{- with $release }}
+      {{- $when := "" -}}
+      {{- with .released }}{{ $when = printf " · %s" (time.Format "Jan 2006" .) }}{{ end -}}
+      <span class="npm-release" title="latest published version{{ with .released }}, {{ . }}{{ end }}">
+        v{{ .version }}{{ $when }}
+      </span>
+      {{- end }}
+    </span>
+  {{- end -}}
+{{- end -}}

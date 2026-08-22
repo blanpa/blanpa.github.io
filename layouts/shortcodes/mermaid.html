@@ -1,0 +1,6 @@
+{{- /* Kept for backwards compatibility — new diagrams should use a plain
+       ```mermaid fence, which the codeblock render hook turns into the same
+       markup. Note that using this shortcode also makes Blowfish load the
+       mermaid bundle eagerly (partials/vendor.html keys off HasShortcode);
+       ui.js detects that and skips its own lazy load. */ -}}
+{{- partial "mermaid-figure.html" (dict "code" .Inner "Page" .Page) -}}

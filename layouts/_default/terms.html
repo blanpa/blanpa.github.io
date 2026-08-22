@@ -1,0 +1,44 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+  {{ $showHero := .Params.showHero | default site.Params.taxonomy.showHero | default false }}
+  {{ if $showHero }}
+    {{ $heroStyle := print "hero/" site.Params.taxonomy.heroStyle ".html" }}
+    {{ if templates.Exists (printf "partials/%s" $heroStyle) }}
+      {{ partial $heroStyle . }}
+    {{ else }}
+      {{ partial "hero/basic.html" . }}
+    {{ end }}
+  {{- end -}}
+
+  <header>
+    {{ if .Params.showBreadcrumbs | default (site.Params.taxonomy.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    {{/* Tags are carried by both articles and project pages, so counting only
+         the blog would understate what the index actually covers. */}}
+    {{- $terms := .Data.Terms.ByCount -}}
+    {{- $posts := len (where site.RegularPages "Section" "blog") -}}
+    {{- $projects := len (where site.RegularPages "Section" "projects") -}}
+    <p class="tag-cloud__intro">
+      {{ len $terms }} {{ cond (eq (len $terms) 1) "topic" "topics" }} across
+      {{ $posts }} articles and {{ $projects }} projects. Most-covered first.
+    </p>
+  </header>
+
+  {{ if .Content }}
+    <section class="prose dark:prose-invert max-w-prose">{{ .Content }}</section>
+  {{ end }}
+
+  {{/* The same chip the blog filter and the article headers use. The theme's
+       default is a bare text list — the only place on the site where a tag
+       does not look like a tag, and long names such as "Machine Learning"
+       wrapped mid-row and pushed their counts out of line. */}}
+  <nav class="tag-cloud" aria-label="All {{ .Title | lower }}">
+    {{ range .Data.Terms.ByCount }}
+      <a class="tag-cloud__chip" href="{{ .Page.RelPermalink }}">
+        {{ .Page.Title }}<span class="tag-cloud__count">{{ .Count }}</span>
+      </a>
+    {{ end }}
+  </nav>
+{{ end }}

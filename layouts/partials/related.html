@@ -1,0 +1,41 @@
+{{/* Fork of themes/blowfish/layouts/partials/related.html. The related-content
+     block is unchanged; what follows it is new.
+
+     Reason: an article is where readers arrive from search, and where the case
+     for hiring is actually made — 2500 words of it. The page then ended with a
+     conclusion and a comment box, and the only route to the services page was
+     the main navigation, i.e. a deliberate second decision. This closes that
+     gap without turning the article into a sales page: one quiet block, after
+     the content, on blog posts only. */}}
+
+{{ if .Params.showRelatedContent | default (.Site.Params.article.showRelatedContent | default false) }}
+  {{ $related := .Site.RegularPages.Related . | first .Site.Params.article.relatedContentLimit }}
+  {{ with $related }}
+    <h2 class="mt-8 text-2xl font-extrabold mb-10">{{ i18n "article.related_articles" | emojify }}</h2>
+    <section class="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      {{ range . }}
+        {{ partial "article-link/card-related.html" . }}
+      {{ end }}
+    </section>
+  {{ end }}
+{{ end }}
+
+{{ if eq .Section "blog" }}
+  <aside class="article-cta">
+    <p class="article-cta__kicker">The code behind the articles</p>
+    <p class="article-cta__text">
+      The protocols written about here are implemented in a set of open-source
+      Node-RED packages — OPC-UA, Siemens S7, Allen-Bradley CIP, NATS, Kafka and
+      the CompuLab gateway interfaces. All MIT-licensed and on npm.
+    </p>
+    <div class="article-cta__actions">
+      {{ with site.GetPage "/projects" }}
+        <a class="article-cta__primary" href="{{ .RelPermalink }}">Browse the packages</a>
+      {{ end }}
+      <a class="article-cta__secondary" href="https://github.com/blanpa" target="_blank" rel="noopener noreferrer">
+        Source on GitHub
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </aside>
+{{ end }}

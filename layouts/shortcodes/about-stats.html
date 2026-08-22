@@ -1,0 +1,22 @@
+{{- /* About-page proof band. The npm total is baked in at build time from
+       data/npm_stats.yml (refreshed by the deploy workflow); ui.js animates
+       the count-up via the data-count hooks. */ -}}
+{{- $total := site.Data.npm_stats.total_last_month | default 0 -}}
+<div class="about-stats">
+  <div class="about-stat">
+    <span class="about-stat__num" data-count="{{ $total }}">{{ lang.FormatNumber 0 $total }}</span>
+    <span class="about-stat__label">npm downloads / mo</span>
+  </div>
+  <div class="about-stat">
+    <span class="about-stat__num" data-count="{{ len site.Data.npm_packages }}">{{ len site.Data.npm_packages }}</span>
+    <span class="about-stat__label">open-source packages</span>
+  </div>
+  <div class="about-stat">
+    <span class="about-stat__num">5</span>
+    <span class="about-stat__label">protocol suites</span>
+  </div>
+  <div class="about-stat">
+    <span class="about-stat__num">2024</span>
+    <span class="about-stat__label">building IIoT since</span>
+  </div>
+</div>

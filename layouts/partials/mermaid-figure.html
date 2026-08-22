@@ -1,0 +1,29 @@
+{{- /* Shared markup for both authoring paths: ```mermaid fences (via the
+       codeblock render hook) and the {{< mermaid >}} shortcode. Blowfish's
+       appearance.js renders every <pre class="mermaid"> and re-renders it on
+       theme switch, so the <pre> class list is load-bearing — the wrapper
+       around it only adds the click-to-zoom affordance.
+
+       The first diagram on a page also emits the runtime loader: the mermaid
+       bundle is >3 MB, by far the heaviest asset here, so it is not shipped
+       with the document — ui.js fetches it once a diagram nears the viewport.
+       (This can't live in extend-footer.html: Blowfish renders that partial
+       through partialCached with no key, i.e. once for the whole site.)
+
+       Params: code (the diagram source), Page. */ -}}
+{{- $first := not (.Page.Store.Get "hasMermaid") -}}
+{{- .Page.Store.Set "hasMermaid" true -}}
+{{- if $first -}}
+  {{- with resources.Get "lib/mermaid/mermaid.min.js" -}}
+    {{- $config := resources.Get "js/mermaid.js" | resources.Minify -}}
+    {{- $bundle := slice . $config | resources.Concat "js/mermaid.bundle.js" | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") -}}
+    <div id="mermaid-loader" hidden data-src="{{ $bundle.RelPermalink }}" data-integrity="{{ $bundle.Data.Integrity }}"></div>
+  {{- end -}}
+{{- end -}}
+<div class="mermaid-wrapper" role="button" tabindex="0" aria-label="Zoom diagram" title="Click to zoom diagram">
+  <pre class="not-prose mermaid">{{ .code | safeHTML }}</pre>
+  <span class="mermaid-zoom-hint" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+    Click to zoom
+  </span>
+</div>

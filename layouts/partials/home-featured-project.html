@@ -1,0 +1,35 @@
+{{- /* Top project (lowest weight) as a card on the homepage, so the
+       strongest asset is visible without a click. Reuses the
+       .project-featured card; .home-featured handles the breakout out of
+       the profile layout's narrow prose column. */ -}}
+{{- $projects := where site.RegularPages "Section" "projects" -}}
+{{- range first 1 $projects.ByWeight -}}
+{{- $img := partial "card-image.html" (dict "page" . "width" 900) -}}
+<section class="home-featured">
+  <span class="home-featured__kicker">Featured project</span>
+  <a href="{{ .RelPermalink }}" class="project-featured">
+    {{- with $img }}
+    <div class="project-featured__img">
+      <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+    </div>
+    {{- end }}
+    <div class="project-featured__content">
+      <div class="project-card__meta">
+        <h2>{{ .Title }}</h2>
+        {{ partial "npm-downloads.html" . }}
+      </div>
+      <p>{{ .Description }}</p>
+      {{- with .Params.tags }}
+      <div class="project-tags">
+        {{- range first 4 . }}
+        <span class="project-tag">{{ . }}</span>
+        {{- end }}
+      </div>
+      {{- end }}
+    </div>
+  </a>
+  {{- with site.GetPage "/projects" }}
+  <a class="home-featured__all" href="{{ .RelPermalink }}">All projects &rarr;</a>
+  {{- end }}
+</section>
+{{- end -}}

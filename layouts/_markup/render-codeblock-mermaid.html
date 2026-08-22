@@ -1,0 +1,9 @@
+{{- /* Render ```mermaid fences as diagrams.
+
+       Without this hook a fenced mermaid block falls through to the normal
+       code-block renderer: the diagram source is printed verbatim and the
+       mermaid runtime is never loaded (Blowfish only ships it when a page
+       uses the {{< mermaid >}} shortcode). Fences are the portable way to
+       author diagrams — they preview in any editor and on GitHub — so they
+       are the site's standard, and this hook makes them real. */ -}}
+{{- partial "mermaid-figure.html" (dict "code" .Inner "Page" .Page) -}}

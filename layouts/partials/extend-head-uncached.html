@@ -1,0 +1,106 @@
+{{/* Structured data (JSON-LD) for richer search results.
+     Called uncached with the page as context, so per-page schema works. */}}
+{{- $author := .Site.Params.author -}}
+{{- $sameAs := slice -}}
+{{- range $author.links -}}
+  {{- range $k, $v := . -}}
+    {{- if and (ne $k "email") (hasPrefix $v "http") -}}{{- $sameAs = $sameAs | append $v -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if .IsHome -}}
+{{/* Blowfish already emits a WebSite schema; we add the Person identity. */}}
+{{- $person := dict
+  "@context" "https://schema.org"
+  "@type" "Person"
+  "name" $author.name
+  "url" .Site.BaseURL
+  "jobTitle" $author.headline
+  "description" $author.bio
+  "image" (absURL $author.image)
+  "sameAs" $sameAs
+-}}
+<script type="application/ld+json">{{ $person | jsonify (dict "indent" "  ") | safeJS }}</script>
+{{- end -}}
+
+{{- if and .IsPage (eq .Section "blog") -}}
+{{/* BlogPosting image: own feature image, else generated card, else default. */}}
+{{- $img := "" -}}
+{{- with .Resources.GetMatch "featured.*" -}}{{- $img = .Permalink -}}{{- end -}}
+{{- if not $img -}}{{- with partial "og-image.html" . -}}{{- $img = . -}}{{- end -}}{{- end -}}
+{{- if not $img -}}{{- with resources.Get "img/og-default.png" -}}{{- $img = .Permalink -}}{{- end -}}{{- end -}}
+{{- $posting := dict
+  "@context" "https://schema.org"
+  "@type" "BlogPosting"
+  "headline" .Title
+  "description" .Description
+  "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
+  "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+  "url" .Permalink
+  "mainEntityOfPage" .Permalink
+  "image" $img
+  "keywords" (delimit .Params.tags ", ")
+  "author" (dict "@type" "Person" "name" $author.name "url" .Site.BaseURL)
+  "publisher" (dict "@type" "Person" "name" $author.name "url" .Site.BaseURL)
+-}}
+<script type="application/ld+json">{{ $posting | jsonify (dict "indent" "  ") | safeJS }}</script>
+{{- end -}}
+
+{{- if and .IsPage (eq .Section "projects") -}}
+{{/* Project pages describe published software, so say so in a form search
+     engines can use: version, licence and repository come out as rich
+     results where a plain title would not. */}}
+{{- $repo := "" -}}
+{{- with .Params.npm -}}{{- $repo = printf "https://github.com/blanpa/%s" . -}}{{- end -}}
+{{- $img := "" -}}
+{{- with .Resources.GetMatch "featured.*" -}}{{- $img = .Permalink -}}{{- end -}}
+{{- $software := dict
+  "@context" "https://schema.org"
+  "@type" "SoftwareSourceCode"
+  "name" .Title
+  "description" .Description
+  "url" .Permalink
+  "codeRepository" $repo
+  "programmingLanguage" "JavaScript"
+  "runtimePlatform" "Node-RED"
+  "license" "https://opensource.org/licenses/MIT"
+  "author" (dict "@type" "Person" "name" $author.name "url" .Site.BaseURL)
+-}}
+{{- with $img -}}{{- $software = merge $software (dict "image" .) -}}{{- end -}}
+{{- with .Params.npm -}}
+  {{- $software = merge $software (dict "downloadUrl" (printf "https://www.npmjs.com/package/%s" .)) -}}
+{{- end -}}
+<script type="application/ld+json">{{ $software | jsonify (dict "indent" "  ") | safeJS }}</script>
+{{- end -}}
+
+{{- if and .IsPage (not .IsHome) -}}
+{{/* Breadcrumbs are rendered on the page already; this is the same trail in
+     the form a search result can display. */}}
+{{- $items := slice (dict "@type" "ListItem" "position" 1 "name" "Home" "item" .Site.BaseURL) -}}
+{{- with .Parent -}}
+  {{- if .Title -}}
+    {{- $items = $items | append (dict "@type" "ListItem" "position" 2 "name" .Title "item" .Permalink) -}}
+  {{- end -}}
+{{- end -}}
+{{- $items = $items | append (dict "@type" "ListItem" "position" (add (len $items) 1) "name" .Title "item" .Permalink) -}}
+<script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $items) | jsonify (dict "indent" "  ") | safeJS }}</script>
+{{- end -}}
+
+{{/* Social card: home keeps the rich default; pages without a feature image
+     get a generated branded title card. Pages WITH a feature image already
+     get og:image from Hugo's internal opengraph template. */}}
+{{- $feature := "" -}}
+{{- $imgs := .Resources.ByType "image" -}}
+{{- range slice "*featured*" "*cover*" "*thumbnail*" -}}
+  {{- if not $feature -}}{{- $feature = $imgs.GetMatch . -}}{{- end -}}
+{{- end -}}
+{{- $social := "" -}}
+{{- if .IsHome -}}
+  {{- with resources.Get "img/og-default.png" -}}{{- $social = .Permalink -}}{{- end -}}
+{{- else if and (not $feature) (not .Params.images) -}}
+  {{- $social = partial "og-image.html" . -}}
+{{- end -}}
+{{- with $social -}}
+<meta property="og:image" content="{{ . }}">
+<meta name="twitter:image" content="{{ . }}">
+{{- end -}}

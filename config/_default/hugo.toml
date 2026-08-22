@@ -1,0 +1,24 @@
+baseURL = "https://blanpa.github.io/"
+languageCode = "en"
+title = "blanpa"
+theme = "blowfish"
+enableRobotsTXT = true
+
+[taxonomies]
+  tag = "tags"
+  series = "series"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON", "LLMS"]
+
+# llms.txt — a plain-text map of the site for assistants that answer technical
+# questions by reading sources. Same idea as sitemap.xml, different consumer.
+# Rendered by layouts/index.llms.txt.
+[outputFormats.LLMS]
+  mediaType = "text/plain"
+  baseName = "llms"
+  isPlainText = true
+  notAlternative = true
+
+[markup.goldmark.renderer]
+  unsafe = true

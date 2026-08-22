@@ -1,0 +1,218 @@
+---
+title: "About"
+description: "IIoT Software Developer with an Industrial Engineering background — building connectivity solutions from edge to cloud."
+layout: "simple"
+# Without a date these pages ship no <lastmod> in the sitemap, so crawlers
+# have nothing to judge freshness by. Bump it when the page is rewritten.
+date: 2026-03-05
+---
+
+<div class="about-hero">
+  <img class="about-hero__photo" src="/img/author.png" alt="blanpa — IIoT Software Developer" width="128" height="128">
+  <div class="about-hero__body">
+    <h2 class="about-hero__title">Building the bridge between <span class="accent">shop floor</span> and <span class="accent">cloud</span></h2>
+    <p class="about-hero__text">I am an IIoT Software Developer with an Industrial Engineering background. I build industrial connectivity solutions — from edge gateways and fieldbus protocols to real-time messaging and predictive maintenance. My focus is on open-source Node-RED modules for condition monitoring, OPC-UA, NATS, S7, CIP/EtherNet-IP, and IoT gateway integration.</p>
+    <div class="about-hero__actions">
+      <a class="about-btn about-btn--primary" href="/projects/">View Projects</a>
+      <a class="about-btn about-btn--ghost" href="/blog/">Read the Blog</a>
+    </div>
+  </div>
+</div>
+
+{{< about-stats >}}
+
+## Skills
+
+<div class="skills-section">
+  <div class="skill-group">
+    <h3 class="skill-group__title">Languages</h3>
+    <div class="skill-chips">
+      <span class="skill-chip">Python</span>
+      <span class="skill-chip">JavaScript</span>
+      <span class="skill-chip">TypeScript</span>
+      <span class="skill-chip">SQL</span>
+      <span class="skill-chip">Go</span>
+      <span class="skill-chip">Java</span>
+    </div>
+  </div>
+  <div class="skill-group">
+    <h3 class="skill-group__title">Platforms & Tools</h3>
+    <div class="skill-chips">
+      <a class="skill-chip" href="/blog/node-red-vs-kepware-vs-ignition/">Node-RED</a>
+      <a class="skill-chip" href="/blog/docker-vs-k3s-edge-deployment/">Docker</a>
+      <a class="skill-chip" href="/blog/docker-vs-k3s-edge-deployment/">Kubernetes / K3s</a>
+      <span class="skill-chip">Linux / Embedded Linux</span>
+      <span class="skill-chip">Terraform</span>
+      <span class="skill-chip">Ansible</span>
+      <span class="skill-chip">Git</span>
+      <span class="skill-chip">GitHub Actions</span>
+      <span class="skill-chip">Jenkins</span>
+      <span class="skill-chip">Azure</span>
+      <span class="skill-chip">GitLab</span>
+    </div>
+  </div>
+  <div class="skill-group">
+    <h3 class="skill-group__title">Industrial Protocols</h3>
+    <div class="skill-chips">
+      <a class="skill-chip chip--proto" href="/blog/siemens-s7-opcua-node-red/">OPC-UA</a>
+      <a class="skill-chip chip--proto" href="/blog/nats-edge-to-cloud-pipeline/">NATS / JetStream</a>
+      <a class="skill-chip chip--proto" href="/blog/mqtt-vs-sparkplug-vs-nats-vs-opcua/">MQTT</a>
+      <a class="skill-chip chip--proto" href="/blog/siemens-s7-opcua-node-red/">Siemens S7</a>
+      <a class="skill-chip chip--proto" href="/blog/allen-bradley-ethernet-ip-node-red/">EtherNet/IP (CIP)</a>
+      <a class="skill-chip chip--proto" href="/blog/can-bus-reverse-engineering-node-red/">CAN Bus</a>
+      <a class="skill-chip chip--proto" href="/blog/modbus-node-red/">RS485 / Modbus</a>
+      <a class="skill-chip chip--proto" href="/blog/unified-namespace-sparkplug-node-red/">Sparkplug B</a>
+      <a class="skill-chip chip--proto" href="/blog/rest-vs-opcua-vs-graphql-manufacturing/">REST / gRPC / WebSocket</a>
+    </div>
+  </div>
+  <div class="skill-group">
+    <h3 class="skill-group__title">Databases</h3>
+    <div class="skill-chips">
+      <span class="skill-chip">PostgreSQL</span>
+      <span class="skill-chip">InfluxDB</span>
+      <span class="skill-chip">TimescaleDB</span>
+    </div>
+  </div>
+  <div class="skill-group">
+    <h3 class="skill-group__title">Visualization & Monitoring</h3>
+    <div class="skill-chips">
+      <span class="skill-chip">Grafana</span>
+      <span class="skill-chip">Apache Superset</span>
+    </div>
+  </div>
+</div>
+
+## Architecture
+
+<div class="tech-arch">
+  <div class="tech-arch__layer">
+    <span class="tech-arch__label">Shop Floor</span>
+    <div class="tech-arch__nodes">
+      <span class="tech-arch__node node--edge">CAN Bus</span>
+      <span class="tech-arch__node node--edge">RS485</span>
+      <span class="tech-arch__node node--edge">Siemens S7</span>
+      <span class="tech-arch__node node--edge">Allen-Bradley</span>
+      <span class="tech-arch__node node--edge">Modbus</span>
+      <span class="tech-arch__node node--edge">CompuLab</span>
+    </div>
+  </div>
+  <div class="tech-arch__connector">
+    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="#00c8a5" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="#00c8a5" stroke-width="2" fill="none" opacity="0.5"/></svg>
+  </div>
+  <div class="tech-arch__layer">
+    <span class="tech-arch__label">Edge Gateway</span>
+    <div class="tech-arch__nodes">
+      <span class="tech-arch__node node--mid">Node-RED</span>
+      <span class="tech-arch__node node--mid">Docker</span>
+      <span class="tech-arch__node node--mid">Embedded Linux</span>
+      <span class="tech-arch__node node--mid">OPC-UA</span>
+      <span class="tech-arch__node node--mid">K3s</span>
+    </div>
+  </div>
+  <div class="tech-arch__connector">
+    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="#00a8dd" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="#00a8dd" stroke-width="2" fill="none" opacity="0.5"/></svg>
+  </div>
+  <div class="tech-arch__layer">
+    <span class="tech-arch__label">Messaging</span>
+    <div class="tech-arch__nodes">
+      <span class="tech-arch__node node--msg">NATS</span>
+      <span class="tech-arch__node node--msg">JetStream</span>
+      <span class="tech-arch__node node--msg">MQTT</span>
+    </div>
+  </div>
+  <div class="tech-arch__connector">
+    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="#0088cc" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="#0088cc" stroke-width="2" fill="none" opacity="0.5"/></svg>
+  </div>
+  <div class="tech-arch__layer">
+    <span class="tech-arch__label">Cloud & Analytics</span>
+    <div class="tech-arch__nodes">
+      <span class="tech-arch__node node--cloud">Python</span>
+      <span class="tech-arch__node node--cloud">Terraform</span>
+      <span class="tech-arch__node node--cloud">Grafana</span>
+      <span class="tech-arch__node node--cloud">Superset</span>
+      <span class="tech-arch__node node--cloud">CI/CD</span>
+      <span class="tech-arch__node node--cloud">i3x</span>
+    </div>
+  </div>
+</div>
+
+## Open Source
+
+I maintain several open-source Node-RED packages for industrial IoT on [npm](https://www.npmjs.com/~blanpa):
+
+<p class="section-note">Private open-source work, unrelated to my employment. Built in my own time and published under the MIT licence.</p>
+
+{{< npm-stats >}}
+
+### GitHub
+
+<div class="repo-grid">
+{{< github repo="blanpa/node-red-contrib-condition-monitoring" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-nats-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-kafka-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-cip-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-s7-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-opcua-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-clab-interfaces" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-i3x" showThumbnail=false >}}
+</div>
+
+## Experience
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-marker"></div>
+    <div class="timeline-content glass">
+      <span class="timeline-date">2024 — present</span>
+      <h3>IIoT Software Developer</h3>
+      <p>Designing and implementing software solutions for industrial applications — IoT, cloud computing, and data analytics. Building real-time data collection, processing, and analysis systems for industrial devices and systems.</p>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-marker"></div>
+    <div class="timeline-content glass">
+      <span class="timeline-date">2022 — 2023</span>
+      <h3>Process Engineer — Industrial Engineering</h3>
+      <p>Analyzed manufacturing processes, optimized efficiency and quality. Led process validation, implemented Lean Manufacturing and Six Sigma methodologies. Collaborated with R&D to transfer new products from development to production.</p>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-marker"></div>
+    <div class="timeline-content glass">
+      <span class="timeline-date">2017 — 2021</span>
+      <h3>B.Eng. Industrial Engineering — Product Engineering</h3>
+      <p>Interdisciplinary studies combining engineering, economics, and product development. Focused on manufacturing processes, quality management, and industrial systems.</p>
+    </div>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-marker"></div>
+    <div class="timeline-content glass">
+      <span class="timeline-date">2012 — 2016</span>
+      <h3>Apprenticeship — Electronics Technician for Devices and Systems</h3>
+      <p>Vocational training in electronics for devices and systems. Hands-on experience with circuit design, embedded systems, and industrial electronics.</p>
+    </div>
+  </div>
+</div>
+
+## Get in Touch
+
+Questions about the packages or the articles? Feel free to reach out.
+
+{{< contact-form >}}
+
+## Support the Packages
+
+<div class="support-cards">
+  <a href="https://ko-fi.com/blanpa" target="_blank" rel="noopener noreferrer" class="support-card">
+    <span class="support-card__icon">&#9749;</span>
+    <span class="support-card__label">Ko-fi</span>
+  </a>
+  <a href="https://github.com/sponsors/blanpa" target="_blank" rel="noopener noreferrer" class="support-card">
+    <span class="support-card__icon">&#10084;</span>
+    <span class="support-card__label">GitHub Sponsors</span>
+  </a>
+  <a href="https://buymeacoffee.com/blanpa" target="_blank" rel="noopener noreferrer" class="support-card">
+    <span class="support-card__icon">&#127861;</span>
+    <span class="support-card__label">Buy Me a Coffee</span>
+  </a>
+</div>

@@ -1,0 +1,12 @@
+# Hugo version must match HUGO_VERSION in .github/workflows/deploy.yml
+services:
+  hugo:
+    image: hugomods/hugo:exts-0.154.5
+    container_name: blanpa-dev
+    ports:
+      - "1314:1313"
+    volumes:
+      - .:/src
+    # baseURL/appendPort: LiveReload connects to the URL in the page, which
+    # must be the host-mapped port (1314), not Hugo's internal 1313.
+    command: hugo server --buildDrafts --bind 0.0.0.0 --baseURL http://localhost:1314/ --appendPort=false --liveReloadPort 1314

@@ -1,0 +1,2993 @@
+/* ==============================================
+   TYPOGRAPHY — self-hosted (GDPR-safe, no CDN)
+   Space Grotesk: display/headings/numbers.
+   JetBrains Mono: technical micro-labels.
+   ============================================== */
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-600.woff2") format("woff2");
+}
+
+/* ==============================================
+   DESIGN TOKENS
+   ============================================== */
+:root {
+  /* Accent — one colour, used solid. (The old teal→blue gradient washes
+     read as 2022 template aesthetics; solid reads calmer and passes
+     contrast checks.) */
+  --accent: #00c8a5;
+  --accent-2: #0099cc;
+  --accent-grad: var(--accent);
+  --accent-ink: #04211b; /* dark text on accent surfaces */
+  /* Accent for light backgrounds. Dark enough that body-sized text on white
+     clears WCAG AA (4.5:1) — #008a70 measured 4.31:1 and did not. */
+  --accent-on-light: #007a63;
+
+  /* Fonts */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Type scale (rem — scales with user font settings) */
+  --text-xs: 0.78rem;
+  --text-sm: 0.9rem;
+  --text-base: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: 1.4rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  /* Surfaces */
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --border-soft: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.25);
+}
+:root:not(.dark) {
+  --surface: rgba(0, 0, 0, 0.02);
+  --surface-hover: rgba(0, 0, 0, 0.04);
+  --border-soft: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+}
+
+/* Display face for headings and stat numbers; body copy stays on the
+   theme's system stack for performance and neutrality. */
+h1, h2, h3, h4,
+.home-proof__num,
+.about-stat__num,
+.process-step__num {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Technical micro-labels get the mono face — the "engineering drawing"
+   register that fits the industrial subject matter. */
+.home-proof__label,
+.home-proof__chip,
+.project-tag,
+.skill-group__title,
+.timeline-date,
+.tech-arch__label,
+.about-stat__label,
+.blog-feed-item__meta time,
+.blog-featured__date,
+.blog-featured__badge,
+.project-featured__badge,
+.blog-feed-item__series,
+.npm-stats-table thead th,
+.mermaid-zoom-hint {
+  font-family: var(--font-mono);
+}
+
+/* ==============================================
+   HOMEPAGE HERO — two columns: copy + portrait
+   ============================================== */
+/* Copy and actions left, portrait right. The old centred profile card put
+   the name first and pushed the proof band and the contact button to the
+   bottom edge of the viewport; this puts the offer, the evidence and the
+   way to get in touch in the first screen. */
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  align-items: center;
+  gap: 3.5rem;
+  padding: 1rem 0 2.5rem;
+}
+
+.home-hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.home-hero__lede {
+  margin: 1.15rem 0 0;
+  max-width: 34rem;
+  font-size: var(--text-lg);
+  line-height: 1.65;
+  opacity: 0.85;
+}
+.home-hero__lede strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+:root:not(.dark) .home-hero__lede strong {
+  color: var(--accent-on-light);
+}
+
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.9rem;
+}
+/* The button carries `margin: 0 auto 3rem` for the centred profile layout,
+   which pushed it off the row's baseline here. */
+.home-hero__actions .home-contact-btn {
+  margin: 0;
+}
+.home-hero__secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+.home-hero__secondary:hover {
+  gap: 0.7rem;
+}
+:root:not(.dark) .home-hero__secondary {
+  color: var(--accent-on-light);
+}
+
+.home-hero__links {
+  margin-top: 1.6rem;
+  font-size: 1.4rem;
+  opacity: 0.65;
+}
+.home-hero__links:hover {
+  opacity: 1;
+}
+
+.home-hero__portrait {
+  justify-self: center;
+}
+.home-hero__portrait img {
+  width: min(15rem, 45vw);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--border-soft);
+  background: var(--surface);
+}
+
+/* Phones: the headline leads, the portrait becomes a small identity marker
+   above it rather than a full-width block pushing everything down. */
+@media (max-width: 820px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-top: 0.5rem;
+  }
+  .home-hero__portrait {
+    order: -1;
+    justify-self: start;
+  }
+  .home-hero__portrait img {
+    width: 5.5rem;
+  }
+  .home-hero__lede {
+    font-size: var(--text-base);
+  }
+}
+
+.home-prose {
+  margin: 2rem 0 0;
+}
+
+/* Legacy: the tagline the profile layout used, which had to break out of the
+   narrow prose column. The custom home layout has no such column. */
+.home-tagline {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.home-tagline {
+  width: min(44rem, 92vw);
+  margin: 1rem auto 2.5rem;
+  font-size: var(--text-lg);
+  line-height: 1.65;
+  opacity: 0.85;
+}
+.home-tagline strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+:root:not(.dark) .home-tagline strong {
+  color: var(--accent-on-light);
+}
+
+/* Evidence strip under the hero: a rule, then the numbers and the protocols
+   the site is actually about. Left-aligned to sit with the hero copy rather
+   than floating centred beneath it. */
+.home-proof {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 1.25rem 3rem;
+  margin: 0 0 3rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border-soft);
+}
+.home-proof__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+.home-proof__num {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+:root:not(.dark) .home-proof__num {
+  color: var(--accent-on-light);
+}
+.home-proof__label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.72;
+}
+.home-proof__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  max-width: 30rem;
+}
+.home-proof__chip {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 200, 165, 0.25);
+  background: rgba(0, 200, 165, 0.06);
+  color: var(--accent);
+}
+:root:not(.dark) .home-proof__chip {
+  color: var(--accent-on-light);
+}
+
+/* ==============================================
+   SUPPORT BUTTON (floating)
+   ============================================== */
+/* A secondary action, so it stays quiet: the site's glass surface, a mono
+   micro-label like the rest of the chrome, and the accent carried only by
+   the heart. It should read as part of the site rather than as a Tailwind
+   component someone dropped in, but it must never out-shout "Get in Touch". */
+.support-fab {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 9999;
+}
+
+.support-fab__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.15rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 9999px;
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.25s ease, background 0.25s ease,
+              box-shadow 0.25s ease, transform 0.25s ease;
+}
+:root:not(.dark) .support-fab__btn {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+.support-fab__btn:hover {
+  border-color: rgba(0, 200, 165, 0.45);
+  background: var(--surface-hover);
+  transform: translateY(-1px);
+}
+.support-fab__heart {
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+:root:not(.dark) .support-fab__heart { color: var(--accent-on-light); }
+.support-fab.is-open .support-fab__heart { transform: rotate(45deg); }
+
+/* Panel: same card treatment as the rest of the site, sized to its content
+   so "GitHub Sponsors" and "Buy Me a Coffee" stop wrapping onto two lines. */
+.support-fab__panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.6rem);
+  min-width: max-content;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.98);
+  transform-origin: bottom right;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.22s;
+}
+:root:not(.dark) .support-fab__panel {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+.support-fab.is-open .support-fab__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Decouples a section from the one that follows it, where adjacency alone
+   would read as a claim. Deliberately quiet: it is a clarification, not a
+   disclaimer banner. */
+.section-note {
+  margin: -0.35rem 0 1.4rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--border-soft);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  opacity: 0.72;
+}
+
+/* Says what the money is for: the upkeep of the packages, not the person. */
+.support-fab__intro {
+  margin: 0;
+  padding: 0.7rem 1.1rem 0.55rem;
+  max-width: 15rem;
+  font-size: var(--text-xs);
+  line-height: 1.45;
+  opacity: 0.6;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.support-fab__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-soft);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.support-fab__item:last-child { border-bottom: 0; }
+.support-fab__item svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+.support-fab__item:hover {
+  background: var(--surface-hover);
+  color: var(--accent);
+}
+:root:not(.dark) .support-fab__item:hover { color: var(--accent-on-light); }
+.support-fab__item:hover svg { opacity: 1; }
+
+/* Phones: heart only. A donation prompt should not be the largest permanent
+   element on a screen whose primary action is "Get in Touch". */
+@media (max-width: 640px) {
+  .support-fab { right: 1rem; bottom: 1rem; }
+  .support-fab__btn { padding: 0.75rem; }
+  .support-fab__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .support-fab__panel { min-width: 13rem; }
+}
+
+/* ==============================================
+   GET IN TOUCH — primary CTA button
+   ============================================== */
+.home-contact-btn {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0 auto 3rem;
+  padding: 1rem 3rem;
+  border: 1px solid rgba(0, 200, 165, 0.3);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 200, 165, 0.08), rgba(0, 153, 204, 0.08));
+  color: var(--accent);
+  font-family: inherit;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.home-contact-btn:hover {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 200, 165, 0.25);
+}
+.home-contact-btn svg {
+  flex-shrink: 0;
+}
+:root:not(.dark) .home-contact-btn {
+  border-color: rgba(0, 160, 130, 0.25);
+  background: linear-gradient(135deg, rgba(0, 200, 165, 0.06), rgba(0, 153, 204, 0.06));
+  color: #008a70;
+}
+:root:not(.dark) .home-contact-btn:hover {
+  background: var(--accent-on-light);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 30px rgba(0, 160, 130, 0.2);
+}
+
+/* ==============================================
+   CONTACT MODAL
+   ============================================== */
+/* Native <dialog>: transparent positioning container, dimmed ::backdrop */
+.contact-dialog {
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: 520px;
+  width: calc(100% - 2rem);
+  max-height: 90vh;
+  overflow: visible;
+  color: inherit;
+}
+.contact-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  animation: modal-bg-in 0.3s ease-out;
+}
+
+@keyframes modal-bg-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.contact-dialog__inner {
+  position: relative;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, #161616 0%, #111 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 200, 165, 0.08),
+    0 24px 80px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(0, 200, 165, 0.05);
+  animation: modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+:root:not(.dark) .contact-dialog__inner {
+  background: linear-gradient(180deg, #fff 0%, #f8f8f8 100%);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 0 0 1px rgba(0, 160, 130, 0.08),
+    0 24px 80px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.contact-dialog__inner > h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  color: var(--accent);
+}
+:root:not(.dark) .contact-dialog__inner > h2 {
+  color: var(--accent-on-light);
+}
+
+.contact-dialog__close {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+.contact-dialog__close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+:root:not(.dark) .contact-dialog__close {
+  color: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+:root:not(.dark) .contact-dialog__close:hover {
+  color: #000;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ==============================================
+   MODAL FORM — enhanced design
+   ============================================== */
+.contact-dialog .contact-form {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  backdrop-filter: none;
+  max-width: none;
+  border-radius: 0;
+}
+
+.contact-dialog .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.contact-dialog .form-group label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #00c8a5;
+  margin-bottom: 0.4rem;
+}
+:root:not(.dark) .contact-dialog .form-group label {
+  color: #008a70;
+}
+
+.contact-dialog .form-group input,
+.contact-dialog .form-group select,
+.contact-dialog .form-group textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f5f5f5;
+  font-size: 0.92rem;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.contact-dialog .form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300c8a5' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.contact-dialog .form-group select option {
+  background: #161616;
+  color: #f5f5f5;
+  padding: 0.5rem;
+}
+:root:not(.dark) .contact-dialog .form-group select option {
+  background: #fff;
+  color: #1a1a1a;
+}
+.contact-dialog .form-group input:focus,
+.contact-dialog .form-group select:focus,
+.contact-dialog .form-group textarea:focus {
+  border-color: #00c8a5;
+  box-shadow: 0 0 0 3px rgba(0, 200, 165, 0.15), 0 4px 12px rgba(0, 200, 165, 0.08);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root:not(.dark) .contact-dialog .form-group input,
+:root:not(.dark) .contact-dialog .form-group select,
+:root:not(.dark) .contact-dialog .form-group textarea {
+  border-color: rgba(0, 0, 0, 0.12);
+  background-color: #f5f5f5;
+  color: #1a1a1a;
+}
+:root:not(.dark) .contact-dialog .form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23008a70' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-color: #f5f5f5;
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+}
+:root:not(.dark) .contact-dialog .form-group input:focus,
+:root:not(.dark) .contact-dialog .form-group select:focus,
+:root:not(.dark) .contact-dialog .form-group textarea:focus {
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 160, 130, 0.12), 0 4px 12px rgba(0, 160, 130, 0.06);
+}
+
+.contact-dialog .form-group textarea {
+  min-height: 110px;
+}
+
+.contact-dialog .contact-submit {
+  width: 100%;
+  justify-content: center;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  border: none;
+  margin-top: 0.5rem;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+.contact-dialog .contact-submit:hover {
+  background: #00ddb8;
+  box-shadow: 0 6px 24px rgba(0, 200, 165, 0.3);
+  transform: translateY(-2px);
+}
+.contact-dialog .contact-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.contact-dialog .form-status {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  min-height: 1.4em;
+}
+.contact-dialog .form-status--success {
+  color: #00c8a5;
+}
+.contact-dialog .form-status--error {
+  color: #ff6b6b;
+}
+
+@media (max-width: 768px) {
+  .home-proof {
+    gap: 1rem 1.75rem;
+  }
+  .contact-dialog__inner {
+    padding: 1.5rem;
+  }
+  .home-contact-btn {
+    padding: 1rem 2.5rem;
+    width: 100%;
+    max-width: 420px;
+  }
+}
+
+/* ==============================================
+   HOMEPAGE FEATURED PROJECT
+   ============================================== */
+/* Full width of the home container — the breakout centring this used to
+   need belonged to the profile layout's narrow prose column. */
+.home-featured {
+  width: 100%;
+  margin: 0 0 2.5rem;
+  text-align: left;
+}
+.home-featured__kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+:root:not(.dark) .home-featured__kicker {
+  color: var(--accent-on-light);
+}
+.home-featured .project-featured {
+  margin: 0.5rem 0 0.75rem;
+}
+.home-featured__all {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--accent);
+}
+.home-featured__all:hover {
+  text-decoration: underline;
+}
+:root:not(.dark) .home-featured__all {
+  color: var(--accent-on-light);
+}
+
+/* ==============================================
+   GLASSMORPHISM BASE — shared card style
+   ============================================== */
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 200, 165, 0.1);
+}
+
+:root:not(.dark) .glass {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+:root:not(.dark) .glass:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ==============================================
+   TECH TAGS / BADGES
+   ============================================== */
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.project-tag {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  background: rgba(0, 200, 165, 0.15);
+  color: #00d4ad;
+  border: 1px solid rgba(0, 200, 165, 0.3);
+  text-transform: uppercase;
+}
+:root:not(.dark) .project-tag {
+  background: rgba(0, 160, 130, 0.1);
+  color: #008a70;
+  border-color: rgba(0, 160, 130, 0.25);
+}
+
+/* ==============================================
+   FEATURED PROJECT — large hero card
+   ============================================== */
+.project-featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  margin: 2rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.project-featured:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 50px rgba(0, 200, 165, 0.12);
+}
+:root:not(.dark) .project-featured {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+:root:not(.dark) .project-featured:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
+}
+
+.project-featured__img {
+  position: relative;
+  min-height: 280px;
+  overflow: hidden;
+}
+.project-featured__img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-featured__content {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.project-featured__badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 9999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  margin-bottom: 1rem;
+}
+.project-featured__content h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.2;
+}
+.project-featured__content p {
+  margin: 0;
+  opacity: 0.7;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .project-featured {
+    grid-template-columns: 1fr;
+  }
+  .project-featured__img {
+    min-height: 200px;
+  }
+  .project-featured__content {
+    padding: 1.5rem;
+  }
+}
+
+/* ==============================================
+   CASE STUDIES
+   ============================================== */
+.case-header__title {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+.case-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.25rem;
+  margin: 1rem 0 0;
+}
+.case-facts dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+.case-facts dd { margin: 0.15rem 0 0; font-size: var(--text-sm); font-weight: 600; }
+.case-brief {
+  margin: 1.1rem 0 0;
+  max-width: 46rem;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* The measured outcome, in the same visual register as the homepage proof
+   band — this is the part a prospect scans for. */
+/* Without a result band the brief ran straight into the first heading. */
+.case-header + .article-content { margin-top: 2rem; }
+
+.case-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 3rem;
+  margin: 2rem 0;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.case-result { display: flex; flex-direction: column; gap: 0.3rem; }
+.case-result__value {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+:root:not(.dark) .case-result__value { color: var(--accent-on-light); }
+.case-result__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+.case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 2.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-soft);
+}
+.case-stack__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+.case-stack__chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.case-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.25rem;
+  margin: 1.75rem 0 0;
+}
+.case-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.case-card:hover { border-color: rgba(0, 200, 165, 0.35); transform: translateY(-2px); }
+.case-card__img { aspect-ratio: 16 / 9; overflow: hidden; }
+.case-card__img img { width: 100%; height: 100%; object-fit: cover; }
+.case-card__body { padding: 1.25rem 1.4rem 1.5rem; }
+.case-card__sector {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+:root:not(.dark) .case-card__sector { color: var(--accent-on-light); }
+.case-card__body h2 { margin: 0.4rem 0 0; font-size: var(--text-xl); font-weight: 700; }
+.case-card__body p { margin: 0.5rem 0 0; font-size: var(--text-sm); opacity: 0.8; line-height: 1.6; }
+.case-card__result {
+  display: inline-block;
+  margin-top: 0.9rem;
+  font-size: var(--text-sm);
+}
+.case-card__result strong { color: var(--accent); font-family: var(--font-display); }
+:root:not(.dark) .case-card__result strong { color: var(--accent-on-light); }
+.case-empty { margin-top: 1.5rem; opacity: 0.6; }
+
+/* ==============================================
+   SERIES POSITION BAR + ARTICLE CTA
+   ============================================== */
+.series-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.25rem;
+  margin: 0.5rem 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--text-sm);
+}
+.series-nav__where { display: inline-flex; align-items: baseline; gap: 0.6rem; }
+.series-nav__name {
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+:root:not(.dark) .series-nav__name { color: var(--accent-on-light); }
+.series-nav__pos {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+}
+.series-nav__steps { display: inline-flex; gap: 1rem; }
+.series-nav__step {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+.series-nav__step:hover { opacity: 1; color: var(--accent); }
+:root:not(.dark) .series-nav__step:hover { color: var(--accent-on-light); }
+
+/* Closing block on articles. Deliberately quiet — it follows 2500 words that
+   have already made the argument, so it only has to name the offer and give
+   two ways forward. */
+.article-cta {
+  margin: 3rem 0 0;
+  padding: 1.6rem 1.75rem;
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 14px 14px 0;
+  background: var(--surface);
+}
+:root:not(.dark) .article-cta { border-left-color: var(--accent-on-light); }
+.article-cta__kicker {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+.article-cta__text {
+  margin: 0.5rem 0 0;
+  max-width: 46ch;
+  opacity: 0.8;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.article-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.4rem;
+  margin-top: 1.2rem;
+}
+.article-cta__primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.3rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-decoration: none;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+.article-cta__primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+:root:not(.dark) .article-cta__primary { background: var(--accent-on-light); color: #fff; }
+.article-cta__secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+.article-cta__secondary:hover { gap: 0.6rem; }
+:root:not(.dark) .article-cta__secondary { color: var(--accent-on-light); }
+
+/* ==============================================
+   TAG CLOUD (taxonomy index)
+   ============================================== */
+/* Tags look like chips everywhere else on the site — the filter on the blog
+   list, the pills under an article title, the tech tags on a card. The
+   taxonomy index was the one page that rendered them as bare text links. */
+.tag-cloud__intro {
+  margin: 0.35rem 0 0;
+  color: inherit;
+  opacity: 0.7;
+  font-size: var(--text-sm);
+}
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 1.5rem 0 2rem;
+}
+.tag-cloud__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 9999px;
+  background: var(--surface);
+  color: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease;
+}
+.tag-cloud__chip:hover {
+  border-color: rgba(0, 200, 165, 0.45);
+  background: var(--surface-hover);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+:root:not(.dark) .tag-cloud__chip:hover { color: var(--accent-on-light); }
+.tag-cloud__count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  opacity: 0.55;
+}
+
+/* Meta line on a tag or series page. */
+.term-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  font-size: var(--text-sm);
+}
+.term-meta__count { opacity: 0.7; }
+.term-meta__count strong { font-weight: 700; opacity: 1; }
+.term-meta__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+.term-meta__all:hover { gap: 0.6rem; }
+:root:not(.dark) .term-meta__all { color: var(--accent-on-light); }
+
+/* ==============================================
+   GITHUB REPO GRID (About)
+   ============================================== */
+/* Eight repositories, one under the other, each preceded by GitHub's social
+   preview image: the section ran 6197px — 60% of the whole About page — for
+   eight near-identical grey slabs. The thumbnails are off (showThumbnail in
+   the shortcode) and what is left fits two to a row. */
+.repo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 0;
+}
+.repo-grid .github-card-wrapper {
+  margin: 0;
+  height: 100%;
+}
+.repo-grid .github-card-wrapper > a,
+.repo-grid .github-card-wrapper > a > div {
+  height: 100%;
+}
+
+/* ==============================================
+   SERIES CALLOUT IN ARTICLES
+   ============================================== */
+/* Blowfish paints the "part of a series" opener with the colour scheme's
+   primary — which in noir is a blue-grey, so on a dark page it was the only
+   light block on screen and shouted louder than the table of contents next
+   to it. Same surface treatment as the rest of the site's boxes, with the
+   accent carrying the emphasis instead of a slab of colour. */
+main details > summary[class*="bg-primary-"] {
+  background: var(--surface) !important;
+  color: inherit !important;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+main details > summary[class*="bg-primary-"]:hover {
+  background: var(--surface-hover) !important;
+}
+:root:not(.dark) main details > summary[class*="bg-primary-"] {
+  border-left-color: var(--accent-on-light);
+}
+
+/* ==============================================
+   PROJECT PAGE HERO
+   ============================================== */
+/* Project pages use Blowfish's thumbAndBackground hero, which drops the
+   artwork into a band of fixed height and crops it with object-fit: cover.
+   The illustrations are 1200x640 and the band is 1024x288, so 55% of every
+   image was sliced away — diagrams ended mid-box. `contain` shows the whole
+   picture; the frame keeps it from floating in the page. */
+#main-content > article > .rounded-md:has(> img.object-cover) {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  padding: 0.75rem;
+}
+#main-content > article > .rounded-md > img.object-cover {
+  object-fit: contain;
+}
+
+/* Download count on a project card. The number is already baked into
+   data/npm_stats.yml for the homepage band — showing it per package turns a
+   card from a description into evidence. */
+.project-card__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+/* Grid cards are ~300px wide: downloads, version and date beside the heading
+   squeezed it into "NATS Messa / ging Suite". Stack them there; the featured
+   card is wide enough to keep them on one line. */
+.project-card .project-card__meta {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+.project-card__meta > h2,
+.project-card__meta > h3 {
+  margin-bottom: 0;
+}
+.npm-facts {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-shrink: 0;
+}
+/* Latest published version and when — the first silent question about any
+   open-source package is whether it is still maintained. */
+.npm-release {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  opacity: 0.5;
+  white-space: nowrap;
+}
+.npm-downloads {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.npm-downloads svg {
+  width: 0.85em;
+  height: 0.85em;
+  opacity: 0.8;
+}
+.npm-downloads__unit {
+  opacity: 0.6;
+  font-weight: 500;
+}
+:root:not(.dark) .npm-downloads {
+  color: var(--accent-on-light);
+}
+
+/* ==============================================
+   PROJECT GRID — remaining projects
+   ============================================== */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+@media (max-width: 1024px) {
+  .project-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .project-grid { grid-template-columns: 1fr; }
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.project-card:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 200, 165, 0.1);
+}
+:root:not(.dark) .project-card {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+:root:not(.dark) .project-card:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.project-card__img {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+.project-card__img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.project-card:hover .project-card__img img {
+  transform: scale(1.05);
+}
+
+.project-card__content {
+  padding: 1.25rem 1.5rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.project-card__content h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+.project-card__content p {
+  margin: 0;
+  opacity: 0.65;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* ==============================================
+   BLOG FEATURED — latest article hero
+   ============================================== */
+.blog-featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  margin: 2rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.blog-featured:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 50px rgba(0, 200, 165, 0.12);
+}
+:root:not(.dark) .blog-featured {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+:root:not(.dark) .blog-featured:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
+}
+
+.blog-featured__img {
+  position: relative;
+  min-height: 280px;
+  overflow: hidden;
+}
+.blog-featured__img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.blog-featured:hover .blog-featured__img img {
+  transform: scale(1.04);
+}
+
+.blog-featured__content {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.blog-featured__badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 9999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  margin-bottom: 0.6rem;
+}
+.blog-featured__date {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 0.6rem;
+}
+:root:not(.dark) .blog-featured__date {
+  color: rgba(0, 0, 0, 0.4);
+}
+.blog-featured__content h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.25;
+}
+.blog-featured__content p {
+  margin: 0;
+  opacity: 0.7;
+  line-height: 1.6;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 768px) {
+  .blog-featured {
+    grid-template-columns: 1fr;
+  }
+  .blog-featured__img {
+    min-height: 200px;
+  }
+  .blog-featured__content {
+    padding: 1.5rem;
+  }
+  .blog-featured__content h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* ==============================================
+   BLOG FEED — chronological post list
+   ============================================== */
+.blog-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.blog-feed-item {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.blog-feed-item:hover {
+  border-color: rgba(0, 200, 165, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(6px);
+  box-shadow: 0 6px 25px rgba(0, 200, 165, 0.08);
+}
+:root:not(.dark) .blog-feed-item {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.5);
+}
+:root:not(.dark) .blog-feed-item:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+}
+
+.blog-feed-item__img {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+.blog-feed-item__img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.blog-feed-item:hover .blog-feed-item__img img {
+  transform: scale(1.08);
+}
+
+.blog-feed-item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.blog-feed-item__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.3rem;
+}
+.blog-feed-item__meta time {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #00c8a5;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+:root:not(.dark) .blog-feed-item__meta time {
+  color: #008a70;
+}
+.blog-feed-item__series {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(0, 153, 204, 0.12);
+  color: #66ccee;
+  border: 1px solid rgba(0, 153, 204, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+:root:not(.dark) .blog-feed-item__series {
+  background: rgba(0, 120, 180, 0.08);
+  color: #0078b4;
+  border-color: rgba(0, 120, 180, 0.2);
+}
+
+.blog-feed-item__body h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem 0;
+  line-height: 1.3;
+}
+.blog-feed-item__body p {
+  margin: 0;
+  opacity: 0.55;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.blog-feed-item__body .project-tags {
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .blog-feed-item {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .blog-feed-item__img {
+    width: 100%;
+    height: 160px;
+    border-radius: 10px;
+  }
+}
+
+/* ==============================================
+   ABOUT & SERVICES — Hero Intro
+   ============================================== */
+.about-hero {
+  margin: 1.5rem 0 2.5rem;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+:root:not(.dark) .about-hero {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.about-hero__title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin: 0 0 1rem 0;
+}
+.about-hero__title .accent {
+  color: var(--accent);
+}
+:root:not(.dark) .about-hero__title .accent {
+  color: var(--accent-on-light);
+}
+.about-hero__text {
+  margin: 0;
+  opacity: 0.75;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+  .about-hero {
+    padding: 1.5rem;
+  }
+  .about-hero__title {
+    font-size: 1.3rem;
+  }
+}
+
+/* ==============================================
+   SKILLS — chip/badge layout
+   ============================================== */
+.skills-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin: 1rem 0 2rem;
+}
+@media (max-width: 768px) {
+  .skills-section { grid-template-columns: 1fr; }
+}
+
+.skill-group {
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+:root:not(.dark) .skill-group {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.skill-group__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #00c8a5;
+  margin: 0 0 0.75rem 0;
+}
+:root:not(.dark) .skill-group__title {
+  color: #008a70;
+}
+
+.skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-chip {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e5e5e5;
+  transition: all 0.2s ease;
+}
+.skill-chip:hover {
+  background: rgba(0, 200, 165, 0.15);
+  border-color: rgba(0, 200, 165, 0.3);
+  color: #00c8a5;
+}
+:root:not(.dark) .skill-chip {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+:root:not(.dark) .skill-chip:hover {
+  background: rgba(0, 160, 130, 0.1);
+  border-color: rgba(0, 160, 130, 0.3);
+  color: #008a70;
+}
+
+.chip--proto {
+  background: rgba(0, 153, 204, 0.12);
+  border-color: rgba(0, 153, 204, 0.2);
+  color: #66ccee;
+}
+.chip--proto:hover {
+  background: rgba(0, 153, 204, 0.25);
+  border-color: rgba(0, 153, 204, 0.4);
+  color: #88ddff;
+}
+:root:not(.dark) .chip--proto {
+  background: rgba(0, 120, 180, 0.08);
+  border-color: rgba(0, 120, 180, 0.2);
+  color: #0078b4;
+}
+:root:not(.dark) .chip--proto:hover {
+  background: rgba(0, 120, 180, 0.15);
+  border-color: rgba(0, 120, 180, 0.35);
+  color: #006090;
+}
+
+/* ==============================================
+   TIMELINE — experience section
+   ============================================== */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1rem 0 2rem;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #00c8a5, rgba(0, 200, 165, 0.15));
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -2rem;
+  top: 1.5rem;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0a0a0a;
+  border: 3px solid #00c8a5;
+  z-index: 1;
+  transform: translateX(-0.5px);
+}
+:root:not(.dark) .timeline-marker {
+  background: #fff;
+}
+
+.timeline-content {
+  padding: 1.5rem 1.75rem;
+}
+.timeline-content h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+.timeline-content p {
+  margin: 0;
+  opacity: 0.7;
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.timeline-date {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #00c8a5;
+  margin-bottom: 0.4rem;
+}
+:root:not(.dark) .timeline-date {
+  color: #008a70;
+}
+
+/* ==============================================
+   SUPPORT CARDS
+   ============================================== */
+.support-cards {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.support-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.75rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.support-card:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 200, 165, 0.1);
+}
+:root:not(.dark) .support-card {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+:root:not(.dark) .support-card:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.support-card__icon {
+  font-size: 1.5rem;
+}
+.support-card__label {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .support-cards {
+    flex-direction: column;
+  }
+}
+
+/* ==============================================
+   SERVICE CARDS — 2x2 grid
+   ============================================== */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin: 1rem 0 2rem;
+}
+@media (max-width: 768px) {
+  .service-grid { grid-template-columns: 1fr; }
+}
+
+.service-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inline SVG, not emoji: two of the four glyphs used to be astral-plane
+   emoji (plug, chart) that render as tofu wherever no emoji font is
+   installed, and as colour emoji next to two monochrome dingbats where one
+   is. The rest of the site draws its icons as stroked SVG anyway. */
+.service-card__icon {
+  margin-bottom: 0.9rem;
+  line-height: 0;
+  color: var(--accent);
+}
+.service-card__icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+:root:not(.dark) .service-card__icon {
+  color: var(--accent-on-light);
+}
+
+.service-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+.service-card p {
+  margin: 0;
+  opacity: 0.7;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* ==============================================
+   PROCESS STEPS — horizontal flow
+   ============================================== */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1rem 0 2.5rem;
+}
+@media (max-width: 900px) {
+  .process-steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+  .process-steps { grid-template-columns: 1fr; }
+}
+
+.process-step {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.process-step__num {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  line-height: 1;
+}
+
+.process-step h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem 0;
+}
+.process-step p {
+  margin: 0;
+  opacity: 0.65;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/* ==============================================
+   NPM STATS TABLE — modernized
+   ============================================== */
+.npm-stats-table {
+  margin: 1rem 0 2rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+:root:not(.dark) .npm-stats-table {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.npm-stats-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.npm-stats-table thead th {
+  padding: 0.9rem 1.25rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #00c8a5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+:root:not(.dark) .npm-stats-table thead th {
+  color: #008a70;
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.npm-stats-table tbody td {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+:root:not(.dark) .npm-stats-table tbody td {
+  border-bottom-color: rgba(0, 0, 0, 0.04);
+}
+
+.npm-stats-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.npm-stats-table tbody tr {
+  transition: background 0.2s ease;
+}
+.npm-stats-table tbody tr:hover {
+  background: rgba(0, 200, 165, 0.06);
+}
+
+.npm-stats-table tbody td a {
+  color: #00c8a5;
+  font-weight: 600;
+  text-decoration: none;
+}
+.npm-stats-table tbody td a:hover {
+  text-decoration: underline;
+}
+:root:not(.dark) .npm-stats-table tbody td a {
+  color: #008a70;
+}
+
+.npm-stats-table .npm-dl {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.npm-stats-table .npm-stats-updated {
+  margin: 0;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+:root:not(.dark) .npm-stats-table .npm-stats-updated {
+  color: rgba(0, 0, 0, 0.45);
+  border-top-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ==============================================
+   TECH ARCHITECTURE DIAGRAM
+   ============================================== */
+.tech-arch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0 2.5rem;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+:root:not(.dark) .tech-arch {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tech-arch__layer {
+  width: 100%;
+  text-align: center;
+}
+.tech-arch__label {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-bottom: 0.6rem;
+}
+
+.tech-arch__nodes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tech-arch__node {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  cursor: default;
+}
+.tech-arch__node:hover {
+  transform: translateY(-2px);
+}
+
+/* Layer colors */
+.node--edge {
+  background: rgba(255, 140, 50, 0.12);
+  border: 1px solid rgba(255, 140, 50, 0.25);
+  color: #ff9944;
+}
+.node--edge:hover {
+  background: rgba(255, 140, 50, 0.2);
+  box-shadow: 0 4px 15px rgba(255, 140, 50, 0.15);
+}
+:root:not(.dark) .node--edge {
+  background: rgba(200, 100, 20, 0.08);
+  color: #c06020;
+  border-color: rgba(200, 100, 20, 0.2);
+}
+
+.node--mid {
+  background: rgba(0, 200, 165, 0.12);
+  border: 1px solid rgba(0, 200, 165, 0.25);
+  color: #00c8a5;
+}
+.node--mid:hover {
+  background: rgba(0, 200, 165, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 200, 165, 0.15);
+}
+:root:not(.dark) .node--mid {
+  background: rgba(0, 160, 130, 0.08);
+  color: #008a70;
+  border-color: rgba(0, 160, 130, 0.2);
+}
+
+.node--msg {
+  background: rgba(0, 168, 220, 0.12);
+  border: 1px solid rgba(0, 168, 220, 0.25);
+  color: #44bbee;
+}
+.node--msg:hover {
+  background: rgba(0, 168, 220, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 168, 220, 0.15);
+}
+:root:not(.dark) .node--msg {
+  background: rgba(0, 120, 180, 0.08);
+  color: #0078b4;
+  border-color: rgba(0, 120, 180, 0.2);
+}
+
+.node--cloud {
+  background: rgba(100, 80, 220, 0.12);
+  border: 1px solid rgba(100, 80, 220, 0.25);
+  color: #9988ee;
+}
+.node--cloud:hover {
+  background: rgba(100, 80, 220, 0.2);
+  box-shadow: 0 4px 15px rgba(100, 80, 220, 0.15);
+}
+:root:not(.dark) .node--cloud {
+  background: rgba(80, 60, 180, 0.08);
+  color: #5040b0;
+  border-color: rgba(80, 60, 180, 0.2);
+}
+
+.tech-arch__connector {
+  display: flex;
+  justify-content: center;
+  margin: 0.4rem 0;
+}
+
+@media (max-width: 640px) {
+  .tech-arch {
+    padding: 1.25rem;
+  }
+  .tech-arch__node {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.7rem;
+  }
+}
+
+/* ==============================================
+   GITHUB CARDS — style override
+   ============================================== */
+.github-card-wrapper {
+  margin: 1.5rem 0;
+}
+.github-card-wrapper > a {
+  text-decoration: none !important;
+}
+.github-card-wrapper > a > div {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  background: rgba(20, 27, 36, 0.6) !important;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+.github-card-wrapper > a > div:hover {
+  border-color: rgba(0, 200, 165, 0.4) !important;
+  background: rgba(20, 27, 36, 0.8) !important;
+  box-shadow: 0 12px 40px rgba(0, 200, 165, 0.15);
+  transform: translateY(-2px);
+}
+.github-card-wrapper > a > div > div:first-child {
+  position: relative;
+}
+.github-card-wrapper > a > div > div:first-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 27, 36, 0.45) 0%, rgba(20, 27, 36, 0.85) 100%);
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+.github-card-wrapper:hover > a > div > div:first-child::after {
+  background: linear-gradient(180deg, rgba(20, 27, 36, 0.35) 0%, rgba(20, 27, 36, 0.75) 100%);
+}
+.github-card-wrapper img {
+  filter: brightness(0.7) contrast(1.1) saturate(0.85);
+  transition: filter 0.3s ease;
+}
+.github-card-wrapper:hover img {
+  filter: brightness(0.8) contrast(1.1) saturate(0.95);
+}
+.github-card-wrapper [class*="text-neutral-800"] {
+  color: rgba(245, 245, 245, 0.95) !important;
+}
+.github-card-wrapper [id$="-description"] {
+  color: rgba(245, 245, 245, 0.7) !important;
+}
+
+:root:not(.dark) .github-card-wrapper > a > div {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+:root:not(.dark) .github-card-wrapper > a > div:hover {
+  border-color: rgba(0, 200, 165, 0.4) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+:root:not(.dark) .github-card-wrapper img {
+  filter: none;
+}
+:root:not(.dark) .github-card-wrapper > a > div > div:first-child::after {
+  display: none;
+}
+:root:not(.dark) .github-card-wrapper [class*="text-neutral-800"] {
+  color: rgba(20, 20, 20, 0.95) !important;
+}
+:root:not(.dark) .github-card-wrapper [id$="-description"] {
+  color: rgba(20, 20, 20, 0.7) !important;
+}
+
+/* ==============================================
+   BLOG CATEGORY FILTER CHIPS
+   ============================================== */
+/* Announces the result count to screen readers when a filter changes;
+   sighted users already see the cards move. */
+.blog-filter-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Wrap rather than scroll. Horizontally scrolling filters hid 17 of 25 chips
+   with no affordance that anything was there — the row simply ended
+   mid-chip. Two or three wrapped rows show the whole vocabulary at once. */
+.blog-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.25rem 0 1.5rem;
+  margin: 1rem 0 0;
+}
+.blog-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  user-select: none;
+}
+.blog-filter-chip:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+  background: rgba(0, 200, 165, 0.08);
+}
+.blog-filter-chip.is-active {
+  border-color: #00c8a5;
+  background: rgba(0, 200, 165, 0.15);
+  color: #00c8a5;
+}
+.blog-filter-chip__count {
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+:root:not(.dark) .blog-filter-chip {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.5);
+}
+:root:not(.dark) .blog-filter-chip:hover {
+  border-color: rgba(0, 160, 130, 0.4);
+  color: #008a70;
+  background: rgba(0, 160, 130, 0.08);
+}
+:root:not(.dark) .blog-filter-chip.is-active {
+  border-color: #008a70;
+  background: rgba(0, 160, 130, 0.12);
+  color: #008a70;
+}
+
+/* ==============================================
+   GISCUS COMMENTS
+   ============================================== */
+.giscus {
+  margin-top: 1rem;
+}
+.giscus-frame {
+  width: 100%;
+}
+
+/* ==============================================
+   POLISH PASS — contrast, sticky TOC, blog grid
+   ============================================== */
+
+/* Footer: better contrast for legal/copyright text */
+#site-footer .text-neutral-500,
+#site-footer .dark\:text-neutral-400,
+.dark #site-footer p,
+.dark #site-footer a {
+  color: rgba(245, 245, 245, 0.6) !important;
+}
+#site-footer a:hover {
+  color: #00d4ad !important;
+}
+:root:not(.dark) #site-footer p,
+:root:not(.dark) #site-footer a {
+  color: rgba(20, 20, 20, 0.65) !important;
+}
+
+/* Sticky TOC — make sure it stays visible while scrolling */
+@media (min-width: 1024px) {
+  .toc {
+    position: sticky !important;
+    top: 100px !important;
+    align-self: flex-start;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+  }
+  #TOCView {
+    max-height: calc(100vh - 160px);
+  }
+}
+
+/* Active TOC link. The accent has to switch with the theme — the bright teal
+   measures 1.91:1 on the light background, which is unreadable. */
+#TableOfContents a.active {
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+:root:not(.dark) #TableOfContents a.active {
+  color: var(--accent-on-light) !important;
+}
+
+/* Links in article prose. The Blowfish noir scheme's primary-600 is a
+   blue-grey that measures 2.73:1 on white — links were the least readable
+   text on the page in light mode. Scoped to prose so heading anchors and
+   card links keep their own styling. */
+:root:not(.dark) .article-content p a,
+:root:not(.dark) .article-content li a,
+:root:not(.dark) .article-content td a,
+:root:not(.dark) .article-content blockquote a {
+  color: var(--accent-on-light);
+  text-decoration-color: rgba(0, 122, 99, 0.4);
+}
+:root:not(.dark) .article-content p a:hover,
+:root:not(.dark) .article-content li a:hover,
+:root:not(.dark) .article-content td a:hover,
+:root:not(.dark) .article-content blockquote a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Card description text — better contrast */
+.project-featured__content p,
+.project-card__content p,
+.blog-featured__content p,
+.blog-feed-item__body p,
+.service-card p,
+.process-step p,
+.about-hero__text {
+  opacity: 0.85;
+  color: rgba(245, 245, 245, 0.85);
+}
+:root:not(.dark) .project-featured__content p,
+:root:not(.dark) .project-card__content p,
+:root:not(.dark) .blog-featured__content p,
+:root:not(.dark) .blog-feed-item__body p,
+:root:not(.dark) .service-card p,
+:root:not(.dark) .process-step p,
+:root:not(.dark) .about-hero__text {
+  color: rgba(20, 20, 20, 0.75);
+  opacity: 1;
+}
+
+/* Blog feed: 2-column grid on larger screens */
+@media (min-width: 768px) {
+  .blog-feed {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .blog-feed-item {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+  .blog-feed-item__img {
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+  }
+  .blog-feed-item:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Tag chip count: better contrast */
+.blog-filter-chip__count {
+  opacity: 0.7;
+}
+
+/* ==============================================
+   MERMAID DIAGRAMS — readable + zoomable
+   ============================================== */
+.mermaid-wrapper {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+  overflow-x: auto;
+  cursor: zoom-in;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+.mermaid-wrapper:hover {
+  border-color: rgba(0, 200, 165, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 6px 24px rgba(0, 200, 165, 0.08);
+}
+:root:not(.dark) .mermaid-wrapper {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+:root:not(.dark) .mermaid-wrapper:hover {
+  border-color: rgba(0, 200, 165, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+}
+
+.mermaid-wrapper .mermaid {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 60px;
+}
+.mermaid-wrapper .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  font-size: 16px !important;
+}
+
+.mermaid-zoom-hint {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.55);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.mermaid-wrapper:hover .mermaid-zoom-hint,
+.mermaid-wrapper:focus-visible .mermaid-zoom-hint {
+  opacity: 1;
+}
+:root:not(.dark) .mermaid-zoom-hint {
+  color: rgba(20, 20, 20, 0.6);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Lightbox / zoomed mode — a native <dialog>, so the platform handles the
+   focus trap, Escape, and focus restore. The dialog itself stays
+   transparent and the scrim is painted by ::backdrop. */
+.mermaid-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  padding: 2rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: hidden;
+  cursor: zoom-out;
+}
+.mermaid-lightbox[open] {
+  display: flex;
+  animation: mermaid-fade-in 0.2s ease-out;
+}
+.mermaid-lightbox::backdrop {
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(10px);
+}
+:root:not(.dark) .mermaid-lightbox::backdrop {
+  background: rgba(245, 245, 245, 0.96);
+}
+
+@keyframes mermaid-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mermaid-lightbox__inner {
+  position: relative;
+  width: 95vw;
+  height: 88vh;
+  overflow: auto;
+  cursor: default;
+}
+.mermaid-lightbox__svg-stage {
+  min-width: 100%;
+  min-height: 100%;
+  width: calc(95vw * var(--mermaid-zoom, 1));
+  height: calc(88vh * var(--mermaid-zoom, 1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.2s ease, height 0.2s ease;
+}
+.mermaid-lightbox__svg-stage svg {
+  width: 100%;
+  height: 100%;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.mermaid-lightbox__close {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+.mermaid-lightbox__close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+:root:not(.dark) .mermaid-lightbox__close {
+  border-color: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.06);
+  color: #1a1a1a;
+}
+:root:not(.dark) .mermaid-lightbox__close:hover {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.mermaid-lightbox__controls {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.4rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1;
+}
+:root:not(.dark) .mermaid-lightbox__controls {
+  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.mermaid-lightbox__controls button {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 0.75rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.mermaid-lightbox__controls button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+:root:not(.dark) .mermaid-lightbox__controls button {
+  color: #1a1a1a;
+}
+:root:not(.dark) .mermaid-lightbox__controls button:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.mermaid-lightbox-open {
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .mermaid-wrapper {
+    padding: 0.75rem;
+  }
+  .mermaid-zoom-hint {
+    opacity: 1;
+  }
+}
+
+/* ==============================================
+   MODERN UX — view transitions, reading progress,
+   background pause
+   ============================================== */
+
+/* Smooth same-origin cross-document navigation (progressive enhancement;
+   ignored by browsers that don't support it). */
+@view-transition {
+  navigation: auto;
+}
+
+/* Reading progress bar on blog articles */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 10000;
+  pointer-events: none;
+  background: transparent;
+}
+.reading-progress > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(0, 200, 165, 0.5);
+  transition: width 0.1s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+  .reading-progress > span {
+    transition: none;
+  }
+}
+
+/* ==============================================
+   HOMEPAGE LIVELINESS — entrance reveal, rotating
+   keyword, card sheen + icon breathe, edge→cloud flow
+   All motion is gated behind prefers-reduced-motion.
+   ============================================== */
+
+/* ---- Staggered entrance reveal ---------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero__title    { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+  .home-hero__lede     { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both; }
+  .home-hero__actions  { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both; }
+  .home-hero__links    { animation: reveal-fade 0.7s ease 0.34s both; }
+  .home-hero__portrait { animation: reveal-fade 0.9s ease 0.20s both; }
+  /* Not reveal-breakout: that keyframe carries translateX(-50%) for elements
+     that break out of a narrow column, and the strip no longer does — it was
+     rendering half a viewport to the left. */
+  .home-proof          { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+
+  /* The tagline still breaks out where it is used. */
+  .home-tagline { animation: reveal-breakout 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+}
+
+@keyframes reveal-breakout {
+  from { opacity: 0; transform: translate(-50%, 18px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Scroll-reveal for the recent-articles list ----------------- */
+/* The .reveal-on-scroll class is added by JS only (so non-JS users see
+   the content), then .is-visible animates each item in as it enters. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Rotating keyword in the tagline ---------------------------- */
+.rotor {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap; /* keep multi-word terms (e.g. "Siemens S7") intact */
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+:root:not(.dark) .rotor {
+  color: var(--accent-on-light);
+}
+
+/* ==============================================
+   ABOUT — hero photo, actions, stat band, CV
+   ============================================== */
+.about-hero {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+}
+.about-hero__photo {
+  width: 128px;
+  height: 128px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 200, 165, 0.35);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+.about-hero__body { min-width: 0; }
+.about-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+.about-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
+}
+.about-btn--primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.about-btn--primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.about-btn--ghost {
+  border: 1px solid rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+}
+.about-btn--ghost:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+:root:not(.dark) .about-btn--ghost { color: #008a70; border-color: rgba(0, 138, 112, 0.4); }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 0 0 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+:root:not(.dark) .about-stats {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
+}
+.about-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+.about-stat__num {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #00c8a5;
+}
+:root:not(.dark) .about-stat__num { color: #008a70; }
+.about-stat__label {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cv-button {
+  display: inline-block;
+  margin: 0 0 2rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.cv-button:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+
+/* Skill chips that link to a deep-dive get a subtle outbound affordance. */
+a.skill-chip { text-decoration: none; cursor: pointer; }
+/* These chips link to my own articles, not off-site: the north-east arrow
+   is the convention for "leaves this site" and was the wrong signal. */
+a.skill-chip::after { content: " \2192"; font-size: 0.82em; opacity: 0.45; }
+a.skill-chip:hover::after { opacity: 1; }
+
+/* RSS subscribe button on the blog list. */
+.rss-subscribe {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(0, 200, 165, 0.4);
+  color: #00c8a5;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.rss-subscribe:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+.rss-subscribe svg { flex-shrink: 0; }
+:root:not(.dark) .rss-subscribe { color: #008a70; border-color: rgba(0, 138, 112, 0.4); }
+
+/* Architecture diagram: dashed connector lines "flow" downward. */
+.tech-arch__connector svg path:first-child {
+  animation: arch-flow 1.2s linear infinite;
+}
+@keyframes arch-flow { to { stroke-dashoffset: -16; } }
+
+@media (max-width: 640px) {
+  /* Stack, but keep the copy ranged left. Centring an eleven-line paragraph
+     on a 390px screen gives every line a different start, which is what
+     makes long centred body text hard to read — the heading can stay
+     centred, the paragraph cannot. */
+  .about-hero { flex-direction: column; align-items: flex-start; }
+  .about-hero__photo { align-self: flex-start; }
+  .about-hero__actions { justify-content: flex-start; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-arch__connector svg path:first-child { animation: none; }
+}
+
+
+/* ==============================================
+   SITE BACKGROUND — industrial blueprint grid
+   Pure CSS on body::before/::after: no DOM
+   injection, no blur filters, no animation —
+   renders for free even on low-end devices.
+   ============================================== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #0a0e14;
+  background-image:
+    /* major grid */
+    linear-gradient(rgba(0, 200, 165, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 165, 0.055) 1px, transparent 1px),
+    /* fine grid */
+    linear-gradient(rgba(148, 180, 193, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 180, 193, 0.03) 1px, transparent 1px);
+  background-size:
+    132px 132px,
+    132px 132px,
+    22px 22px,
+    22px 22px;
+}
+
+/* Vignette + a faint accent wash at the top, so the grid recedes toward
+   the edges and content stays the focus. Static — nothing to animate. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 200, 165, 0.07), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(5, 8, 12, 0.6) 100%);
+}
+
+html:not(.dark) body::before {
+  background-color: #f6f8fa;
+  background-image:
+    linear-gradient(rgba(0, 122, 100, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 122, 100, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(30, 50, 60, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 50, 60, 0.035) 1px, transparent 1px);
+}
+html:not(.dark) body::after {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 138, 112, 0.05), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 60%, rgba(210, 220, 226, 0.5) 100%);
+}

@@ -1,0 +1,5 @@
+# Content tests (see tests/README.md). Deliberately tiny: pytest to run them,
+# PyYAML to read front matter. Everything else is Python stdlib, plus the
+# node and bash binaries that are already on any CI runner.
+pytest>=8.0
+PyYAML>=6.0

@@ -1,0 +1,131 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+
+  {{/* Hero */}}
+  {{ if site.Params.list.showHero | default false }}
+    {{ $heroStyle := print "hero/" site.Params.list.heroStyle ".html" }}
+    {{ if templates.Exists ( printf "partials/%s" $heroStyle ) }}
+      {{ partial $heroStyle . }}
+    {{ else }}
+      {{ partial "hero/basic.html" . }}
+    {{ end }}
+  {{ end }}
+
+  <header>
+    {{ if .Params.showBreadcrumbs | default (site.Params.list.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    {{ with .Description }}
+      <p class="mt-2 text-lg text-neutral-500 dark:text-neutral-400">{{ . }}</p>
+    {{ end }}
+    {{ with .OutputFormats.Get "rss" }}
+      <a class="rss-subscribe" href="{{ .RelPermalink }}" title="Subscribe via RSS">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.18 15.64a2.18 2.18 0 1 1 0 4.36 2.18 2.18 0 0 1 0-4.36zM4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44zm0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+        Subscribe via RSS
+      </a>
+    {{ end }}
+  </header>
+
+  {{ $allPages := .Pages.ByDate.Reverse }}
+
+  {{/* Tag filter chips */}}
+  {{ $tagMap := dict }}
+  {{ range $allPages }}
+    {{ range .Params.tags }}
+      {{ $key := . | urlize }}
+      {{ $entry := index $tagMap $key | default (dict "name" . "count" 0) }}
+      {{ $tagMap = merge $tagMap (dict $key (dict "name" $entry.name "count" (add $entry.count 1))) }}
+    {{ end }}
+  {{ end }}
+  {{/* A chip that filters to a single article is a link dressed as a filter,
+       and there were 11 of them — two thirds of the row scrolled off-screen
+       as a result. Tags below the threshold stay reachable through the tag
+       pages on each post. */}}
+  {{ $minPosts := 2 }}
+  {{ if gt (len $tagMap) 0 }}
+    {{/* Toggle buttons, not links: aria-pressed is what tells a screen
+         reader which filter is on. ui.js mirrors the active filter into
+         ?tag= so the view can be linked and the back button undoes it. */}}
+    <nav class="blog-filter-chips" aria-label="Filter articles by tag">
+      <button type="button" class="blog-filter-chip is-active" data-filter="all" aria-pressed="true">All</button>
+      {{ range $slug, $entry := $tagMap }}
+        {{ if ge $entry.count $minPosts }}
+          <button type="button" class="blog-filter-chip" data-filter="{{ $slug }}" aria-pressed="false">{{ $entry.name }}<span class="blog-filter-chip__count">{{ $entry.count }}</span></button>
+        {{ end }}
+      {{ end }}
+    </nav>
+    {{/* Cards vanishing is a silent event without this. */}}
+    <p class="blog-filter-status" role="status" aria-live="polite"></p>
+  {{ end }}
+
+  {{ if gt (len $allPages) 0 }}
+    {{/* Featured — latest article */}}
+    {{ $featured := index $allPages 0 }}
+    {{ $rest := after 1 $allPages }}
+
+    {{ with $featured }}
+      {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 900) }}
+      {{/* No own image → fall back to the generated branded card. */}}
+      {{ if not $featuredURL }}{{ $featuredURL = partial "og-image.html" . }}{{ end }}
+
+      <a href="{{ .RelPermalink }}" class="blog-featured" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
+        {{ with $featuredURL }}
+          <div class="blog-featured__img">
+            <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+          </div>
+        {{ end }}
+        <div class="blog-featured__content">
+          <span class="blog-featured__badge">Latest</span>
+          <time class="blog-featured__date">{{ .Date.Format "January 2, 2006" }}</time>
+          <h2>{{ .Title }}</h2>
+          <p>{{ .Description }}</p>
+          {{ with .Params.tags }}
+            <div class="project-tags">
+              {{ range first 4 . }}
+                <span class="project-tag">{{ . }}</span>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </a>
+    {{ end }}
+
+    {{/* Rest — chronological list */}}
+    {{ if gt (len $rest) 0 }}
+      <div class="blog-feed">
+        {{ range $rest }}
+          {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 600) }}
+          {{/* No own image → fall back to the generated branded card. */}}
+          {{ if not $featuredURL }}{{ $featuredURL = partial "og-image.html" . }}{{ end }}
+
+          <a href="{{ .RelPermalink }}" class="blog-feed-item" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
+            {{ with $featuredURL }}
+              <div class="blog-feed-item__img">
+                <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+              </div>
+            {{ end }}
+            <div class="blog-feed-item__body">
+              <div class="blog-feed-item__meta">
+                <time>{{ .Date.Format "Jan 2, 2006" }}</time>
+                {{ with .Params.series }}
+                  <span class="blog-feed-item__series">{{ index . 0 }}</span>
+                {{ end }}
+              </div>
+              <h3>{{ .Title }}</h3>
+              <p>{{ .Description }}</p>
+              {{ with .Params.tags }}
+                <div class="project-tags">
+                  {{ range first 3 . }}
+                    <span class="project-tag">{{ . }}</span>
+                  {{ end }}
+                </div>
+              {{ end }}
+            </div>
+          </a>
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ end }}
+
+{{ end }}

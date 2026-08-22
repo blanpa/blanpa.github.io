@@ -1,0 +1,85 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+
+  {{/* Hero */}}
+  {{ if site.Params.list.showHero | default false }}
+    {{ $heroStyle := print "hero/" site.Params.list.heroStyle ".html" }}
+    {{ if templates.Exists ( printf "partials/%s" $heroStyle ) }}
+      {{ partial $heroStyle . }}
+    {{ else }}
+      {{ partial "hero/basic.html" . }}
+    {{ end }}
+  {{ end }}
+
+  <header>
+    {{ if .Params.showBreadcrumbs | default (site.Params.list.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    {{ with .Description }}
+      <p class="mt-2 text-lg text-neutral-500 dark:text-neutral-400">{{ . }}</p>
+    {{ end }}
+  </header>
+
+  {{ $pages := .Pages.ByWeight }}
+  {{ $rest := after 1 $pages }}
+
+  {{/* Featured Project */}}
+  {{ range first 1 $pages }}
+    {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 900) }}
+
+    <a href="{{ .RelPermalink }}" class="project-featured">
+      {{ with $featuredURL }}
+        <div class="project-featured__img">
+          <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+        </div>
+      {{ end }}
+      <div class="project-featured__content">
+        <div class="project-card__meta">
+          <span class="project-featured__badge">Featured Project</span>
+          {{ partial "npm-downloads.html" . }}
+        </div>
+        <h2>{{ .Title }}</h2>
+        <p>{{ .Description }}</p>
+        {{ with .Params.tags }}
+          <div class="project-tags">
+            {{ range . }}
+              <span class="project-tag">{{ . }}</span>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    </a>
+  {{ end }}
+
+  {{/* Project Grid */}}
+  {{ if gt (len $rest) 0 }}
+    <section class="project-grid">
+      {{ range $rest }}
+        {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 600) }}
+
+        <a href="{{ .RelPermalink }}" class="project-card">
+          {{ with $featuredURL }}
+            <div class="project-card__img">
+              <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+            </div>
+          {{ end }}
+          <div class="project-card__content">
+            <div class="project-card__meta">
+              <h3>{{ .Title }}</h3>
+              {{ partial "npm-downloads.html" . }}
+            </div>
+            <p>{{ .Description }}</p>
+            {{ with .Params.tags }}
+              <div class="project-tags">
+                {{ range . }}
+                  <span class="project-tag">{{ . }}</span>
+                {{ end }}
+              </div>
+            {{ end }}
+          </div>
+        </a>
+      {{ end }}
+    </section>
+  {{ end }}
+{{ end }}

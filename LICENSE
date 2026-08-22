@@ -1,0 +1,52 @@
+This repository holds two kinds of work under two different licenses.
+
+================================================================================
+Code — MIT License
+================================================================================
+
+Applies to everything that builds the site: layouts/, assets/, config/,
+archetypes/, data/, static/, the GitHub Actions workflows, docker-compose.yml,
+and the Python helper scripts in the repository root.
+
+The Blowfish theme in themes/ is a git submodule and carries its own license
+(MIT, see themes/blowfish/LICENSE).
+
+Copyright (c) 2026 blanpa
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+Content — Creative Commons Attribution 4.0 International (CC BY 4.0)
+================================================================================
+
+Applies to everything under content/: the articles, project write-ups, page
+copy, and the images that accompany them.
+
+Copyright (c) 2026 blanpa
+
+You are free to share and adapt this material for any purpose, including
+commercially, provided you give appropriate credit, link to the license, and
+indicate if changes were made. Attribution should name blanpa and link to the
+source article on https://blanpa.github.io.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+Summary: https://creativecommons.org/licenses/by/4.0/
+
+Code samples embedded in articles are MIT-licensed under the terms above — use
+them without attribution.

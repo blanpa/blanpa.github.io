@@ -1,0 +1,100 @@
+colorScheme = "noir"
+defaultAppearance = "dark"
+autoSwitchAppearance = true
+
+enableSearch = true
+enableCodeCopy = true
+# defaultSocialImage intentionally unset: extend-head-uncached.html supplies
+# og:image (rich default on home, generated title cards on image-less pages).
+mainSections = ["blog"]
+# Formspree form id used by the contact-form / contact-modal shortcodes.
+formspreeId = "mjgaaoww"
+disableImageOptimization = false
+highlightCurrentMenuArea = true
+# Cookieless analytics: create an account at goatcounter.com, then set your
+# site code here (e.g. "blanpa") to enable the tracker in extend-head.html.
+# goatcounter = ""
+smartTOC = true
+
+[header]
+  layout = "fixed-fill-blur"
+
+[footer]
+  showMenu = true
+  showCopyright = true
+  showThemeAttribution = false
+  showAppearanceSwitcher = true
+  showScrollToTop = true
+
+[homepage]
+  # "custom" renders layouts/partials/home/custom.html — a two-column hero
+  # (copy and actions left, portrait right) instead of Blowfish's centred
+  # identity card.
+  layout = "custom"
+  homepageImage = ""
+  showRecent = true
+  showRecentItems = 5
+
+[article]
+  showDate = true
+  showDateUpdated = true
+  showAuthor = false
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
+  # false: with a blurred background hero the image is dimmed to almost
+  # nothing, so the reserved header space was 337px of empty grid above every
+  # article title — a third of a laptop screen, and it read as a layout bug.
+  layoutBackgroundHeaderSpace = false
+  showBreadcrumbs = true
+  showDraftLabel = true
+  showEdit = false
+  showPagination = true
+  showReadingTime = true
+  showTableOfContents = true
+  showRelatedContent = true
+  relatedContentLimit = 3
+  showComments = true
+  showTaxonomies = true
+  showWordCount = false
+  showZenMode = false
+  sharingLinks = ["linkedin", "reddit", "email"]
+
+[list]
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = false
+  showBreadcrumbs = true
+  showCards = true
+  orderByWeight = true
+  groupByYear = false
+  cardView = true
+  cardViewScreenWidth = false
+
+[taxonomy]
+  showTermCount = true
+  showHero = true
+  heroStyle = "background"
+  cardView = false
+
+[term]
+  showHero = true
+  heroStyle = "background"
+  groupByYear = false
+  cardView = true
+  cardViewScreenWidth = false
+
+[author]
+  name = "blanpa"
+  image = "img/author.png"
+  headline = "IIoT Software Developer — from PLC to cloud"
+  bio = "Building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing."
+  links = [
+    { github = "https://github.com/blanpa" },
+    { linkedin = "https://linkedin.com/in/blanpa" },
+    { medium = "https://medium.com/@blanpa" },
+    { email = "mailto:blanpa@proton.me" },
+    { ko-fi = "https://ko-fi.com/blanpa" },
+    { heart-empty = "https://github.com/sponsors/blanpa" },
+  ]
