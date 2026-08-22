@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -97,3 +98,25 @@ def test_mermaid_diagram_parses(mermaid, tmp_path):
     if result.returncode != 0:
         pytest.fail(f"{mermaid}: mermaid rejected this diagram —\n{result.stderr[-1500:]}")
     assert out.exists() and out.stat().st_size > 0, f"{mermaid}: produced no SVG"
+
+
+def test_every_diagram_has_a_prerendered_svg():
+    """Diagrams ship as build-time SVGs; a missing one silently costs 3.2 MB.
+
+    layouts/partials/mermaid-figure.html falls back to client-side rendering
+    when it finds no SVG for a diagram's source — deliberately, so an
+    un-rendered diagram is a heavy page rather than a broken one. The cost of
+    that kindness is that nothing would otherwise tell you it happened.
+
+    Fix: tools/render-diagrams.py
+    """
+    result = subprocess.run(
+        [sys.executable, str(REPO / "tools" / "render-diagrams.py"), "--check"],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert result.returncode == 0, (
+        f"{result.stdout.strip()}\n{result.stderr.strip()}\n\n"
+        "Run tools/render-diagrams.py and commit the new SVGs."
+    )

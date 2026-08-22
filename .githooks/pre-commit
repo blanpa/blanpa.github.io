@@ -5,8 +5,8 @@
 #
 # Skip a single commit with `git commit --no-verify` when you know better.
 #
-# The fast suite (~10 s) always runs. Diagram rendering drives a headless
-# browser and takes ~1.5 s per diagram, so it only runs for the posts whose
+# The fast suite (~3 s) always runs. Diagram rendering drives a headless
+# browser and takes ~4 s per diagram, so it only runs for the posts whose
 # mermaid blocks you are actually committing.
 
 set -uo pipefail

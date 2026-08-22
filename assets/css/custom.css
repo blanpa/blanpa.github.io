@@ -2476,6 +2476,26 @@ main details > summary[class*="bg-primary-"]:hover {
 }
 
 /* ==============================================
+   MERMAID DIAGRAMS — static (build-time SVG)
+
+   tools/render-diagrams.py renders each diagram twice, once per theme, and
+   the partial inlines both. Swapping them in CSS rather than re-rendering in
+   JS is the whole point of the exercise: no runtime, no reflow on theme
+   switch. display:none also takes the hidden variant out of the a11y tree,
+   so a screen reader sees one diagram, not two.
+   ============================================== */
+.mermaid-static--dark { display: none; }
+:root.dark .mermaid-static--light { display: none; }
+:root.dark .mermaid-static--dark { display: block; }
+
+.mermaid-static svg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==============================================
    MERMAID DIAGRAMS — readable + zoomable
    ============================================== */
 .mermaid-wrapper {

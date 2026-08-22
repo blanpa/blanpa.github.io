@@ -291,6 +291,11 @@
     var wrappers = document.querySelectorAll(".mermaid-wrapper");
     if (!wrappers.length) return;
 
+    /* Pages whose diagrams are all build-time SVGs have no runtime work to
+       do — only the lightbox below. Without this, the observer would still
+       fetch 3.2 MB for a page that has nothing to render with it. */
+    var needsRuntime = !!document.querySelector("pre.mermaid");
+
     /* -- Runtime ---------------------------------------------------- */
     /* The mermaid bundle is >3 MB — by far the heaviest asset here — so
        extend-footer.html only hands us its URL and we fetch it once a
@@ -343,17 +348,19 @@
       queued.forEach(function (fn) { fn(); });
     }
 
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          io.disconnect();
-          ensureRuntime();
-        });
-      }, { rootMargin: "800px 0px" });
-      Array.prototype.forEach.call(wrappers, function (w) { io.observe(w); });
-    } else {
-      ensureRuntime();
+    if (needsRuntime) {
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            io.disconnect();
+            ensureRuntime();
+          });
+        }, { rootMargin: "800px 0px" });
+        Array.prototype.forEach.call(wrappers, function (w) { io.observe(w); });
+      } else {
+        ensureRuntime();
+      }
     }
 
     /* -- Lightbox --------------------------------------------------- */
@@ -421,10 +428,21 @@
     }
 
     function open(wrapper) {
-      /* Scoped to the <pre>: the wrapper also holds the zoom-hint icon, and
-         picking that up would zoom a magnifying glass instead of a diagram. */
-      var svg = wrapper.querySelector("pre.mermaid svg");
-      /* Clicked before the runtime arrived: load it, then open. */
+      /* Scoped to the diagram itself: the wrapper also holds the zoom-hint
+         icon, and picking that up would zoom a magnifying glass. Two cases —
+         a build-time SVG (take the variant currently shown, not the hidden
+         one) or a runtime-rendered <pre class="mermaid">. */
+      var svg;
+      if (wrapper.classList.contains("mermaid-wrapper--static")) {
+        var dark = document.documentElement.classList.contains("dark");
+        svg = wrapper.querySelector(
+          (dark ? ".mermaid-static--dark" : ".mermaid-static--light") + " svg"
+        );
+      } else {
+        svg = wrapper.querySelector("pre.mermaid svg");
+      }
+      /* Clicked before the runtime arrived: load it, then open. Static
+         diagrams never take this branch — their SVG is in the document. */
       if (!svg) {
         ensureRuntime(function () { open(wrapper); });
         return;
