@@ -1,0 +1,48 @@
+{{/* Fork of themes/blowfish/layouts/partials/related.html. The related-content
+     block is unchanged; what follows it is new.
+
+     Reason: an article is where readers arrive from search, and where the case
+     for hiring is actually made — 2500 words of it. The page then ended with a
+     conclusion and a comment box, and the only route to the services page was
+     the main navigation, i.e. a deliberate second decision. This closes that
+     gap without turning the article into a sales page: one quiet block, after
+     the content, on blog posts only. */}}
+
+{{ if .Params.showRelatedContent | default (.Site.Params.article.showRelatedContent | default false) }}
+  {{ $related := .Site.RegularPages.Related . | first .Site.Params.article.relatedContentLimit }}
+  {{ with $related }}
+    <h2 class="mt-8 text-2xl font-extrabold mb-10">{{ i18n "article.related_articles" | emojify }}</h2>
+    <section class="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      {{ range . }}
+        {{ partial "article-link/card-related.html" . }}
+      {{ end }}
+    </section>
+  {{ end }}
+{{ end }}
+
+{{ if eq .Section "blog" }}
+  {{/* Find the author's mail link by key rather than by position — the order
+       of author.links is not a contract. */}}
+  {{- $mail := "" -}}
+  {{- range site.Params.author.links -}}
+    {{- with index . "email" }}{{ $mail = . }}{{ end -}}
+  {{- end -}}
+  <aside class="article-cta">
+    <p class="article-cta__kicker">Working on something like this?</p>
+    <p class="article-cta__text">
+      I build industrial connectivity for a living — Node-RED modules, protocol
+      bridges from PLC to cloud, and the pipelines in between.
+    </p>
+    <div class="article-cta__actions">
+      {{ with site.GetPage "/services" }}
+        <a class="article-cta__primary" href="{{ .RelPermalink }}">What I do</a>
+      {{ end }}
+      {{ with $mail }}
+        <a class="article-cta__secondary" href="{{ . }}">
+          Send an email
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      {{ end }}
+    </div>
+  </aside>
+{{ end }}

@@ -1,0 +1,53 @@
+{{/* Fork of themes/blowfish/layouts/partials/series/series.html.
+
+     The theme renders only the collapsed list of parts, so a reader landing on
+     one of nineteen articles could not tell where in the series they were
+     without opening it. This adds a position bar above that list: which series,
+     which part, and the way one step in either direction — ordered by
+     series_order rather than by date, which is what the numbering promises.
+     (The two differ here only for the two posts that share a publication
+     date, but the ordering the reader is shown should be the one the parts
+     are numbered by.) */}}
+
+{{ if .Params.series }}
+  {{- $name := index .Params.series 0 -}}
+  {{- $key := strings.ToLower $name -}}
+  {{- $parts := sort (index .Site.Taxonomies.series $key) "Params.series_order" -}}
+  {{- $total := len $parts -}}
+  {{- $index := -1 -}}
+  {{- range $i, $p := $parts -}}
+    {{- if eq $p.Permalink $.Page.Permalink }}{{ $index = $i }}{{ end -}}
+  {{- end -}}
+
+  {{ if ge $index 0 }}
+    <nav class="series-nav" aria-label="Series navigation">
+      <span class="series-nav__where">
+        {{ with $.Site.GetPage (printf "/series/%s" (urlize $name)) }}
+          <a class="series-nav__name" href="{{ .RelPermalink }}">{{ $name }}</a>
+        {{ else }}
+          <span class="series-nav__name">{{ $name }}</span>
+        {{ end }}
+        <span class="series-nav__pos">Part {{ add $index 1 }} of {{ $total }}</span>
+      </span>
+
+      <span class="series-nav__steps">
+        {{ if gt $index 0 }}
+          {{- $prev := index $parts (sub $index 1) -}}
+          <a class="series-nav__step" href="{{ $prev.RelPermalink }}" rel="prev"
+             title="{{ $prev.Title }}"><span aria-hidden="true">&larr;</span> Previous</a>
+        {{ end }}
+        {{ if lt $index (sub $total 1) }}
+          {{- $next := index $parts (add $index 1) -}}
+          <a class="series-nav__step" href="{{ $next.RelPermalink }}" rel="next"
+             title="{{ $next.Title }}">Next <span aria-hidden="true">&rarr;</span></a>
+        {{ end }}
+      </span>
+    </nav>
+  {{ end }}
+
+  <details
+    class="mt-2 mb-5 overflow-hidden rounded-lg ms-0 ps-5"
+    {{ if .Params.seriesOpened | default (.Site.Params.article.seriesOpened | default false) }}open{{ end }}>
+    {{ partial "series/series_base.html" . }}
+  </details>
+{{ end }}
