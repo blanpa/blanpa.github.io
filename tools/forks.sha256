@@ -1,0 +1,10 @@
+# sha256 of the themes/blowfish original for each file we fork.
+# Regenerate with: tools/check-forks.sh --update
+7d2ef4510e355d226e6962786b56f9267fcca6ed631ac316efb71c7a64f8d230  404.html
+502706f4fcdd624f30e0c973bb8e13336e3e49836f682df9641a48990771bbd1  _default/index.json
+ce936d1bd27bd91da65c49b418c391d951759a54e918f2fa3a82b8ad2424fd4a  _default/rss.xml
+4add0a61ae7bade173e0a3d0df517083ceec651070f27186697a720bb5e7f8d4  _default/terms.html
+f349cb47a4f144a1fed29d2393628a93f20fb47bf9792ad645a93c60bc8d39fa  partials/article-meta/term.html
+80e48ea84ae3a5676000ad2095994ad43ea28deef564940db1c4c77d88991de9  partials/related.html
+92717343a7bfe36ee1502eb7f11b18e98a8ae64a195888bfaa2d088a94acaaa9  partials/series/series.html
+595b0b8ada89509176202a897828b518b54795d1f239ab6c2ffe32dad0769c20  shortcodes/mermaid.html

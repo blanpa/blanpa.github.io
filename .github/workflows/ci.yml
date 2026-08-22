@@ -41,6 +41,12 @@ jobs:
         with:
           submodules: recursive
 
+      # Runs before the build: it needs nothing but the checked-out submodule,
+      # and a drifted fork is worth knowing about even if the build passes.
+      # This is the check that gives Dependabot's monthly theme bump meaning.
+      - name: Check forked theme layouts
+        run: tools/check-forks.sh
+
       - name: Build
         env:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
