@@ -296,35 +296,124 @@ h1, h2, h3, h4,
   color: var(--accent-on-light);
 }
 
-/* Support FAB — intentionally a quiet, neutral pill (defined by the theme's
-   utility classes in extend-footer). It is a secondary action: the heart icon
-   tints to the accent on hover, but it never pulses or competes with the
-   primary "Get in Touch" CTA. */
-#support-fab-btn #support-fab-icon {
+/* ==============================================
+   SUPPORT BUTTON (floating)
+   ============================================== */
+/* A secondary action, so it stays quiet: the site's glass surface, a mono
+   micro-label like the rest of the chrome, and the accent carried only by
+   the heart. It should read as part of the site rather than as a Tailwind
+   component someone dropped in, but it must never out-shout "Get in Touch". */
+.support-fab {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 9999;
+}
+
+.support-fab__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.15rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 9999px;
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.25s ease, background 0.25s ease,
+              box-shadow 0.25s ease, transform 0.25s ease;
+}
+:root:not(.dark) .support-fab__btn {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+.support-fab__btn:hover {
+  border-color: rgba(0, 200, 165, 0.45);
+  background: var(--surface-hover);
+  transform: translateY(-1px);
+}
+.support-fab__heart {
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+:root:not(.dark) .support-fab__heart { color: var(--accent-on-light); }
+.support-fab.is-open .support-fab__heart { transform: rotate(45deg); }
+
+/* Panel: same card treatment as the rest of the site, sized to its content
+   so "GitHub Sponsors" and "Buy Me a Coffee" stop wrapping onto two lines. */
+.support-fab__panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.6rem);
+  min-width: max-content;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.98);
+  transform-origin: bottom right;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.22s;
+}
+:root:not(.dark) .support-fab__panel {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+.support-fab.is-open .support-fab__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.support-fab__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-soft);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.support-fab__item:last-child { border-bottom: 0; }
+.support-fab__item svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+.support-fab__item:hover {
+  background: var(--surface-hover);
   color: var(--accent);
 }
+:root:not(.dark) .support-fab__item:hover { color: var(--accent-on-light); }
+.support-fab__item:hover svg { opacity: 1; }
 
-/* The options panel is taken out of flow: hidden, it still reserved its full
-   height, which made the fixed container 158x240px — 11.5% of a phone
-   viewport, sitting on top of the tagline and three protocol chips. */
-#support-fab {
-  position: fixed;
-}
-#support-options {
-  position: absolute;
-  bottom: calc(100% + 0.75rem);
-  right: 0;
-}
-
-/* On phones the pill shrinks to the heart alone. A donation prompt should not
-   be the largest permanent element on a page whose primary action is
-   "Get in Touch". */
+/* Phones: heart only. A donation prompt should not be the largest permanent
+   element on a screen whose primary action is "Get in Touch". */
 @media (max-width: 640px) {
-  #support-fab-btn {
-    padding: 0.85rem;
-    border-radius: 9999px;
-  }
-  #support-fab-btn > span:not(#support-fab-icon) {
+  .support-fab { right: 1rem; bottom: 1rem; }
+  .support-fab__btn { padding: 0.75rem; }
+  .support-fab__label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -333,9 +422,7 @@ h1, h2, h3, h4,
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
   }
-  #support-options {
-    width: min(17rem, calc(100vw - 3rem));
-  }
+  .support-fab__panel { min-width: 13rem; }
 }
 
 /* ==============================================
@@ -806,6 +893,138 @@ h1, h2, h3, h4,
   .project-featured__content {
     padding: 1.5rem;
   }
+}
+
+/* ==============================================
+   TAG CLOUD (taxonomy index)
+   ============================================== */
+/* Tags look like chips everywhere else on the site — the filter on the blog
+   list, the pills under an article title, the tech tags on a card. The
+   taxonomy index was the one page that rendered them as bare text links. */
+.tag-cloud__intro {
+  margin: 0.35rem 0 0;
+  color: inherit;
+  opacity: 0.7;
+  font-size: var(--text-sm);
+}
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 1.5rem 0 2rem;
+}
+.tag-cloud__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 9999px;
+  background: var(--surface);
+  color: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease;
+}
+.tag-cloud__chip:hover {
+  border-color: rgba(0, 200, 165, 0.45);
+  background: var(--surface-hover);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+:root:not(.dark) .tag-cloud__chip:hover { color: var(--accent-on-light); }
+.tag-cloud__count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  opacity: 0.55;
+}
+
+/* Meta line on a tag or series page. */
+.term-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  font-size: var(--text-sm);
+}
+.term-meta__count { opacity: 0.7; }
+.term-meta__count strong { font-weight: 700; opacity: 1; }
+.term-meta__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+.term-meta__all:hover { gap: 0.6rem; }
+:root:not(.dark) .term-meta__all { color: var(--accent-on-light); }
+
+/* ==============================================
+   GITHUB REPO GRID (About)
+   ============================================== */
+/* Eight repositories, one under the other, each preceded by GitHub's social
+   preview image: the section ran 6197px — 60% of the whole About page — for
+   eight near-identical grey slabs. The thumbnails are off (showThumbnail in
+   the shortcode) and what is left fits two to a row. */
+.repo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 0;
+}
+.repo-grid .github-card-wrapper {
+  margin: 0;
+  height: 100%;
+}
+.repo-grid .github-card-wrapper > a,
+.repo-grid .github-card-wrapper > a > div {
+  height: 100%;
+}
+
+/* ==============================================
+   SERIES CALLOUT IN ARTICLES
+   ============================================== */
+/* Blowfish paints the "part of a series" opener with the colour scheme's
+   primary — which in noir is a blue-grey, so on a dark page it was the only
+   light block on screen and shouted louder than the table of contents next
+   to it. Same surface treatment as the rest of the site's boxes, with the
+   accent carrying the emphasis instead of a slab of colour. */
+main details > summary[class*="bg-primary-"] {
+  background: var(--surface) !important;
+  color: inherit !important;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+main details > summary[class*="bg-primary-"]:hover {
+  background: var(--surface-hover) !important;
+}
+:root:not(.dark) main details > summary[class*="bg-primary-"] {
+  border-left-color: var(--accent-on-light);
+}
+
+/* ==============================================
+   PROJECT PAGE HERO
+   ============================================== */
+/* Project pages use Blowfish's thumbAndBackground hero, which drops the
+   artwork into a band of fixed height and crops it with object-fit: cover.
+   The illustrations are 1200x640 and the band is 1024x288, so 55% of every
+   image was sliced away — diagrams ended mid-box. `contain` shows the whole
+   picture; the frame keeps it from floating in the page. */
+#main-content > article > .rounded-md:has(> img.object-cover) {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  padding: 0.75rem;
+}
+#main-content > article > .rounded-md > img.object-cover {
+  object-fit: contain;
 }
 
 /* Download count on a project card. The number is already baked into
@@ -2404,7 +2623,9 @@ body.mermaid-lightbox-open {
 
 /* Skill chips that link to a deep-dive get a subtle outbound affordance. */
 a.skill-chip { text-decoration: none; cursor: pointer; }
-a.skill-chip::after { content: " \2197"; font-size: 0.72em; opacity: 0.45; }
+/* These chips link to my own articles, not off-site: the north-east arrow
+   is the convention for "leaves this site" and was the wrong signal. */
+a.skill-chip::after { content: " \2192"; font-size: 0.82em; opacity: 0.45; }
 a.skill-chip:hover::after { opacity: 1; }
 
 /* RSS subscribe button on the blog list. */
@@ -2433,8 +2654,13 @@ a.skill-chip:hover::after { opacity: 1; }
 @keyframes arch-flow { to { stroke-dashoffset: -16; } }
 
 @media (max-width: 640px) {
-  .about-hero { flex-direction: column; text-align: center; }
-  .about-hero__actions { justify-content: center; }
+  /* Stack, but keep the copy ranged left. Centring an eleven-line paragraph
+     on a 390px screen gives every line a different start, which is what
+     makes long centred body text hard to read — the heading can stay
+     centred, the paragraph cannot. */
+  .about-hero { flex-direction: column; align-items: flex-start; }
+  .about-hero__photo { align-self: flex-start; }
+  .about-hero__actions { justify-content: flex-start; }
   .about-stats { grid-template-columns: repeat(2, 1fr); }
 }
 

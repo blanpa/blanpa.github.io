@@ -58,10 +58,10 @@ date: 2026-03-05
       <a class="skill-chip chip--proto" href="/blog/nats-edge-to-cloud-pipeline/">NATS / JetStream</a>
       <a class="skill-chip chip--proto" href="/blog/mqtt-vs-sparkplug-vs-nats-vs-opcua/">MQTT</a>
       <a class="skill-chip chip--proto" href="/blog/siemens-s7-opcua-node-red/">Siemens S7</a>
-      <span class="skill-chip chip--proto">EtherNet/IP (CIP)</span>
+      <a class="skill-chip chip--proto" href="/blog/allen-bradley-ethernet-ip-node-red/">EtherNet/IP (CIP)</a>
       <a class="skill-chip chip--proto" href="/blog/can-bus-reverse-engineering-node-red/">CAN Bus</a>
-      <span class="skill-chip chip--proto">RS485 / Modbus</span>
-      <span class="skill-chip chip--proto">Sparkplug B</span>
+      <a class="skill-chip chip--proto" href="/blog/modbus-node-red/">RS485 / Modbus</a>
+      <a class="skill-chip chip--proto" href="/blog/unified-namespace-sparkplug-node-red/">Sparkplug B</a>
       <a class="skill-chip chip--proto" href="/blog/rest-vs-opcua-vs-graphql-manufacturing/">REST / gRPC / WebSocket</a>
     </div>
   </div>
@@ -144,14 +144,16 @@ I maintain several open-source Node-RED packages for industrial IoT on [npm](htt
 
 ### GitHub
 
-{{< github repo="blanpa/node-red-contrib-condition-monitoring" >}}
-{{< github repo="blanpa/node-red-contrib-nats-suite" >}}
-{{< github repo="blanpa/node-red-contrib-kafka-suite" >}}
-{{< github repo="blanpa/node-red-contrib-cip-suite" >}}
-{{< github repo="blanpa/node-red-contrib-s7-suite" >}}
-{{< github repo="blanpa/node-red-contrib-opcua-suite" >}}
-{{< github repo="blanpa/node-red-contrib-clab-interfaces" >}}
-{{< github repo="blanpa/node-red-contrib-i3x" >}}
+<div class="repo-grid">
+{{< github repo="blanpa/node-red-contrib-condition-monitoring" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-nats-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-kafka-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-cip-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-s7-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-opcua-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-clab-interfaces" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-i3x" showThumbnail=false >}}
+</div>
 
 ## Experience
 

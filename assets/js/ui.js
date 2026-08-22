@@ -259,35 +259,30 @@
     });
   }
 
-  /* ---- Support FAB (footer) ---------------------------------------- */
+  /* ---- Support button (floating) ----------------------------------- */
   function initSupportFab() {
-    var fab = document.getElementById("support-fab-btn");
-    var options = document.getElementById("support-options");
-    var icon = document.getElementById("support-fab-icon");
-    if (!fab || !options) return;
-    var open = false;
+    var wrap = document.getElementById("support-fab");
+    var btn = document.getElementById("support-fab-btn");
+    if (!wrap || !btn) return;
 
-    function setOpen(next) {
-      open = next;
-      fab.setAttribute("aria-expanded", open ? "true" : "false");
-      options.classList.toggle("opacity-0", !open);
-      options.classList.toggle("translate-y-4", !open);
-      options.classList.toggle("pointer-events-none", !open);
-      options.classList.toggle("invisible", !open);
-      options.classList.toggle("opacity-100", open);
-      options.classList.toggle("translate-y-0", open);
-      options.classList.toggle("pointer-events-auto", open);
-      if (icon) icon.style.transform = open ? "rotate(45deg)" : "rotate(0deg)";
+    /* One class on the container drives the whole open state — panel,
+       heart rotation and hit-testing all hang off .is-open in the CSS. */
+    function setOpen(open) {
+      wrap.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
     }
 
-    fab.addEventListener("click", function () { setOpen(!open); });
+    btn.addEventListener("click", function () {
+      setOpen(!wrap.classList.contains("is-open"));
+    });
     document.addEventListener("click", function (e) {
-      if (open && !document.getElementById("support-fab").contains(e.target)) {
-        setOpen(false);
-      }
+      if (wrap.classList.contains("is-open") && !wrap.contains(e.target)) setOpen(false);
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && open) setOpen(false);
+      if (e.key === "Escape" && wrap.classList.contains("is-open")) {
+        setOpen(false);
+        btn.focus();
+      }
     });
   }
 

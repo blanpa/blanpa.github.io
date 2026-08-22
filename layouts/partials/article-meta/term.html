@@ -1,0 +1,29 @@
+{{/* Meta line under a tag/series heading.
+
+     Blowfish's version only ever emits view and like counters, both of which
+     are off here — so a term page opened with a bare word ("OPC-UA") and a
+     grid of cards, with nothing saying what the page is or how to get back to
+     the full list. This says how much is filed under the term and offers the
+     way out. Everything else about term pages stays with the theme. */}}
+
+{{ $context := . }}
+{{ if (reflect.IsMap .) }}{{ $context = .context }}{{ end }}
+
+{{ with $context }}
+  {{ $count := len .Pages }}
+  {{/* The same partial serves tags and series — "19 pages tagged IIoT" is
+       wrong for a series, which pages belong to rather than carry. */}}
+  {{ $relation := cond (eq .Data.Singular "series") "in the series" "tagged" }}
+  <div class="term-meta">
+    <span class="term-meta__count">
+      {{ $count }} {{ cond (eq $count 1) "page" "pages" }} {{ $relation }}
+      <strong>{{ .Title }}</strong>
+    </span>
+    {{ with .Parent }}
+      <a class="term-meta__all" href="{{ .RelPermalink }}">
+        All {{ .Title | lower }}
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    {{ end }}
+  </div>
+{{ end }}
