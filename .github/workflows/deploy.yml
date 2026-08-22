@@ -40,7 +40,7 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       # Bake the live npm numbers into the build (data/npm_stats.yml): monthly
       # downloads plus the latest published version and its date, which is what
