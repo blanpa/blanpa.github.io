@@ -58,7 +58,7 @@ smartTOC = true
   showTaxonomies = true
   showWordCount = false
   showZenMode = false
-  sharingLinks = ["linkedin", "reddit", "email"]
+  sharingLinks = ["linkedin", "reddit"]
 
 [list]
   showHero = true
