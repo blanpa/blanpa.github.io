@@ -13,7 +13,7 @@ Your Street 123
 Germany
 
 **Contact:**
-Email: blanpa@proton.me
+Email: your@email.example
 
 ## Liability for Content
 

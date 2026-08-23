@@ -87,4 +87,4 @@ date: 2026-03-17
 ## Contact
 
 Questions about the packages, the articles, or the protocols they cover:
-[blanpa@proton.me](mailto:blanpa@proton.me).
+open an issue on [GitHub](https://github.com/blanpa).
