@@ -10,6 +10,10 @@ mainSections = ["blog"]
 # Formspree form id used by the contact-form / contact-modal shortcodes.
 formspreeId = "myegapwn"
 disableImageOptimization = false
+# Blowfish attaches medium-zoom to every img without .nozoom. The site has no
+# in-article illustrations, only covers, so every cover was click-to-enlarge.
+# The switch needs the forked layouts/partials/footer.html to have any effect.
+disableImageZoom = true
 highlightCurrentMenuArea = true
 # Cookieless analytics: create an account at goatcounter.com, then set your
 # site code here (e.g. "blanpa") to enable the tracker in extend-head.html.

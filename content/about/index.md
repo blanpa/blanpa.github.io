@@ -8,7 +8,7 @@ date: 2026-03-05
 ---
 
 <div class="about-hero">
-  <img class="about-hero__photo" src="/img/author.png" alt="blanpa — IIoT Software Developer" width="128" height="128">
+  <img class="about-hero__photo nozoom" src="/img/author.png" alt="blanpa — IIoT Software Developer" width="128" height="128">
   <div class="about-hero__body">
     <h2 class="about-hero__title">Building the bridge between <span class="accent">shop floor</span> and <span class="accent">cloud</span></h2>
     <p class="about-hero__text">I am an IIoT Software Developer with an Industrial Engineering background. I build industrial connectivity solutions — from edge gateways and fieldbus protocols to real-time messaging and predictive maintenance. My focus is on open-source Node-RED modules for condition monitoring, OPC-UA, NATS, S7, CIP/EtherNet-IP, and IoT gateway integration.</p>

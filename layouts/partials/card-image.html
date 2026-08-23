@@ -1,7 +1,14 @@
 {{- /* Resolve a page's card image URL: first image resource matching
        feature, cover, or thumbnail, resized to the given width. SVGs and
        sites with image optimization disabled pass through unresized. Returns
-       "" when the page has no matching image. Params: page, width (int). */ -}}
+       "" when the page has no matching image. Params: page, width (int).
+
+       Callers put class="nozoom" on the <img>. Image zoom is off site-wide
+       (disableImageZoom in params.toml, which only works because
+       layouts/partials/footer.html forks the theme's broken condition), so
+       nothing depends on the class today. It stays because covers are never
+       what a reader wants to enlarge: if zoom is ever switched back on for a
+       real in-article illustration, the covers are already excluded. */ -}}
 {{- $url := "" -}}
 {{- $images := .page.Resources.ByType "image" -}}
 {{- $img := "" -}}

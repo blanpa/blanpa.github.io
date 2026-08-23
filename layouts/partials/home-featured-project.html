@@ -10,7 +10,7 @@
   <a href="{{ .RelPermalink }}" class="project-featured">
     {{- with $img }}
     <div class="project-featured__img">
-      <img src="{{ . }}" loading="lazy" decoding="async" alt="">
+      <img class="nozoom" src="{{ . }}" loading="lazy" decoding="async" alt="">
     </div>
     {{- end }}
     <div class="project-featured__content">

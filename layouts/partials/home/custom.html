@@ -53,6 +53,7 @@
         {{- end }}
         <div class="home-hero__portrait">
           <img
+            class="nozoom"
             src="{{ $rendered.RelPermalink }}"
             width="240" height="240"
             alt="{{ $.Site.Params.Author.name | default `Author` }}"

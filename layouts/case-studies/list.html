@@ -16,7 +16,7 @@
         {{ $img := partial "card-image.html" (dict "page" . "width" 600) }}
         <a class="case-card" href="{{ .RelPermalink }}">
           {{ with $img }}
-            <div class="case-card__img"><img src="{{ . }}" loading="lazy" decoding="async" alt=""></div>
+            <div class="case-card__img"><img class="nozoom" src="{{ . }}" loading="lazy" decoding="async" alt=""></div>
           {{ end }}
           <div class="case-card__body">
             {{ with .Params.sector }}<span class="case-card__sector">{{ . }}</span>{{ end }}
