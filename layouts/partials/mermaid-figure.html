@@ -33,9 +33,23 @@
 
 {{- if and $light $dark -}}
 
+  {{- /* mmdc gives every SVG root id="my-svg" and scopes the diagram's own
+         stylesheet to it — "#my-svg .node rect{fill:...}". Both variants are
+         inlined into the same document, so left alone those two style blocks
+         match BOTH SVGs and whichever sits later in the DOM (dark) wins for
+         both: in the light theme the diagram drew near-black boxes on a white
+         page. Rewriting the id scopes each stylesheet back to its own SVG.
+         The ordinal separates two copies of one diagram on a page — the key
+         is the source hash, so it would not. Every "my-svg" in the file is an
+         id or a url(#…) pointing at one, and the string appears in no diagram
+         source, so replacing it wholesale is safe. */ -}}
+  {{- $n := add (int (.Page.Store.Get "mermaidSeq")) 1 -}}
+  {{- .Page.Store.Set "mermaidSeq" $n -}}
+  {{- $id := printf "mmd%d-%s" $n $key -}}
+
   <div class="mermaid-wrapper mermaid-wrapper--static" role="button" tabindex="0" aria-label="Zoom diagram" title="Click to zoom diagram">
-    <div class="mermaid-static mermaid-static--light">{{ $light.Content | safeHTML }}</div>
-    <div class="mermaid-static mermaid-static--dark">{{ $dark.Content | safeHTML }}</div>
+    <div class="mermaid-static mermaid-static--light">{{ replace $light.Content "my-svg" (printf "%s-l" $id) | safeHTML }}</div>
+    <div class="mermaid-static mermaid-static--dark">{{ replace $dark.Content "my-svg" (printf "%s-d" $id) | safeHTML }}</div>
     <span class="mermaid-zoom-hint" aria-hidden="true">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
       Click to zoom
