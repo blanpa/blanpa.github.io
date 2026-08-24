@@ -90,7 +90,7 @@ query {
         "timestamp": "2026-04-11T08:30:00Z"
       },
       "status": {
-        "value": "Running",
+        "value": "RUNNING",
         "timestamp": "2026-04-11T08:29:55Z"
       }
     }
@@ -324,13 +324,40 @@ GraphQL lets the client define exactly what data it wants using a query language
 ### Schema Definition
 
 ```graphql
+scalar DateTime
+
+enum Quality {
+  GOOD
+  BAD
+  UNCERTAIN
+}
+
+enum MachineStatus {
+  OFF
+  RUNNING
+  ERROR
+  MAINTENANCE
+}
+
+type Line {
+  id: ID!
+  name: String!
+  machines: [Machine!]!
+}
+
+type HistoryPoint {
+  timestamp: DateTime!
+  temperature: Float
+  spindleSpeed: Float
+}
+
 type Machine {
   id: ID!
   name: String!
   line: Line!
   temperature: SensorReading
   spindleSpeed: SensorReading
-  status: MachineStatus!
+  status: StatusReading!
   partsProduced: Int!
   alarms(severity: Int): [Alarm!]!
   history(from: DateTime!, to: DateTime!, interval: String): [HistoryPoint!]!
@@ -340,6 +367,11 @@ type SensorReading {
   value: Float!
   unit: String!
   quality: Quality!
+  timestamp: DateTime!
+}
+
+type StatusReading {
+  value: MachineStatus!
   timestamp: DateTime!
 }
 

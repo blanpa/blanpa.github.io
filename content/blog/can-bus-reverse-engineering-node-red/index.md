@@ -290,14 +290,14 @@ BS_:
 BU_: Drive
 
 BO_ 385 DriveStatus: 8 Drive
- SG_ MotorRPM : 16|16@1+ (1,0) [0|20000] "RPM" Vector__XXX
- SG_ MotorTemp : 32|16@1+ (0.1,0) [0|200] "degC" Vector__XXX
- SG_ DriveState : 0|8@1+ (1,0) [0|255] "" Vector__XXX
- SG_ FaultCode : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ MotorRPM : 23|16@0+ (1,0) [0|20000] "RPM" Vector__XXX
+ SG_ MotorTemp : 39|16@0+ (0.1,0) [0|200] "degC" Vector__XXX
+ SG_ FaultCode : 15|8@0+ (1,0) [0|255] "" Vector__XXX
+ SG_ DriveState : 63|8@0+ (1,0) [0|255] "" Vector__XXX
 
 BO_ 641 DriveCommand: 8 Drive
- SG_ TargetRPM : 16|16@1+ (1,0) [0|20000] "RPM" Vector__XXX
- SG_ Direction : 0|8@1+ (1,0) [0|2] "" Vector__XXX
+ SG_ TargetRPM : 23|16@0+ (1,0) [0|20000] "RPM" Vector__XXX
+ SG_ Direction : 7|8@0+ (1,0) [0|2] "" Vector__XXX
 ```
 
 DBC signal format: `SG_ Name : StartBit|Length@ByteOrder ValueType (Factor,Offset) [Min|Max] "Unit" Receiver`

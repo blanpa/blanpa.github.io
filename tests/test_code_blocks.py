@@ -20,6 +20,8 @@ import tomllib
 import pytest
 import yaml
 
+from conftest import REPO
+
 # Line comments are a documentation idiom in JSON samples ("// UDT member").
 # Strip them before parsing rather than banning them.
 JSON_LINE_COMMENT = re.compile(r'(?<!:)//(?![^"\n]*")[^\n]*')
@@ -115,3 +117,59 @@ def test_fence_language_is_one_we_recognise(block):
         f"{block}: unrecognised fence language {block.lang!r} — fix the typo, "
         f"or add it to the known set in this test"
     )
+
+
+# The CAN post carries a DBC alongside a table of frames it recorded off a
+# real bus, and a Python decoder for the same frames. All three describe one
+# frame layout, and nothing forces them to agree — the DBC shipped with the
+# signals declared Intel byte order while the prose, the table and the decoder
+# all read big-endian, so the file decoded 41993 RPM where the article said
+# 2468. cantools would catch this in one line, but tests/requirements.txt is
+# deliberately stdlib-only, and the subset of DBC needed here is small.
+DBC_SIGNAL = re.compile(
+    r"^\s*SG_\s+(?P<name>\w+)\s*:\s*(?P<start>\d+)\|(?P<length>\d+)"
+    r"@(?P<order>[01])(?P<sign>[+-])\s*\((?P<scale>[-\d.]+),(?P<offset>[-\d.]+)\)"
+)
+
+
+def _decode_motorola(data: bytes, start: int, length: int) -> int:
+    """DBC big-endian (@0): `start` is the MSB, numbered so that byte n holds
+    bits n*8+7 (MSB) down to n*8 (LSB)."""
+    value = 0
+    bit = start
+    for _ in range(length):
+        byte, offset = divmod(bit, 8)
+        value = (value << 1) | ((data[byte] >> offset) & 1)
+        bit = bit - 1 if offset else bit + 15
+    return value
+
+
+def test_can_dbc_decodes_the_posts_own_capture():
+    post = REPO / "content/blog/can-bus-reverse-engineering-node-red/index.md"
+    text = post.read_text(encoding="utf-8")
+
+    dbc = re.search(r"^```dbc\n(.*?)^```", text, re.S | re.M)
+    assert dbc, "the CAN post no longer has a dbc block"
+    signals = {m["name"]: m for m in map(DBC_SIGNAL.match, dbc.group(1).splitlines()) if m}
+    for name in ("MotorRPM", "DriveState"):
+        assert name in signals, f"DBC no longer declares {name}"
+        assert signals[name]["order"] == "0", (
+            f"{name} is declared @{signals[name]['order']} (Intel). The post's "
+            f"analysis, capture table and Python decoder are all big-endian."
+        )
+
+    # "| Motor 1000 RPM FWD | `00 00 03 E8 00 00 00 01` |"
+    rows = re.findall(r"\|\s*Motor\s+(\d+) RPM (FWD|REV)\s*\|\s*`([0-9A-F ]+)`\s*\|", text)
+    assert len(rows) >= 3, "the capture table in the CAN post has moved or changed shape"
+    for rpm, direction, frame in rows:
+        data = bytes.fromhex(frame.replace(" ", ""))
+        got = _decode_motorola(data, int(signals["MotorRPM"]["start"]),
+                               int(signals["MotorRPM"]["length"]))
+        assert got == int(rpm), (
+            f"DBC decodes {got} RPM from {frame}, but the table says {rpm}"
+        )
+        state = _decode_motorola(data, int(signals["DriveState"]["start"]),
+                                 int(signals["DriveState"]["length"]))
+        assert state == (1 if direction == "FWD" else 2), (
+            f"DBC decodes DriveState {state} from {frame}, but the table says {direction}"
+        )
