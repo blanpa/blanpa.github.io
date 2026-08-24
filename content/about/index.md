@@ -14,7 +14,7 @@ date: 2026-03-05
     <p class="about-hero__text">I am an IIoT Software Developer with an Industrial Engineering background. I build industrial connectivity solutions — from edge gateways and fieldbus protocols to real-time messaging and predictive maintenance. My focus is on open-source Node-RED modules for condition monitoring, OPC-UA, NATS, S7, CIP/EtherNet-IP, and IoT gateway integration.</p>
     <div class="about-hero__actions">
       <a class="about-btn about-btn--primary" href="/projects/">View Projects</a>
-      <a class="about-btn about-btn--ghost" href="/blog/">Read the Blog</a>
+      <a class="about-btn about-btn--ghost" href="/work/">What I Work On</a>
     </div>
   </div>
 </div>
@@ -38,9 +38,9 @@ date: 2026-03-05
   <div class="skill-group">
     <h3 class="skill-group__title">Platforms & Tools</h3>
     <div class="skill-chips">
-      <a class="skill-chip" href="/blog/node-red-vs-kepware-vs-ignition/">Node-RED</a>
-      <a class="skill-chip" href="/blog/docker-vs-k3s-edge-deployment/">Docker</a>
-      <a class="skill-chip" href="/blog/docker-vs-k3s-edge-deployment/">Kubernetes / K3s</a>
+      <span class="skill-chip">Node-RED</span>
+      <span class="skill-chip">Docker</span>
+      <span class="skill-chip">Kubernetes / K3s</span>
       <span class="skill-chip">Linux / Embedded Linux</span>
       <span class="skill-chip">Terraform</span>
       <span class="skill-chip">Ansible</span>
@@ -54,15 +54,15 @@ date: 2026-03-05
   <div class="skill-group">
     <h3 class="skill-group__title">Industrial Protocols</h3>
     <div class="skill-chips">
-      <a class="skill-chip chip--proto" href="/blog/siemens-s7-opcua-node-red/">OPC-UA</a>
-      <a class="skill-chip chip--proto" href="/blog/nats-edge-to-cloud-pipeline/">NATS / JetStream</a>
-      <a class="skill-chip chip--proto" href="/blog/mqtt-vs-sparkplug-vs-nats-vs-opcua/">MQTT</a>
-      <a class="skill-chip chip--proto" href="/blog/siemens-s7-opcua-node-red/">Siemens S7</a>
-      <a class="skill-chip chip--proto" href="/blog/allen-bradley-ethernet-ip-node-red/">EtherNet/IP (CIP)</a>
-      <a class="skill-chip chip--proto" href="/blog/can-bus-reverse-engineering-node-red/">CAN Bus</a>
-      <a class="skill-chip chip--proto" href="/blog/modbus-node-red/">RS485 / Modbus</a>
-      <a class="skill-chip chip--proto" href="/blog/unified-namespace-sparkplug-node-red/">Sparkplug B</a>
-      <a class="skill-chip chip--proto" href="/blog/rest-vs-opcua-vs-graphql-manufacturing/">REST / gRPC / WebSocket</a>
+      <span class="skill-chip chip--proto">OPC-UA</span>
+      <span class="skill-chip chip--proto">NATS / JetStream</span>
+      <span class="skill-chip chip--proto">MQTT</span>
+      <span class="skill-chip chip--proto">Siemens S7</span>
+      <span class="skill-chip chip--proto">EtherNet/IP (CIP)</span>
+      <span class="skill-chip chip--proto">CAN Bus</span>
+      <span class="skill-chip chip--proto">RS485 / Modbus</span>
+      <span class="skill-chip chip--proto">Sparkplug B</span>
+      <span class="skill-chip chip--proto">REST / gRPC / WebSocket</span>
     </div>
   </div>
   <div class="skill-group">

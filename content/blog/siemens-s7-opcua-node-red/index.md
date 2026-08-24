@@ -1,5 +1,6 @@
 ---
 title: "Siemens S7 + OPC-UA + Node-RED — From PLC to Dashboard in 30 Minutes"
+draft: true
 tags: ["IIoT", "OPC-UA", "Node-RED", "PLC"]
 description: "Step-by-step tutorial: reading data from a Siemens S7-1500 PLC via OPC-UA and displaying it on a Node-RED dashboard."
 date: 2026-04-25

@@ -1,5 +1,6 @@
 ---
 title: "Talking to Allen-Bradley PLCs from Node-RED — EtherNet/IP & CIP Explained"
+draft: true
 tags: ["IIoT", "Node-RED", "Allen-Bradley", "EtherNet-IP", "PLC"]
 description: "A practical guide to reading and writing Allen-Bradley ControlLogix, CompactLogix, and legacy SLC/PLC-5 tags from Node-RED over EtherNet/IP and CIP."
 date: 2026-06-27
@@ -252,7 +253,7 @@ ControlLogix controllers have a finite number of CIP connections. If multiple SC
 
 Once tags are flowing into Node-RED, you're in the same world as any other source:
 
-- Normalize Allen-Bradley tags and Siemens tags into a common model and publish to a [Unified Namespace](/blog/unified-namespace-sparkplug-node-red/).
+- Normalize Allen-Bradley tags and Siemens tags into a common model and publish to a Unified Namespace.
 - Stream high-volume data to [Kafka](/blog/kafka-shop-floor-event-streaming/) for plant-tier aggregation.
 - Feed counts and states into OEE calculations and dashboards.
 

@@ -1,5 +1,6 @@
 ---
 title: "Modbus in Node-RED — The 47-Year-Old Protocol Everyone Still Uses"
+draft: true
 tags: ["IIoT", "Modbus", "Node-RED", "PLC"]
 description: "A practical guide to reading and writing Modbus TCP and RTU devices from Node-RED — register maps, data type decoding, byte ordering, and the gotchas that waste afternoons."
 date: 2026-07-11
@@ -249,7 +250,7 @@ On a shared RS-485 bus, requests are serial — a device that's slow to answer (
 
 Modbus on its own is a dead end — raw registers nobody else understands. Its value comes from *lifting* it into your wider architecture. Once decoded in Node-RED, a Modbus power-meter reading is just another `msg.payload`, indistinguishable from an OPC-UA tag:
 
-- Normalize it and publish to a [Unified Namespace](/blog/unified-namespace-sparkplug-node-red/) alongside your PLC data.
+- Normalize it and publish to a Unified Namespace alongside your PLC data.
 - Stream high-frequency energy data to [Kafka](/blog/kafka-shop-floor-event-streaming/) for analysis.
 - Feed it into [predictive maintenance](/blog/predictive-maintenance-node-red/) or OEE calculations.
 

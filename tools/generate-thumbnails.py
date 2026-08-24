@@ -41,7 +41,6 @@ PROMPTS["projects"] = {
 
 PROMPTS["blog"] = {
     "nats-edge-to-cloud-pipeline": "industrial factory floor sensors connected to cloud servers via glowing data streams, NATS messaging nodes as relay points",
-    "compulab-iot-gateway-node-red": "compact embedded IoT gateway device with glowing ports and cables, industrial edge computing hardware",
     "ml-inference-edge-onnx-node-red": "neural network brain on a small edge device, machine learning inference on embedded hardware, data flowing from sensors through ML model",
     "predictive-maintenance-node-red": "industrial machine with vibration sensors and health monitoring graphs, predictive maintenance dashboard with signal waves",
     "mqtt-vs-sparkplug-vs-nats-vs-opcua": "four different messaging protocol symbols interconnected, industrial communication network comparison, data packets flowing",
@@ -56,7 +55,6 @@ PROMPTS["blog"] = {
     "lessons-learned-publishing-npm-packages": "npm package boxes being published and downloaded, open source software distribution",
     "kafka-shop-floor-event-streaming": "Apache Kafka distributed event log streaming manufacturing sensor data as parallel partitioned rivers, factory floor feeding a high-throughput broker cluster with many independent consumers",
     "allen-bradley-ethernet-ip-node-red": "Allen-Bradley ControlLogix PLC rack with EtherNet/IP communication cables and CIP protocol data packets flowing to an edge device, industrial automation",
-    "unified-namespace-sparkplug-node-red": "central unified namespace hub with hierarchical industrial data tree, many factory systems publishing and subscribing through a single MQTT broker in hub-and-spoke topology",
     "modbus-node-red": "Modbus RTU serial RS-485 bus connecting industrial meters VFDs and sensors with 16-bit register data words flowing, classic industrial protocol",
     "securing-ot-networks-opcua-purdue": "layered industrial network security with segmented zones and firewalls, Purdue model pyramid of factory levels with an isolated DMZ protecting PLCs, OT cybersecurity",
 }

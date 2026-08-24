@@ -1,5 +1,6 @@
 ---
 title: "Securing OT Networks — The Purdue Model, OPC-UA Encryption & Segmentation"
+draft: true
 tags: ["IIoT", "Security", "OPC-UA", "Networking", "PLC"]
 description: "A practical OT security primer for IIoT developers — the Purdue model, network segmentation, securing OPC-UA and MQTT, and the realities of patching a 20-year-old PLC."
 date: 2026-07-18
@@ -7,7 +8,7 @@ series: ["IIoT"]
 series_order: 19
 ---
 
-Every other post in this series has been about *connecting* things — [PLCs to dashboards](/blog/siemens-s7-opcua-node-red/), [protocols to brokers](/blog/unified-namespace-sparkplug-node-red/), [edge to cloud](/blog/nats-edge-to-cloud-pipeline/). This one is about the uncomfortable flip side: every connection you add is also an attack surface. Industrial systems were designed in an era of physical isolation, and we've spent the last decade enthusiastically networking them without always asking what that means for security. This is the post I wish more IIoT developers read *before* their first deployment, not after their first incident.
+Every other post in this series has been about *connecting* things — [PLCs to dashboards](/blog/siemens-s7-opcua-node-red/), [protocols to brokers](/blog/mqtt-vs-sparkplug-vs-nats-vs-opcua/), [edge to cloud](/blog/nats-edge-to-cloud-pipeline/). This one is about the uncomfortable flip side: every connection you add is also an attack surface. Industrial systems were designed in an era of physical isolation, and we've spent the last decade enthusiastically networking them without always asking what that means for security. This is the post I wish more IIoT developers read *before* their first deployment, not after their first incident.
 
 > **Scope:** This is a defensive primer for developers building IIoT systems, not a pen-testing guide. The goal is to help you not be the weak link.
 
@@ -54,7 +55,7 @@ The key insight: **the Industrial DMZ between Levels 3 and 4 is where IT meets O
 
 ### Where Node-RED and IIoT Gateways Live
 
-Your [edge gateway](/blog/compulab-iot-gateway-node-red/) typically straddles Level 2/3 — close enough to poll PLCs, positioned to push data *up* into the DMZ. It should **never** be dual-homed straight from the PLC VLAN to the public internet. If it needs to reach the cloud, it publishes to a broker in the DMZ, and the DMZ broker handles the outbound connection.
+Your edge gateway typically straddles Level 2/3 — close enough to poll PLCs, positioned to push data *up* into the DMZ. It should **never** be dual-homed straight from the PLC VLAN to the public internet. If it needs to reach the cloud, it publishes to a broker in the DMZ, and the DMZ broker handles the outbound connection.
 
 ```mermaid
 flowchart LR
@@ -123,7 +124,7 @@ The `SignAndEncrypt` vs `Sign` distinction matters: *Sign* guarantees integrity 
 
 ### Securing MQTT / Sparkplug
 
-The same discipline applies to a [Unified Namespace broker](/blog/unified-namespace-sparkplug-node-red/), which by definition carries your entire operation's state:
+The same discipline applies to a Unified Namespace broker, which by definition carries your entire operation's state:
 
 - **TLS** (port 8883), never plaintext 1883 across zone boundaries.
 - **Per-client credentials** — every edge node and subscriber gets its own identity.

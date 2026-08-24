@@ -71,7 +71,7 @@ which protocols, where the gateway sat, how the data was normalised, what runs
 on the edge and what in the plant. Link the relevant articles and packages —
 this is where the writing and the code pay off:
 
-- [Siemens S7 via OPC-UA](/blog/siemens-s7-opcua-node-red/)
+- [S7 Suite](/projects/s7-suite/)
 - [`node-red-contrib-opcua-suite`](/projects/opcua-suite/)
 
 A diagram helps here. Same fenced block the articles use:
