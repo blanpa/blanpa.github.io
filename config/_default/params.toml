@@ -44,7 +44,13 @@ smartTOC = true
   showDateUpdated = true
   showAuthor = false
   showHero = true
-  heroStyle = "background"
+  # "background" washes the cover across the full width behind the title, and
+  # the date, tag row and series bar end up on top of the artwork. The covers
+  # are schematics drawn on paper, so under light type on the dark theme the
+  # whole page header became a grey band. Projects had already been moved off
+  # it for the same reason; this is the default for every article now, and
+  # both sections say so explicitly in their cascade.
+  heroStyle = "basic"
   layoutBackgroundBlur = true
   # false: with a blurred background hero the image is dimmed to almost
   # nothing, so the reserved header space was 337px of empty grid above every

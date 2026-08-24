@@ -1688,9 +1688,19 @@ main details > summary[class*="bg-primary-"] {
 .skill-chip:not(:last-child)::after {
   content: ",";
   color: var(--ink-faint);
+  /* An atomic inline box: the linked chips are underlined, and a decoration
+     on an ancestor is painted straight through ordinary inline descendants,
+     so the comma was underlined too. */
+  display: inline-block;
+  text-decoration: none;
 }
+/* "Sparkplug B" and "Kubernetes / K3s" are one name each; letting a line
+   break fall inside them left a stray "B" on its own line. */
+.skill-chip { white-space: nowrap; }
 .chip--proto { color: inherit; background: none; border: 0; }
-a.skill-chip { text-decoration: none; color: inherit; }
+/* The linked chips keep the body colour and are marked by their underline
+   alone — see a.skill-chip further down, which sets it. */
+a.skill-chip { color: inherit; }
 
 /* ==============================================
    TIMELINE — experience section
@@ -2769,11 +2779,26 @@ body.mermaid-lightbox-open {
 .rss-subscribe svg { flex-shrink: 0; }
 .about-btn--ghost { margin: 0; }
 
-/* Skill chips that link to a deep-dive get a subtle outbound affordance. */
-a.skill-chip { text-decoration: none; cursor: pointer; }
-/* These chips link to my own articles, not off-site: the north-east arrow
-   is the convention for "leaves this site" and was the wrong signal. */
-a.skill-chip::after { content: none; }
+/* Twelve of these chips link into an article and the rest are plain text.
+   With no decoration at all they were indistinguishable, so the links were
+   invisible: nothing said "Node-RED" was clickable and "Terraform" was not.
+   An underline in the accent, offset far enough not to fight the descenders,
+   is the same affordance body copy links already use. The north-east arrow
+   stays gone — these are internal links and that glyph means "leaves the
+   site". */
+a.skill-chip {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--accent-rgb) / 0.45);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+@media (hover: hover) {
+  a.skill-chip:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+}
 
 /* The architecture connectors used to have their dashes marching downward
    on a loop. Perpetual ambient motion with nothing to report is the visual
@@ -2792,6 +2817,14 @@ a.skill-chip::after { content: none; }
 @media (prefers-reduced-motion: reduce) {
   .tech-arch__connector svg path:first-child { animation: none; }
 }
+
+/* The three connectors carried three hardcoded colours from the old palette —
+   a mint stepping into two blues — and were the only saturated colour left on
+   the page. They are structure, not emphasis, so they take a rule weight:
+   the accent stays reserved for links, the one primary button and the current
+   nav item. The SVGs say currentColor now, so this is the only place to
+   change it. */
+.tech-arch__connector { color: var(--rule-strong); }
 
 
 /* ==============================================
@@ -2870,8 +2903,20 @@ a[href*="/tags/"] > span > span {
   font-weight: 400;
   color: var(--ink-soft);
 }
-a[href*="/tags/"]:not(.tag-cloud__chip)::after {
-  content: " ·";
+/* The separator hangs off the anchor, but Blowfish's markup puts a
+   `<span class="flex">` inside it — a block box — so an ::after on the anchor
+   was pushed onto its own line and every card showed its tags with a row of
+   loose dots underneath. Making that span inline puts the separator back on
+   the baseline.
+
+   And it is a ::before on every tag after the first, not an ::after on every
+   tag but the last: :last-of-type counts anchors among their siblings, which
+   is not the same set as "the tags", so the final separator survived on the
+   project cards and dangled at the end of a wrapped line. */
+a[href*="/tags/"]:not(.tag-cloud__chip) > span.flex {
+  display: inline;
+}
+a[href*="/tags/"]:not(.tag-cloud__chip) ~ a[href*="/tags/"]:not(.tag-cloud__chip)::before {
+  content: "· ";
   color: var(--ink-faint);
 }
-a[href*="/tags/"]:last-of-type::after { content: none; }

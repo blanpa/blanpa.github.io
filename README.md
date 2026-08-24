@@ -55,7 +55,7 @@ to publish one, including the rule that every figure has to be a measured one.
 Helper scripts for authoring (all need Python 3; none are part of the build):
 
 - `tools/generate-thumbnails.py` — generates AI cover images for posts and projects via the Hugging Face Inference API (needs `HF_TOKEN` and `pip install Pillow huggingface_hub`). `--style=paper` (default) draws ink on warm paper for the light theme, `--style=ink` the reverse for the dark one; covers are committed, so a bad run is undone with `git checkout -- content/`
-- `tools/draw-covers.py` — draws the post and project covers as schematics from the `:root` design tokens (needs `pip install cairosvg Pillow`). Deterministic and offline: same slug, same drawing, no API. This is what produced the covers in the repo
+- `tools/draw-covers.py` — draws the post and project covers as schematics from the `:root` design tokens (needs `pip install cairosvg Pillow`). Deterministic and offline: same slug, same drawing, no API. This is what produced the covers in the repo. `tools/draw-covers.py og` redraws the two social cards in `assets/img/`; they are set in Noto Serif Bold (`assets/fonts/og-title.ttf`, OFL-1.1, licence alongside it) — a build-time asset that never reaches a visitor
 - `tools/generate-diagrams.py` — converts ASCII diagrams in posts to Mermaid shortcodes via the Claude API (needs `ANTHROPIC_API_KEY`)
 - `tools/render-diagrams.py` — renders the mermaid blocks to static SVG (see below); needs mermaid-cli
 - `tools/check-forks.sh` — compares the forked theme layouts against their recorded upstream versions

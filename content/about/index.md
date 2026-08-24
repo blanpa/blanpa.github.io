@@ -97,7 +97,7 @@ date: 2026-03-05
     </div>
   </div>
   <div class="tech-arch__connector">
-    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="#00c8a5" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="#00c8a5" stroke-width="2" fill="none" opacity="0.5"/></svg>
+    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="currentColor" stroke-width="2" fill="none" opacity="0.5"/></svg>
   </div>
   <div class="tech-arch__layer">
     <span class="tech-arch__label">Edge Gateway</span>
@@ -110,7 +110,7 @@ date: 2026-03-05
     </div>
   </div>
   <div class="tech-arch__connector">
-    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="#00a8dd" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="#00a8dd" stroke-width="2" fill="none" opacity="0.5"/></svg>
+    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="currentColor" stroke-width="2" fill="none" opacity="0.5"/></svg>
   </div>
   <div class="tech-arch__layer">
     <span class="tech-arch__label">Messaging</span>
@@ -121,7 +121,7 @@ date: 2026-03-05
     </div>
   </div>
   <div class="tech-arch__connector">
-    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="#0088cc" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="#0088cc" stroke-width="2" fill="none" opacity="0.5"/></svg>
+    <svg width="40" height="32" viewBox="0 0 40 32"><path d="M20 0v32" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" opacity="0.5"/><path d="M10 22l10 10 10-10" stroke="currentColor" stroke-width="2" fill="none" opacity="0.5"/></svg>
   </div>
   <div class="tech-arch__layer">
     <span class="tech-arch__label">Cloud & Analytics</span>

@@ -12,6 +12,11 @@
 </div>
 
 <style>
+/* This page never got the ink-and-paper pass: it still had the mint-to-blue
+   gradient on the numerals and the primary button, mint hover tints, weight
+   900 and a lift-on-hover — the whole vocabulary the redesign removed
+   everywhere else. It is styled off the tokens now, and the buttons are the
+   same two the About hero uses. */
 .error-404 {
   display: flex;
   justify-content: center;
@@ -26,25 +31,22 @@
 }
 .error-404__code {
   display: block;
+  font-family: var(--font-display);
   font-size: 5rem;
-  font-weight: 900;
+  font-weight: 600;
   line-height: 1;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin-bottom: 0.5rem;
+  color: var(--ink-faint);
 }
 .error-404__content h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--text-2xl);
   margin: 0 0 0.75rem 0;
 }
 .error-404__content p {
   margin: 0 0 2rem;
-  opacity: 0.6;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  color: var(--ink-soft);
+  font-size: var(--text-base);
+  line-height: 1.6;
 }
 .error-404__actions {
   display: flex;
@@ -52,31 +54,32 @@
   justify-content: center;
 }
 .error-404__btn {
-  padding: 0.6rem 1.5rem;
-  border-radius: 10px;
-  font-size: 0.88rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
   text-decoration: none;
-  transition: all 0.25s ease;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: inherit;
-}
-.error-404__btn:hover {
-  border-color: rgba(0, 200, 165, 0.3);
-  background: rgba(0, 200, 165, 0.06);
+  transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
+  border: 1px solid rgb(var(--accent-rgb) / 0.4);
+  color: var(--accent);
 }
 .error-404__btn--primary {
-  background: linear-gradient(135deg, #00c8a5, #0099cc);
-  color: #0a0a0a;
-  border: none;
-  font-weight: 700;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
 }
-.error-404__btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 200, 165, 0.25);
-}
-:root:not(.dark) .error-404__btn {
-  border-color: rgba(0, 0, 0, 0.1);
+@media (hover: hover) {
+  .error-404__btn:hover {
+    background: rgb(var(--accent-rgb) / 0.12);
+    transform: translateY(-1px);
+  }
+  .error-404__btn--primary:hover {
+    background: var(--accent);
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
 }
 @media (max-width: 500px) {
   .error-404__content { padding: 2rem 1.5rem; }
