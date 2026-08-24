@@ -5,5 +5,5 @@ description: "IIoT Software Developer — Building industrial connectivity solut
 # stays in content; the template only decides where it goes.
 hero:
   title: "Shop-floor signals,<br>cloud-ready data."
-  lede: 'I am <strong>blanpa</strong>, an IIoT developer building the layer between machines and the systems that need their data — open-source Node-RED modules from edge gateway to cloud, fluent in <span class="rotor" data-rotor="OPC-UA|Siemens S7|Allen-Bradley CIP|NATS|Kafka">OPC-UA</span>'
+  lede: 'I am <strong>blanpa</strong>, an IIoT developer building the layer between machines and the systems that need their data — open-source Node-RED modules from edge gateway to cloud, fluent in OPC-UA, Siemens S7, Allen-Bradley CIP, NATS and Kafka.'
 ---

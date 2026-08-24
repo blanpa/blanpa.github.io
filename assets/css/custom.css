@@ -46,23 +46,19 @@
 
 /* ==============================================
    TYPOGRAPHY — self-hosted (GDPR-safe, no CDN)
-   Space Grotesk: display/headings/numbers.
-   JetBrains Mono: technical micro-labels.
+
+   Display is a serif, and it is a system stack: every OS ships one of
+   these, so headings cost zero bytes and render on first paint. That is
+   also the point aesthetically — a geometric display sans (Space Grotesk,
+   Poppins, Sora) is the house face of every generated portfolio, and the
+   reason this site read as one. A book serif over a plain UI sans is the
+   register of something written rather than assembled.
+
+   JetBrains Mono stays, but only where the content is genuinely machine
+   text: versions, package names, download figures, code. Using mono as
+   decoration — uppercase, letterspaced, on ordinary labels — was the
+   other half of the problem.
    ============================================== */
-@font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/space-grotesk-500.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/space-grotesk-700.woff2") format("woff2");
-}
 @font-face {
   font-family: "JetBrains Mono";
   font-style: normal;
@@ -82,70 +78,94 @@
    DESIGN TOKENS
    ============================================== */
 :root {
-  /* Accent — one colour, used solid. (The old teal→blue gradient washes
-     read as 2022 template aesthetics; solid reads calmer and passes
-     contrast checks.) */
-  --accent: #00c8a5;
-  --accent-2: #0099cc;
-  --accent-grad: var(--accent);
-  --accent-ink: #04211b; /* dark text on accent surfaces */
-  /* Accent for light backgrounds. Dark enough that body-sized text on white
-     clears WCAG AA (4.5:1) — #008a70 measured 4.31:1 and did not. */
-  --accent-on-light: #007a63;
+  /* Ink on paper. The old palette was one saturated mint (#00c8a5) on
+     near-black, applied to every border, label, number and chip — the
+     colour was doing the work that size and spacing should do. The accent
+     here is an oxide that reads industrial without glowing, and it appears
+     only on links, the one primary button, and the current nav item.
+     --accent-rgb feeds rgb(... / alpha) for the few tinted surfaces. */
+  --accent: #d9744a;
+  --accent-rgb: 217 116 74;
+  --accent-ink: #1a0e07; /* text on accent-filled surfaces */
+  --accent-on-light: #9c3d18; /* legacy alias, kept: 28 call sites */
+
+  /* Surfaces — dark is the base, light overrides below. */
+  --paper: #16171a;
+  --paper-raised: #1d1e22;
+  --ink: #e7e4de;
+  --ink-soft: #9c988f;
+  --ink-faint: #6e6a63;
+  --rule: #2c2d31;
+  --rule-strong: #43444a;
 
   /* Fonts */
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Iowan Old Style", Charter, "Bitstream Charter",
+    "Sitka Text", Cambria, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  /* Type scale (rem — scales with user font settings) */
-  --text-xs: 0.78rem;
-  --text-sm: 0.9rem;
-  --text-base: 1rem;
-  --text-lg: 1.15rem;
-  --text-xl: 1.4rem;
+  /* Type scale. Body is 17px: this site is read, not scanned. */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.375rem;
   --text-2xl: 1.75rem;
   --text-3xl: 2.25rem;
+  --text-display: clamp(2.4rem, 1.6rem + 3.2vw, 3.75rem);
 
-  /* Surfaces */
-  --surface: rgba(255, 255, 255, 0.03);
-  --surface-hover: rgba(255, 255, 255, 0.07);
-  --border-soft: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.25);
+  /* Geometry. Near-square corners and no shadows: the pill-and-glass
+     vocabulary is what made every element look like the same component. */
+  --radius-sm: 2px;
+  --radius: 3px;
+  --radius-lg: 4px;
+
+  /* Legacy aliases so the component sections below keep resolving. */
+  --surface: rgba(255, 255, 255, 0.025);
+  --surface-hover: rgba(255, 255, 255, 0.05);
+  --border-soft: var(--rule);
+  --border-strong: var(--rule-strong);
 }
 :root:not(.dark) {
-  --surface: rgba(0, 0, 0, 0.02);
-  --surface-hover: rgba(0, 0, 0, 0.04);
-  --border-soft: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.16);
+  --accent: #9c3d18;
+  --accent-rgb: 156 61 24;
+  --accent-ink: #ffffff;
+  --accent-on-light: #9c3d18;
+
+  --paper: #faf8f4;
+  --paper-raised: #ffffff;
+  --ink: #1b1a17;
+  --ink-soft: #5c584f;
+  --ink-faint: #8a857a;
+  --rule: #e2ddd3;
+  --rule-strong: #c7c1b4;
+
+  --surface: rgba(0, 0, 0, 0.015);
+  --surface-hover: rgba(0, 0, 0, 0.035);
+  --border-soft: var(--rule);
+  --border-strong: var(--rule-strong);
 }
 
-/* Display face for headings and stat numbers; body copy stays on the
-   theme's system stack for performance and neutrality. */
-h1, h2, h3, h4,
-.home-proof__num,
-.about-stat__num,
-.process-step__num {
+/* Headings are the serif; body copy stays on the theme's system sans so
+   the two registers stay distinct. Optical sizing: the serif needs less
+   negative tracking than the geometric sans it replaces. */
+h1, h2, h3, h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.18;
 }
+h1 { font-size: var(--text-3xl); }
 
-/* Technical micro-labels get the mono face — the "engineering drawing"
-   register that fits the industrial subject matter. */
-.home-proof__label,
-.home-proof__chip,
-.project-tag,
-.skill-group__title,
-.timeline-date,
-.tech-arch__label,
-.about-stat__label,
-.blog-feed-item__meta time,
-.blog-featured__date,
-.blog-featured__badge,
-.project-featured__badge,
-.blog-feed-item__series,
-.npm-stats-table thead th,
-.mermaid-zoom-hint {
+/* Machine text only. Everything that used to be here — section labels,
+   stat captions, tag chips, dates — is ordinary prose and now reads as
+   ordinary prose. */
+.npm-stats-table td:last-child,
+.project-meta__version,
+.project-meta__downloads,
+.github-card__name,
+code, kbd, pre, samp {
   font-family: var(--font-mono);
+  font-variant-ligatures: none;
 }
 
 /* ==============================================
@@ -194,30 +214,22 @@ h1, h2, h3, h4,
   gap: 0.75rem 1.5rem;
   margin-top: 1.9rem;
 }
-/* The button carries `margin: 0 auto 3rem` for the centred profile layout,
-   which pushed it off the row's baseline here. */
 .home-hero__actions .home-contact-btn {
   margin: 0;
 }
 .home-hero__secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  display: inline-block;
+  font-size: var(--text-base);
+  font-weight: 500;
   color: var(--accent);
-  text-decoration: none;
-  transition: gap 0.2s ease;
-}@media (hover: hover) {
-
-  .home-hero__secondary:hover {
-    gap: 0.7rem;
-  }
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgb(var(--accent-rgb) / 0.4);
+  transition: text-decoration-color 0.15s ease;
 }
-:root:not(.dark) .home-hero__secondary {
-  color: var(--accent-on-light);
+@media (hover: hover) {
+  .home-hero__secondary:hover { text-decoration-color: var(--accent); }
 }
 
 .home-hero__links {
@@ -293,261 +305,84 @@ h1, h2, h3, h4,
 /* Evidence strip under the hero: a rule, then the numbers and the protocols
    the site is actually about. Left-aligned to sit with the hero copy rather
    than floating centred beneath it. */
+/* The proof line — a sentence, not a dashboard. The two figures are
+   emphasised by weight and tabular numerals only; colouring them accent
+   turned them into the loudest thing on the page. */
 .home-proof {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  gap: 1.25rem 3rem;
-  margin: 0 0 3rem;
-  padding-top: 1.75rem;
-  border-top: 1px solid var(--border-soft);
-}
-.home-proof__item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
+  max-width: 46rem;
+  margin: 0 0 3.5rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--ink-soft);
 }
 .home-proof__num {
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--accent);
+  font-weight: 650;
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
-:root:not(.dark) .home-proof__num {
-  color: var(--accent-on-light);
-}
-.home-proof__label {
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.72;
-}
-.home-proof__chips {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.4rem;
-  max-width: 30rem;
-}
-.home-proof__chip {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 200, 165, 0.25);
-  background: rgba(0, 200, 165, 0.06);
-  color: var(--accent);
-}
-:root:not(.dark) .home-proof__chip {
-  color: var(--accent-on-light);
-}
 
 /* ==============================================
-   SUPPORT BUTTON (floating)
+   SUPPORT NOTE — footer footnote
+
+   Replaces the floating support button and its panel (~130 lines of fixed
+   positioning, backdrop blur, transform origins and z-index). See
+   layouts/partials/extend-footer.html for why.
    ============================================== */
-/* A secondary action, so it stays quiet: the site's glass surface, a mono
-   micro-label like the rest of the chrome, and the accent carried only by
-   the heart. It should read as part of the site rather than as a Tailwind
-   component someone dropped in, but it must never out-shout "Get in Touch". */
-.support-fab {
-  position: fixed;
-  right: 1.5rem;
-  bottom: 1.5rem;
-  z-index: 9999;
-}
-
-.support-fab__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.7rem 1.15rem;
-  border: 1px solid var(--border-soft);
-  border-radius: 9999px;
-  background: var(--surface);
-  backdrop-filter: blur(10px);
-  color: inherit;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  transition: border-color 0.25s ease, background 0.25s ease,
-              box-shadow 0.25s ease, transform 0.25s ease;
-}
-:root:not(.dark) .support-fab__btn {
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-}@media (hover: hover) {
-
-  .support-fab__btn:hover {
-    border-color: rgba(0, 200, 165, 0.45);
-    background: var(--surface-hover);
-    transform: translateY(-1px);
-  }
-}
-.support-fab__heart {
-  color: var(--accent);
-  font-size: 1rem;
-  line-height: 1;
-  transition: transform 0.3s ease;
-}
-:root:not(.dark) .support-fab__heart { color: var(--accent-on-light); }
-.support-fab.is-open .support-fab__heart { transform: rotate(45deg); }
-
-/* Panel: same card treatment as the rest of the site, sized to its content
-   so "GitHub Sponsors" and "Buy Me a Coffee" stop wrapping onto two lines. */
-.support-fab__panel {
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + 0.6rem);
-  min-width: max-content;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  background: var(--surface);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px) scale(0.98);
-  transform-origin: bottom right;
-  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.22s;
-}
-:root:not(.dark) .support-fab__panel {
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
-}
-.support-fab.is-open .support-fab__panel {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-}
-
-/* Decouples a section from the one that follows it, where adjacency alone
-   would read as a claim. Deliberately quiet: it is a clarification, not a
-   disclaimer banner. */
-.section-note {
-  margin: -0.35rem 0 1.4rem;
-  padding-left: 0.85rem;
-  border-left: 2px solid var(--border-soft);
+.support-note {
+  max-width: 44rem;
+  margin: 2.5rem 0 0;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
   font-size: var(--text-sm);
-  line-height: 1.55;
-  opacity: 0.72;
+  line-height: 1.65;
+  color: var(--ink-soft);
 }
-
-/* Says what the money is for: the upkeep of the packages, not the person. */
-.support-fab__intro {
-  margin: 0;
-  padding: 0.7rem 1.1rem 0.55rem;
-  max-width: 15rem;
-  font-size: var(--text-xs);
-  line-height: 1.45;
-  opacity: 0.6;
-  border-bottom: 1px solid var(--border-soft);
+.support-note a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgb(var(--accent-rgb) / 0.4);
 }
-
-.support-fab__item {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.7rem 1.1rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: inherit;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--border-soft);
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.support-fab__item:last-child { border-bottom: 0; }
-.support-fab__item svg {
-  width: 1.1rem;
-  height: 1.1rem;
-  flex-shrink: 0;
-  opacity: 0.7;
-  transition: opacity 0.2s ease, color 0.2s ease;
-}@media (hover: hover) {
-
-  .support-fab__item:hover {
-    background: var(--surface-hover);
-    color: var(--accent);
-  }
-  :root:not(.dark) .support-fab__item:hover { color: var(--accent-on-light); }
-  .support-fab__item:hover svg { opacity: 1; }
-}
-
-/* Phones: heart only. A donation prompt should not be the largest permanent
-   element on a screen whose primary action is "Get in Touch". */
-@media (max-width: 640px) {
-  .support-fab { right: 1rem; bottom: 1rem; }
-  .support-fab__btn { padding: 0.75rem; }
-  .support-fab__label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-  }
-  .support-fab__panel { min-width: 13rem; }
+@media (hover: hover) {
+  .support-note a:hover { text-decoration-color: var(--accent); }
 }
 
 /* ==============================================
-   GET IN TOUCH — primary CTA button
+   GET IN TOUCH — the one primary action
+
+   Was an accent-tinted gradient with a translucent accent border that
+   filled in on hover, plus a lift and a coloured drop shadow. A primary
+   button can simply be a filled rectangle; the outline-that-fills pattern
+   made the site's single most important control look provisional.
    ============================================== */
 .home-contact-btn {
-  display: flex;
+  display: inline-flex;
   width: fit-content;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  margin: 0 auto 3rem;
-  padding: 1rem 3rem;
-  border: 1px solid rgba(0, 200, 165, 0.3);
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(0, 200, 165, 0.08), rgba(0, 153, 204, 0.08));
-  color: var(--accent);
+  gap: 0.55rem;
+  margin: 0 0 3rem;
+  padding: 0.8rem 1.6rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--accent-ink);
   font-family: inherit;
-  font-size: var(--text-lg);
-  font-weight: 700;
+  font-size: var(--text-base);
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}@media (hover: hover) {
-
+  transition: background 0.15s ease, color 0.15s ease;
+}
+@media (hover: hover) {
   .home-contact-btn:hover {
-    background: var(--accent);
-    color: var(--accent-ink);
-    border-color: transparent;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 200, 165, 0.25);
+    background: transparent;
+    color: var(--accent);
   }
 }
-.home-contact-btn svg {
-  flex-shrink: 0;
-}
-:root:not(.dark) .home-contact-btn {
-  border-color: rgba(0, 160, 130, 0.25);
-  background: linear-gradient(135deg, rgba(0, 200, 165, 0.06), rgba(0, 153, 204, 0.06));
-  color: #008a70;
-}@media (hover: hover) {
-
-  :root:not(.dark) .home-contact-btn:hover {
-    background: var(--accent-on-light);
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 8px 30px rgba(0, 160, 130, 0.2);
-  }
-}
+.home-contact-btn svg { flex-shrink: 0; }
 
 /* ==============================================
    CONTACT MODAL
@@ -585,16 +420,16 @@ h1, h2, h3, h4,
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: linear-gradient(180deg, #161616 0%, #111 100%);
   box-shadow:
-    0 0 0 1px rgba(0, 200, 165, 0.08),
+    0 0 0 1px rgb(var(--accent-rgb) / 0.08),
     0 24px 80px rgba(0, 0, 0, 0.6),
-    0 0 60px rgba(0, 200, 165, 0.05);
+    0 0 60px rgb(var(--accent-rgb) / 0.05);
   animation: modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 :root:not(.dark) .contact-dialog__inner {
   background: linear-gradient(180deg, #fff 0%, #f8f8f8 100%);
   border-color: rgba(0, 0, 0, 0.08);
   box-shadow:
-    0 0 0 1px rgba(0, 160, 130, 0.08),
+    0 0 0 1px rgb(var(--accent-rgb) / 0.08),
     0 24px 80px rgba(0, 0, 0, 0.15);
 }
 
@@ -673,11 +508,11 @@ h1, h2, h3, h4,
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #00c8a5;
+  color: var(--accent);
   margin-bottom: 0.4rem;
 }
 :root:not(.dark) .contact-dialog .form-group label {
-  color: #008a70;
+  color: var(--accent);
 }
 
 .contact-dialog .form-group input,
@@ -698,7 +533,7 @@ h1, h2, h3, h4,
 }
 
 .contact-dialog .form-group select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300c8a5' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23908c84' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
@@ -717,8 +552,8 @@ h1, h2, h3, h4,
 .contact-dialog .form-group input:focus,
 .contact-dialog .form-group select:focus,
 .contact-dialog .form-group textarea:focus {
-  border-color: #00c8a5;
-  box-shadow: 0 0 0 3px rgba(0, 200, 165, 0.15), 0 4px 12px rgba(0, 200, 165, 0.08);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.15), 0 4px 12px rgb(var(--accent-rgb) / 0.08);
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -739,7 +574,7 @@ h1, h2, h3, h4,
 :root:not(.dark) .contact-dialog .form-group select:focus,
 :root:not(.dark) .contact-dialog .form-group textarea:focus {
   background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(0, 160, 130, 0.12), 0 4px 12px rgba(0, 160, 130, 0.06);
+  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.12), 0 4px 12px rgb(var(--accent-rgb) / 0.06);
 }
 
 .contact-dialog .form-group textarea {
@@ -762,8 +597,8 @@ h1, h2, h3, h4,
 }@media (hover: hover) {
 
   .contact-dialog .contact-submit:hover {
-    background: #00ddb8;
-    box-shadow: 0 6px 24px rgba(0, 200, 165, 0.3);
+    background: var(--accent);
+    box-shadow: 0 6px 24px rgb(var(--accent-rgb) / 0.3);
     transform: translateY(-2px);
   }
 }
@@ -780,7 +615,7 @@ h1, h2, h3, h4,
   min-height: 1.4em;
 }
 .contact-dialog .form-status--success {
-  color: #00c8a5;
+  color: var(--accent);
 }
 .contact-dialog .form-status--error {
   color: #ff6b6b;
@@ -810,93 +645,88 @@ h1, h2, h3, h4,
   margin: 0 0 2.5rem;
   text-align: left;
 }
+/* The section label. Was mono, uppercase, letterspaced and accent-coloured
+   — the "kicker" treatment applied to every heading on the site until it
+   stopped signalling anything. It is a small heading, so it is set as one. */
 .home-featured__kicker {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  margin-bottom: 0.6rem;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  margin-bottom: 0.25rem;
-}
-:root:not(.dark) .home-featured__kicker {
-  color: var(--accent-on-light);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
 }
 .home-featured .project-featured {
   margin: 0.5rem 0 0.75rem;
 }
 .home-featured__all {
   display: inline-block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-decoration: none;
+  font-size: var(--text-base);
+  font-weight: 500;
   color: var(--accent);
-}@media (hover: hover) {
-
-  .home-featured__all:hover {
-    text-decoration: underline;
-  }
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgb(var(--accent-rgb) / 0.4);
 }
-:root:not(.dark) .home-featured__all {
-  color: var(--accent-on-light);
+@media (hover: hover) {
+  .home-featured__all:hover { text-decoration-color: var(--accent); }
 }
 
 /* ==============================================
-   GLASSMORPHISM BASE — shared card style
+   CARD BASE — a hairline, not a pane of glass
+
+   The .glass name is kept because ~20 templates reference the class; what
+   it does is the opposite now. Translucent fills, 16px corners and a lift
+   on hover made every block on the site the same object. A card here is a
+   rule and some space, and hover changes only what you can click.
    ============================================== */
 .glass {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}@media (hover: hover) {
-
-  .glass:hover {
-    border-color: rgba(0, 200, 165, 0.35);
-    background: rgba(255, 255, 255, 0.07);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 200, 165, 0.1);
-  }
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: transparent;
+  transition: border-color 0.15s ease;
 }
-
-:root:not(.dark) .glass {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
-}@media (hover: hover) {
-
-  :root:not(.dark) .glass:hover {
-    border-color: rgba(0, 200, 165, 0.4);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .glass:hover {
+    border-color: var(--rule-strong);
   }
 }
 
 /* ==============================================
-   TECH TAGS / BADGES
+   TECH TAGS — a list, set as a list
+
+   Was: uppercase letterspaced pills, tinted and outlined in the accent,
+   one per technology. Eight of them under a project title is eight
+   buttons that do nothing. They are metadata, so they are set as a quiet
+   line of metadata, separated by rules rather than boxed individually.
    ============================================== */
 .project-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.75rem;
+  align-items: baseline;
+  gap: 0 0.5rem;
+  margin-top: 0.9rem;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
 }
 .project-tag {
-  display: inline-block;
-  padding: 0.3rem 0.8rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  border-radius: 9999px;
-  background: rgba(0, 200, 165, 0.15);
-  color: #00d4ad;
-  border: 1px solid rgba(0, 200, 165, 0.3);
-  text-transform: uppercase;
+  display: inline;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-weight: 400;
+  font-size: inherit;
+  letter-spacing: 0;
+  text-transform: none;
 }
-:root:not(.dark) .project-tag {
-  background: rgba(0, 160, 130, 0.1);
-  color: #008a70;
-  border-color: rgba(0, 160, 130, 0.25);
+.project-tag:not(:last-child)::after {
+  content: " ·";
+  color: var(--ink-faint);
 }
 
 /* ==============================================
@@ -917,10 +747,10 @@ h1, h2, h3, h4,
 }@media (hover: hover) {
 
   .project-featured:hover {
-    border-color: rgba(0, 200, 165, 0.35);
+    border-color: rgb(var(--accent-rgb) / 0.35);
     background: rgba(255, 255, 255, 0.07);
     transform: translateY(-4px);
-    box-shadow: 0 16px 50px rgba(0, 200, 165, 0.12);
+    box-shadow: 0 16px 50px rgb(var(--accent-rgb) / 0.12);
   }
 }
 :root:not(.dark) .project-featured {
@@ -929,7 +759,7 @@ h1, h2, h3, h4,
 }@media (hover: hover) {
 
   :root:not(.dark) .project-featured:hover {
-    border-color: rgba(0, 200, 165, 0.4);
+    border-color: rgb(var(--accent-rgb) / 0.4);
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
   }
@@ -957,15 +787,17 @@ h1, h2, h3, h4,
 .project-featured__badge {
   display: inline-block;
   width: fit-content;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border-radius: 9999px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-faint);
 }
 .project-featured__content h2 {
   font-size: 1.75rem;
@@ -1093,7 +925,7 @@ h1, h2, h3, h4,
   transition: border-color 0.25s ease, transform 0.25s ease;
 }@media (hover: hover) {
 
-  .case-card:hover { border-color: rgba(0, 200, 165, 0.35); transform: translateY(-2px); }
+  .case-card:hover { border-color: rgb(var(--accent-rgb) / 0.35); transform: translateY(-2px); }
 }
 .case-card__img { aspect-ratio: 16 / 9; overflow: hidden; }
 .case-card__img img { width: 100%; height: 100%; object-fit: cover; }
@@ -1241,29 +1073,28 @@ h1, h2, h3, h4,
   gap: 0.55rem;
   margin: 1.5rem 0 2rem;
 }
+/* The tag index is the one place where a tag really is a control you
+   click, so it keeps a box — squared off, and it borrows the accent only
+   on hover rather than wearing it at rest. */
 .tag-cloud__chip {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.45rem 0.95rem;
-  border: 1px solid var(--border-soft);
-  border-radius: 9999px;
-  background: var(--surface);
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: transparent;
   color: inherit;
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: 400;
   text-decoration: none;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease,
-              transform 0.2s ease;
-}@media (hover: hover) {
-
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+@media (hover: hover) {
   .tag-cloud__chip:hover {
-    border-color: rgba(0, 200, 165, 0.45);
-    background: var(--surface-hover);
+    border-color: var(--accent);
     color: var(--accent);
-    transform: translateY(-1px);
   }
-  :root:not(.dark) .tag-cloud__chip:hover { color: var(--accent-on-light); }
 }
 .tag-cloud__count {
   font-family: var(--font-mono);
@@ -1451,10 +1282,10 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   .project-card:hover {
-    border-color: rgba(0, 200, 165, 0.35);
+    border-color: rgb(var(--accent-rgb) / 0.35);
     background: rgba(255, 255, 255, 0.07);
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 200, 165, 0.1);
+    box-shadow: 0 12px 40px rgb(var(--accent-rgb) / 0.1);
   }
 }
 :root:not(.dark) .project-card {
@@ -1463,7 +1294,7 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   :root:not(.dark) .project-card:hover {
-    border-color: rgba(0, 200, 165, 0.4);
+    border-color: rgb(var(--accent-rgb) / 0.4);
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
   }
@@ -1526,10 +1357,10 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   .blog-featured:hover {
-    border-color: rgba(0, 200, 165, 0.35);
+    border-color: rgb(var(--accent-rgb) / 0.35);
     background: rgba(255, 255, 255, 0.07);
     transform: translateY(-4px);
-    box-shadow: 0 16px 50px rgba(0, 200, 165, 0.12);
+    box-shadow: 0 16px 50px rgb(var(--accent-rgb) / 0.12);
   }
 }
 :root:not(.dark) .blog-featured {
@@ -1538,7 +1369,7 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   :root:not(.dark) .blog-featured:hover {
-    border-color: rgba(0, 200, 165, 0.4);
+    border-color: rgb(var(--accent-rgb) / 0.4);
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
   }
@@ -1572,15 +1403,17 @@ main details > summary[class*="bg-primary-"] {
 .blog-featured__badge {
   display: inline-block;
   width: fit-content;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border-radius: 9999px;
-  background: var(--accent);
-  color: var(--accent-ink);
   margin-bottom: 0.6rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-faint);
 }
 .blog-featured__date {
   font-size: 0.75rem;
@@ -1642,10 +1475,10 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   .blog-feed-item:hover {
-    border-color: rgba(0, 200, 165, 0.3);
+    border-color: rgb(var(--accent-rgb) / 0.3);
     background: rgba(255, 255, 255, 0.06);
     transform: translateX(6px);
-    box-shadow: 0 6px 25px rgba(0, 200, 165, 0.08);
+    box-shadow: 0 6px 25px rgb(var(--accent-rgb) / 0.08);
   }
 }
 :root:not(.dark) .blog-feed-item {
@@ -1654,7 +1487,7 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   :root:not(.dark) .blog-feed-item:hover {
-    border-color: rgba(0, 200, 165, 0.35);
+    border-color: rgb(var(--accent-rgb) / 0.35);
     background: rgba(255, 255, 255, 0.8);
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
   }
@@ -1699,28 +1532,28 @@ main details > summary[class*="bg-primary-"] {
 .blog-feed-item__meta time {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #00c8a5;
+  color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 :root:not(.dark) .blog-feed-item__meta time {
-  color: #008a70;
+  color: var(--accent);
 }
 .blog-feed-item__series {
   font-size: 0.72rem;
   font-weight: 600;
   padding: 0.15rem 0.55rem;
   border-radius: 9999px;
-  background: rgba(0, 153, 204, 0.12);
-  color: #66ccee;
-  border: 1px solid rgba(0, 153, 204, 0.2);
+  background: rgb(var(--accent-rgb) / 0.12);
+  color: var(--accent);
+  border: 1px solid rgb(var(--accent-rgb) / 0.2);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 :root:not(.dark) .blog-feed-item__series {
-  background: rgba(0, 120, 180, 0.08);
-  color: #0078b4;
-  border-color: rgba(0, 120, 180, 0.2);
+  background: rgb(var(--accent-rgb) / 0.08);
+  color: var(--accent);
+  border-color: rgb(var(--accent-rgb) / 0.2);
 }
 
 .blog-feed-item__body h3 {
@@ -1824,78 +1657,40 @@ main details > summary[class*="bg-primary-"] {
 }
 
 .skill-group__title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #00c8a5;
-  margin: 0 0 0.75rem 0;
-}
-:root:not(.dark) .skill-group__title {
-  color: #008a70;
+  margin: 0 0 0.4rem;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
 }
 
+/* Skills as running text. Fifty outlined chips across four groups turned
+   the About page into a tag cloud of itself; a comma-separated line says
+   the same thing in a quarter of the height and reads at a glance. */
 .skill-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  display: block;
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--ink-soft);
 }
-
 .skill-chip {
-  display: inline-block;
-  padding: 0.3rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #e5e5e5;
-  transition: all 0.2s ease;
-}@media (hover: hover) {
-
-  .skill-chip:hover {
-    background: rgba(0, 200, 165, 0.15);
-    border-color: rgba(0, 200, 165, 0.3);
-    color: #00c8a5;
-  }
+  display: inline;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: 400;
 }
-:root:not(.dark) .skill-chip {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.1);
-  color: #333;
-}@media (hover: hover) {
-
-  :root:not(.dark) .skill-chip:hover {
-    background: rgba(0, 160, 130, 0.1);
-    border-color: rgba(0, 160, 130, 0.3);
-    color: #008a70;
-  }
+.skill-chip:not(:last-child)::after {
+  content: ",";
+  color: var(--ink-faint);
 }
-
-.chip--proto {
-  background: rgba(0, 153, 204, 0.12);
-  border-color: rgba(0, 153, 204, 0.2);
-  color: #66ccee;
-}@media (hover: hover) {
-
-  .chip--proto:hover {
-    background: rgba(0, 153, 204, 0.25);
-    border-color: rgba(0, 153, 204, 0.4);
-    color: #88ddff;
-  }
-}
-:root:not(.dark) .chip--proto {
-  background: rgba(0, 120, 180, 0.08);
-  border-color: rgba(0, 120, 180, 0.2);
-  color: #0078b4;
-}@media (hover: hover) {
-
-  :root:not(.dark) .chip--proto:hover {
-    background: rgba(0, 120, 180, 0.15);
-    border-color: rgba(0, 120, 180, 0.35);
-    color: #006090;
-  }
-}
+.chip--proto { color: inherit; background: none; border: 0; }
+a.skill-chip { text-decoration: none; color: inherit; }
 
 /* ==============================================
    TIMELINE — experience section
@@ -1912,8 +1707,7 @@ main details > summary[class*="bg-primary-"] {
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(180deg, #00c8a5, rgba(0, 200, 165, 0.15));
-  border-radius: 2px;
+  background: var(--rule);
 }
 
 .timeline-item {
@@ -1932,7 +1726,7 @@ main details > summary[class*="bg-primary-"] {
   height: 16px;
   border-radius: 50%;
   background: #0a0a0a;
-  border: 3px solid #00c8a5;
+  border: 3px solid var(--accent);
   z-index: 1;
   transform: translateX(-0.5px);
 }
@@ -1961,11 +1755,11 @@ main details > summary[class*="bg-primary-"] {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #00c8a5;
+  color: var(--accent);
   margin-bottom: 0.4rem;
 }
 :root:not(.dark) .timeline-date {
-  color: #008a70;
+  color: var(--accent);
 }
 
 /* ==============================================
@@ -1977,49 +1771,36 @@ main details > summary[class*="bg-primary-"] {
   margin: 1rem 0;
 }
 
+/* Support links on the About page. Same reasoning as the footer note: a
+   funding link is a footnote, not three call-to-action cards. */
+.support-cards {
+  display: block;
+  font-size: var(--text-base);
+  line-height: 1.7;
+}
 .support-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.75rem;
+  display: inline;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgb(var(--accent-rgb) / 0.4);
+}
+.support-card:not(:last-child)::after {
+  content: " ·";
+  color: var(--ink-faint);
   text-decoration: none;
-  color: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}@media (hover: hover) {
-
+}
+.support-card svg,
+.support-card__icon { display: none; }
+@media (hover: hover) {
   .support-card:hover {
-    border-color: rgba(0, 200, 165, 0.35);
-    background: rgba(255, 255, 255, 0.07);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0, 200, 165, 0.1);
-  }
-}
-:root:not(.dark) .support-card {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
-}@media (hover: hover) {
-
-  :root:not(.dark) .support-card:hover {
-    border-color: rgba(0, 200, 165, 0.4);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  }
-}
-
-.support-card__icon {
-  font-size: 1.5rem;
-}
-.support-card__label {
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-@media (max-width: 640px) {
-  .support-cards {
-    flex-direction: column;
+    transform: none;
+    text-decoration-color: var(--accent);
   }
 }
 
@@ -2140,11 +1921,11 @@ main details > summary[class*="bg-primary-"] {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #00c8a5;
+  color: var(--accent);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 :root:not(.dark) .npm-stats-table thead th {
-  color: #008a70;
+  color: var(--accent);
   border-bottom-color: rgba(0, 0, 0, 0.06);
 }
 
@@ -2166,12 +1947,12 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   .npm-stats-table tbody tr:hover {
-    background: rgba(0, 200, 165, 0.06);
+    background: rgb(var(--accent-rgb) / 0.06);
   }
 }
 
 .npm-stats-table tbody td a {
-  color: #00c8a5;
+  color: var(--accent);
   font-weight: 600;
   text-decoration: none;
 }@media (hover: hover) {
@@ -2181,7 +1962,7 @@ main details > summary[class*="bg-primary-"] {
   }
 }
 :root:not(.dark) .npm-stats-table tbody td a {
-  color: #008a70;
+  color: var(--accent);
 }
 
 .npm-stats-table .npm-dl {
@@ -2240,103 +2021,29 @@ main details > summary[class*="bg-primary-"] {
   gap: 0.5rem;
 }
 
+/* The nodes were four tinted pill families — orange edge, green gateway,
+   cyan messaging, purple cloud — so a diagram whose actual message is
+   "data moves upward through four tiers" spent its colour budget on the
+   tiers instead. The tiers are already expressed by position and by the
+   arrows between them, so the nodes are now uniform and the diagram reads
+   as one drawing rather than four palettes. */
 .tech-arch__node {
-  padding: 0.4rem 0.9rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  border-radius: 10px;
-  transition: all 0.25s ease;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-soft);
   cursor: default;
-}@media (hover: hover) {
-
-  .tech-arch__node:hover {
-    transform: translateY(-2px);
-  }
 }
-
-/* Layer colors */
-.node--edge {
-  background: rgba(255, 140, 50, 0.12);
-  border: 1px solid rgba(255, 140, 50, 0.25);
-  color: #ff9944;
-}@media (hover: hover) {
-
-  .node--edge:hover {
-    background: rgba(255, 140, 50, 0.2);
-    box-shadow: 0 4px 15px rgba(255, 140, 50, 0.15);
-  }
-}
-:root:not(.dark) .node--edge {
-  background: rgba(200, 100, 20, 0.08);
-  color: #c06020;
-  border-color: rgba(200, 100, 20, 0.2);
-}
-
-.node--mid {
-  background: rgba(0, 200, 165, 0.12);
-  border: 1px solid rgba(0, 200, 165, 0.25);
-  color: #00c8a5;
-}@media (hover: hover) {
-
-  .node--mid:hover {
-    background: rgba(0, 200, 165, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 200, 165, 0.15);
-  }
-}
-:root:not(.dark) .node--mid {
-  background: rgba(0, 160, 130, 0.08);
-  color: #008a70;
-  border-color: rgba(0, 160, 130, 0.2);
-}
-
-.node--msg {
-  background: rgba(0, 168, 220, 0.12);
-  border: 1px solid rgba(0, 168, 220, 0.25);
-  color: #44bbee;
-}@media (hover: hover) {
-
-  .node--msg:hover {
-    background: rgba(0, 168, 220, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 168, 220, 0.15);
-  }
-}
-:root:not(.dark) .node--msg {
-  background: rgba(0, 120, 180, 0.08);
-  color: #0078b4;
-  border-color: rgba(0, 120, 180, 0.2);
-}
-
+.node--edge,
+.node--mid,
+.node--msg,
 .node--cloud {
-  background: rgba(100, 80, 220, 0.12);
-  border: 1px solid rgba(100, 80, 220, 0.25);
-  color: #9988ee;
-}@media (hover: hover) {
-
-  .node--cloud:hover {
-    background: rgba(100, 80, 220, 0.2);
-    box-shadow: 0 4px 15px rgba(100, 80, 220, 0.15);
-  }
-}
-:root:not(.dark) .node--cloud {
-  background: rgba(80, 60, 180, 0.08);
-  color: #5040b0;
-  border-color: rgba(80, 60, 180, 0.2);
-}
-
-.tech-arch__connector {
-  display: flex;
-  justify-content: center;
-  margin: 0.4rem 0;
-}
-
-@media (max-width: 640px) {
-  .tech-arch {
-    padding: 1.25rem;
-  }
-  .tech-arch__node {
-    font-size: 0.72rem;
-    padding: 0.3rem 0.7rem;
-  }
+  background: transparent;
+  border-color: var(--rule);
+  color: var(--ink-soft);
 }
 
 /* ==============================================
@@ -2358,9 +2065,9 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   .github-card-wrapper > a > div:hover {
-    border-color: rgba(0, 200, 165, 0.4) !important;
+    border-color: rgb(var(--accent-rgb) / 0.4) !important;
     background: rgba(20, 27, 36, 0.8) !important;
-    box-shadow: 0 12px 40px rgba(0, 200, 165, 0.15);
+    box-shadow: 0 12px 40px rgb(var(--accent-rgb) / 0.15);
     transform: translateY(-2px);
   }
 }
@@ -2403,7 +2110,7 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   :root:not(.dark) .github-card-wrapper > a > div:hover {
-    border-color: rgba(0, 200, 165, 0.4) !important;
+    border-color: rgb(var(--accent-rgb) / 0.4) !important;
     background: rgba(255, 255, 255, 0.95) !important;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   }
@@ -2467,15 +2174,15 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   .blog-filter-chip:hover {
-    border-color: rgba(0, 200, 165, 0.4);
-    color: #00c8a5;
-    background: rgba(0, 200, 165, 0.08);
+    border-color: rgb(var(--accent-rgb) / 0.4);
+    color: var(--accent);
+    background: rgb(var(--accent-rgb) / 0.08);
   }
 }
 .blog-filter-chip.is-active {
-  border-color: #00c8a5;
-  background: rgba(0, 200, 165, 0.15);
-  color: #00c8a5;
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 0.15);
+  color: var(--accent);
 }
 .blog-filter-chip__count {
   font-size: 0.7rem;
@@ -2488,15 +2195,15 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   :root:not(.dark) .blog-filter-chip:hover {
-    border-color: rgba(0, 160, 130, 0.4);
-    color: #008a70;
-    background: rgba(0, 160, 130, 0.08);
+    border-color: rgb(var(--accent-rgb) / 0.4);
+    color: var(--accent);
+    background: rgb(var(--accent-rgb) / 0.08);
   }
 }
 :root:not(.dark) .blog-filter-chip.is-active {
-  border-color: #008a70;
-  background: rgba(0, 160, 130, 0.12);
-  color: #008a70;
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 0.12);
+  color: var(--accent);
 }
 
 /* ==============================================
@@ -2522,7 +2229,7 @@ main details > summary[class*="bg-primary-"] {
 }@media (hover: hover) {
 
   #site-footer a:hover {
-    color: #00d4ad !important;
+    color: var(--accent) !important;
   }
 }
 :root:not(.dark) #site-footer p,
@@ -2554,22 +2261,29 @@ main details > summary[class*="bg-primary-"] {
   color: var(--accent-on-light) !important;
 }
 
-/* Links in article prose. The Blowfish noir scheme's primary-600 is a
-   blue-grey that measures 2.73:1 on white — links were the least readable
-   text on the page in light mode. Scoped to prose so heading anchors and
-   card links keep their own styling. */
-:root:not(.dark) .article-content p a,
-:root:not(.dark) .article-content li a,
-:root:not(.dark) .article-content td a,
-:root:not(.dark) .article-content blockquote a {
-  color: var(--accent-on-light);
-  text-decoration-color: rgba(0, 122, 99, 0.4);
-}@media (hover: hover) {
-
-  :root:not(.dark) .article-content p a:hover,
-  :root:not(.dark) .article-content li a:hover,
-  :root:not(.dark) .article-content td a:hover,
-  :root:not(.dark) .article-content blockquote a:hover {
+/* Links in prose. Blowfish's noir scheme uses a blue-grey primary-600 for
+   these, which was both hard to read in light mode (2.73:1 on white) and
+   a second accent colour competing with the site's own. One accent, both
+   themes, contrast checked: 6.5:1 light, 5.7:1 dark. */
+.article-content p a,
+.article-content li a,
+.article-content td a,
+.article-content blockquote a,
+.prose p a,
+.prose li a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgb(var(--accent-rgb) / 0.4);
+}
+@media (hover: hover) {
+  .article-content p a:hover,
+  .article-content li a:hover,
+  .article-content td a:hover,
+  .article-content blockquote a:hover,
+  .prose p a:hover,
+  .prose li a:hover {
     text-decoration-color: currentColor;
   }
 }
@@ -2661,9 +2375,9 @@ main details > summary[class*="bg-primary-"] {
 }
 @media (hover: hover) {
   .mermaid-wrapper:hover {
-    border-color: rgba(0, 200, 165, 0.35);
+    border-color: rgb(var(--accent-rgb) / 0.35);
     background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 6px 24px rgba(0, 200, 165, 0.08);
+    box-shadow: 0 6px 24px rgb(var(--accent-rgb) / 0.08);
   }
 }
 :root:not(.dark) .mermaid-wrapper {
@@ -2672,7 +2386,7 @@ main details > summary[class*="bg-primary-"] {
 }
 @media (hover: hover) {
   :root:not(.dark) .mermaid-wrapper:hover {
-    border-color: rgba(0, 200, 165, 0.4);
+    border-color: rgb(var(--accent-rgb) / 0.4);
     background: rgba(255, 255, 255, 0.85);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
   }
@@ -2916,7 +2630,7 @@ body.mermaid-lightbox-open {
   height: 100%;
   width: 0;
   background: var(--accent);
-  box-shadow: 0 0 8px rgba(0, 200, 165, 0.5);
+  box-shadow: 0 0 8px rgb(var(--accent-rgb) / 0.5);
   transition: width 0.1s linear;
 }
 
@@ -2930,65 +2644,29 @@ body.mermaid-lightbox-open {
 }
 
 /* ==============================================
-   HOMEPAGE LIVELINESS — entrance reveal, rotating
-   keyword, card sheen + icon breathe, edge→cloud flow
-   All motion is gated behind prefers-reduced-motion.
+   MOTION — none on load
+
+   Was: staggered entrance reveals on the hero, a scroll-triggered reveal
+   on every list item, and a keyword that swapped itself every 2.4s. Two
+   problems. Taste: choreographed page entrances are the single loudest
+   generated-portfolio tell. Robustness: .reveal-on-scroll sets opacity 0
+   and waits for an IntersectionObserver, so a full-page render — a print,
+   a screenshot, a crawler, a failed script — got blank sections. The site
+   now renders finished on first paint.
+
+   .rotor and .reveal-on-scroll are left as inert no-ops rather than
+   deleted, so any stale markup degrades to plain text instead of
+   vanishing.
    ============================================== */
-
-/* ---- Staggered entrance reveal ---------------------------------- */
-@media (prefers-reduced-motion: no-preference) {
-  .home-hero__title    { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
-  .home-hero__lede     { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both; }
-  .home-hero__actions  { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both; }
-  .home-hero__links    { animation: reveal-fade 0.7s ease 0.34s both; }
-  .home-hero__portrait { animation: reveal-fade 0.9s ease 0.20s both; }
-  /* Not reveal-breakout: that keyframe carries translateX(-50%) for elements
-     that break out of a narrow column, and the strip no longer does — it was
-     rendering half a viewport to the left. */
-  .home-proof          { animation: reveal-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
-
-  /* The tagline still breaks out where it is used. */
-  .home-tagline { animation: reveal-breakout 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
-}
-
-@keyframes reveal-breakout {
-  from { opacity: 0; transform: translate(-50%, 18px); }
-  to   { opacity: 1; transform: translate(-50%, 0); }
-}
-@keyframes reveal-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes reveal-up {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ---- Scroll-reveal for the recent-articles list ----------------- */
-/* The .reveal-on-scroll class is added by JS only (so non-JS users see
-   the content), then .is-visible animates each item in as it enters. */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-on-scroll {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .reveal-on-scroll.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ---- Rotating keyword in the tagline ---------------------------- */
 .rotor {
-  display: inline-block;
-  font-weight: 700;
-  color: var(--accent);
-  white-space: nowrap; /* keep multi-word terms (e.g. "Siemens S7") intact */
-  transition: opacity 0.28s ease, transform 0.28s ease;
+  display: inline;
+  font-weight: inherit;
+  color: inherit;
 }
-:root:not(.dark) .rotor {
-  color: var(--accent-on-light);
+.reveal-on-scroll,
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* ==============================================
@@ -3005,7 +2683,7 @@ body.mermaid-lightbox-open {
   flex-shrink: 0;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(0, 200, 165, 0.35);
+  border: 2px solid rgb(var(--accent-rgb) / 0.35);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 .about-hero__body { min-width: 0; }
@@ -3034,99 +2712,72 @@ body.mermaid-lightbox-open {
   .about-btn--primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
 }
 .about-btn--ghost {
-  border: 1px solid rgba(0, 200, 165, 0.4);
-  color: #00c8a5;
+  border: 1px solid rgb(var(--accent-rgb) / 0.4);
+  color: var(--accent);
 }@media (hover: hover) {
 
-  .about-btn--ghost:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+  .about-btn--ghost:hover { background: rgb(var(--accent-rgb) / 0.12); transform: translateY(-1px); }
 }
-:root:not(.dark) .about-btn--ghost { color: #008a70; border-color: rgba(0, 138, 112, 0.4); }
+:root:not(.dark) .about-btn--ghost { color: var(--accent); border-color: rgb(var(--accent-rgb) / 0.4); }
 
+/* About proof line — same sentence treatment as the homepage. */
 .about-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin: 0 0 2rem;
-  padding: 1.25rem 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-}
-:root:not(.dark) .about-stats {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
-}
-.about-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  text-align: center;
+  max-width: 44rem;
+  margin: 0 0 2.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-base);
+  line-height: 1.65;
+  color: var(--ink-soft);
 }
 .about-stat__num {
-  font-size: 1.6rem;
-  font-weight: 800;
-  line-height: 1;
-  color: #00c8a5;
-}
-:root:not(.dark) .about-stat__num { color: #008a70; }
-.about-stat__label {
-  font-size: 0.75rem;
-  opacity: 0.75;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 650;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
-.cv-button {
+/* Secondary actions are underlined text, not outlined pills. Three
+   different pill buttons on one page is three components doing one job. */
+.cv-button,
+.rss-subscribe,
+.about-btn--ghost {
   display: inline-block;
   margin: 0 0 2rem;
-  padding: 0.6rem 1.3rem;
-  border-radius: 9999px;
-  font-weight: 700;
-  text-decoration: none;
-  border: 1px solid rgba(0, 200, 165, 0.4);
-  color: #00c8a5;
-  transition: transform 0.2s ease, background 0.2s ease;
-}@media (hover: hover) {
-
-  .cv-button:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgb(var(--accent-rgb) / 0.4);
+  transition: text-decoration-color 0.15s ease;
 }
+@media (hover: hover) {
+  .cv-button:hover,
+  .rss-subscribe:hover,
+  .about-btn--ghost:hover {
+    background: none;
+    transform: none;
+    text-decoration-color: var(--accent);
+  }
+}
+.rss-subscribe { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; }
+.rss-subscribe svg { flex-shrink: 0; }
+.about-btn--ghost { margin: 0; }
 
 /* Skill chips that link to a deep-dive get a subtle outbound affordance. */
 a.skill-chip { text-decoration: none; cursor: pointer; }
 /* These chips link to my own articles, not off-site: the north-east arrow
    is the convention for "leaves this site" and was the wrong signal. */
-a.skill-chip::after { content: " \2192"; font-size: 0.82em; opacity: 0.45; }@media (hover: hover) {
+a.skill-chip::after { content: none; }
 
-  a.skill-chip:hover::after { opacity: 1; }
-}
-
-/* RSS subscribe button on the blog list. */
-.rss-subscribe {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 1rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 9999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-decoration: none;
-  border: 1px solid rgba(0, 200, 165, 0.4);
-  color: #00c8a5;
-  transition: transform 0.2s ease, background 0.2s ease;
-}@media (hover: hover) {
-
-  .rss-subscribe:hover { background: rgba(0, 200, 165, 0.12); transform: translateY(-1px); }
-}
-.rss-subscribe svg { flex-shrink: 0; }
-:root:not(.dark) .rss-subscribe { color: #008a70; border-color: rgba(0, 138, 112, 0.4); }
-
-/* Architecture diagram: dashed connector lines "flow" downward. */
-.tech-arch__connector svg path:first-child {
-  animation: arch-flow 1.2s linear infinite;
-}
-@keyframes arch-flow { to { stroke-dashoffset: -16; } }
-
+/* The architecture connectors used to have their dashes marching downward
+   on a loop. Perpetual ambient motion with nothing to report is the visual
+   equivalent of a spinner on a finished page. */
 @media (max-width: 640px) {
   /* Stack, but keep the copy ranged left. Centring an eleven-line paragraph
      on a 390px screen gives every line a different start, which is what
@@ -3144,55 +2795,83 @@ a.skill-chip::after { content: " \2192"; font-size: 0.82em; opacity: 0.45; }@med
 
 
 /* ==============================================
-   SITE BACKGROUND — industrial blueprint grid
-   Pure CSS on body::before/::after: no DOM
-   injection, no blur filters, no animation —
-   renders for free even on low-end devices.
+   SITE BACKGROUND — flat paper
+
+   Was: a fixed two-layer blueprint grid plus a radial accent wash and a
+   vignette, painted on body::before/::after. Three decorative layers behind
+   every page, none of which carried information, all of which announced
+   "tech site". The ground is now a plain colour on <body> itself — one
+   declaration, and it extends past the viewport instead of being a fixed
+   sheet that content scrolls over.
    ============================================== */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background-color: #0a0e14;
-  background-image:
-    /* major grid */
-    linear-gradient(rgba(0, 200, 165, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 200, 165, 0.055) 1px, transparent 1px),
-    /* fine grid */
-    linear-gradient(rgba(148, 180, 193, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 180, 193, 0.03) 1px, transparent 1px);
-  background-size:
-    132px 132px,
-    132px 132px,
-    22px 22px,
-    22px 22px;
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+body::before,
+body::after { content: none; }
+
+/* ==============================================
+   LABEL RESET — the decorative-mono sweep
+
+   Across the components above, roughly a dozen small labels shared one
+   treatment: JetBrains Mono, uppercase, 0.06–0.08em tracking, accent
+   colour. Dates, table headers, form labels, sector names, diagram tiers.
+   Used once it is a nice detail; used on everything it stops being a
+   signal and becomes the site's texture — and it was a large part of why
+   the whole thing read as generated.
+
+   These are ordinary labels, so they are set as ordinary labels. Mono
+   survives only where the content really is machine text: version
+   strings, package names, download figures, code. Kept as one block
+   rather than edited in place so the decision is visible and reversible.
+   ============================================== */
+.contact-dialog .form-group label,
+.case-facts dt,
+.case-result__label,
+.case-stack__label,
+.case-card__sector,
+.blog-feed-item__meta time,
+.blog-feed-item__series,
+.blog-featured__date,
+.timeline-date,
+.npm-stats-table thead th,
+.tech-arch__label,
+.mermaid-zoom-hint,
+.process-step__num {
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-soft);
 }
 
-/* Vignette + a faint accent wash at the top, so the grid recedes toward
-   the edges and content stays the focus. Static — nothing to animate. */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 200, 165, 0.07), transparent 70%),
-    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(5, 8, 12, 0.6) 100%);
+/* Version/download metadata is genuinely machine text, so it keeps mono —
+   but it is metadata, so it is not also coloured. */
+.project-meta,
+.project-meta__version,
+.project-meta__downloads,
+.npm-downloads {
+  color: var(--ink-soft);
 }
 
-html:not(.dark) body::before {
-  background-color: #f6f8fa;
-  background-image:
-    linear-gradient(rgba(0, 122, 100, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 122, 100, 0.06) 1px, transparent 1px),
-    linear-gradient(rgba(30, 50, 60, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(30, 50, 60, 0.035) 1px, transparent 1px);
+/* Blowfish renders article/project tags as nested spans with its own
+   rounded-border utilities — the last chip family on the site, and the one
+   the custom CSS never reached because it has no class of its own. The
+   tag index keeps its boxes (see .tag-cloud__chip); in a page header the
+   tags are metadata, so they read as metadata. */
+a[href*="/tags/"] > span > span {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  padding: 0 !important;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-soft);
 }
-html:not(.dark) body::after {
-  background:
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(0, 138, 112, 0.05), transparent 70%),
-    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 60%, rgba(210, 220, 226, 0.5) 100%);
+a[href*="/tags/"]:not(.tag-cloud__chip)::after {
+  content: " ·";
+  color: var(--ink-faint);
 }
+a[href*="/tags/"]:last-of-type::after { content: none; }

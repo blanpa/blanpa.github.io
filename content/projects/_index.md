@@ -1,8 +1,7 @@
 ---
 title: "Projects"
 description: "Open-source Node-RED modules, industrial automation, and IIoT solutions."
-showHero: true
-heroStyle: "background"
+showHero: false
 cascade:
   showDate: false
   showAuthor: false
@@ -10,5 +9,9 @@ cascade:
   showReadingTime: false
   showTableOfContents: true
   showHero: true
-  heroStyle: "thumbAndBackground"
+  # Was "thumbAndBackground": Blowfish washes the cover art across the full
+  # width behind the page title. With these covers — dark, high-contrast,
+  # busy — the title and the tag line under it were barely readable. "basic"
+  # puts the image above the title instead of behind it.
+  heroStyle: "basic"
 ---

@@ -82,168 +82,11 @@
     update();
   }
 
-  /* ---- Homepage proof band: animated count-up stats ---------------- */
-  /* The real values are baked into the HTML at build time (data-count),
-     so the numbers are correct even without JS. This only animates the
-     count-up the first time the band scrolls into view. Respects
-     prefers-reduced-motion (no animation, values already rendered). */
-  function initProofCounters() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    function countUp(el, target) {
-      var dur = 1200, start = 0;
-      function step(ts) {
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / dur, 1);
-        var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(target * eased).toLocaleString("en");
-        if (p < 1) requestAnimationFrame(step);
-        else el.textContent = target.toLocaleString("en");
-      }
-      requestAnimationFrame(step);
-    }
-
-    document.querySelectorAll(".home-proof, .about-stats").forEach(function (band) {
-      var els = band.querySelectorAll("[data-count]");
-      if (!els.length) return;
-
-      var started = false;
-      function start() {
-        if (started) return;
-        started = true;
-        els.forEach(function (el) {
-          var t = parseInt(el.getAttribute("data-count"), 10);
-          if (t > 0) countUp(el, t);
-        });
-      }
-
-      if ("IntersectionObserver" in window) {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) { start(); io.disconnect(); }
-          });
-        }, { threshold: 0.35 });
-        io.observe(band);
-      } else {
-        start();
-      }
-    });
-  }
-
-  /* ---- Rotating keyword(s) in the tagline -------------------------- */
-  function initRotors() {
-    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.querySelectorAll("[data-rotor]").forEach(function (el) {
-      var words = el.getAttribute("data-rotor").split("|").map(function (s) {
-        return s.trim();
-      }).filter(Boolean);
-      if (words.length < 2 || reduce) return;
-
-      // Reserve the width of the widest term so the line never reflows as
-      // words cycle. Always reserved (even for a trailing rotor): a stable
-      // footprint keeps the wrap position fixed. Measured live, font-correct.
-      var maxW = 0;
-      words.forEach(function (w) {
-        el.textContent = w;
-        if (el.offsetWidth > maxW) maxW = el.offsetWidth;
-      });
-      el.textContent = words[0];
-      el.style.minWidth = maxW + "px";
-      el.style.textAlign = "left";
-
-      var i = 0;
-      function tick() {
-        i = (i + 1) % words.length;
-        el.style.opacity = "0";
-        el.style.transform = "translateY(-4px)";
-        setTimeout(function () {
-          el.textContent = words[i];
-          el.style.opacity = "1";
-          el.style.transform = "translateY(0)";
-        }, 280);
-      }
-
-      /* Stop while the tab is in the background — nobody is reading a word
-         swap they can't see, and a timer that keeps firing there keeps the
-         page from being frozen by the browser. */
-      var timer = null;
-      function start() { if (!timer) timer = setInterval(tick, 2400); }
-      function stop() { if (timer) { clearInterval(timer); timer = null; } }
-      document.addEventListener("visibilitychange", function () {
-        if (document.hidden) stop(); else start();
-      });
-      start();
-    });
-  }
-
-  /* ---- Scroll-reveal for the homepage recent-articles list -------- */
-  function initScrollReveal() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (!("IntersectionObserver" in window)) return;
-    // Homepage only: the proof band exists nowhere else.
-    if (!document.querySelector(".home-proof")) return;
-    var items = document.querySelectorAll(".article-link--simple");
-    if (!items.length) return;
-
-    items.forEach(function (el, i) {
-      el.classList.add("reveal-on-scroll");
-      el.style.transitionDelay = (i % 5) * 0.08 + "s";
-    });
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          e.target.classList.add("is-visible");
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-
-    items.forEach(function (el) { io.observe(el); });
-  }
-
-  /* ---- Generic staggered scroll-reveal --------------------------- */
-  /* Reveals matching elements as they enter the viewport, then strips the
-     helper classes so a pinned transform/opacity can't override the
-     element's own hover styles (cards lift on hover). */
-  function revealGroup(selector, step) {
-    var items = document.querySelectorAll(selector);
-    if (!items.length) return;
-    items.forEach(function (el, i) {
-      el.classList.add("reveal-on-scroll");
-      // Stagger siblings, but cap so a long list doesn't crawl in.
-      el.style.transitionDelay = (i % 6) * (step || 0.07) + "s";
-    });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var el = e.target;
-        io.unobserve(el);
-        el.classList.add("is-visible");
-        el.addEventListener("transitionend", function () {
-          el.classList.remove("reveal-on-scroll", "is-visible");
-          el.style.transitionDelay = "";
-        }, { once: true });
-      });
-    }, { threshold: 0.1, rootMargin: "0px 0px -8% 0px" });
-    items.forEach(function (el) { io.observe(el); });
-  }
-
-  function initSectionReveal() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (!("IntersectionObserver" in window)) return;
-    // About page sections (no-op elsewhere — revealGroup self-guards).
-    revealGroup(".about-stats");
-    revealGroup(".skill-group");
-    revealGroup(".tech-arch__layer");
-    revealGroup(".timeline-item");
-    revealGroup(".support-card");
-    // Blog & projects list cards.
-    revealGroup(".blog-featured");
-    revealGroup(".blog-feed-item");
-    revealGroup(".project-featured");
-    revealGroup(".project-card");
-  }
+  /* Removed: animated count-up stats, the rotating hero keyword, and the
+     two IntersectionObserver reveal passes. The numbers are baked into the
+     HTML at build time and now simply render; the reveals hid real content
+     behind a script for a decorative fade. See the MOTION note in
+     custom.css for the reasoning. */
 
   /* ---- Cmd/Ctrl+K opens search (reuses Blowfish's own toggle) ----- */
   function initSearchHotkey() {
@@ -259,32 +102,8 @@
     });
   }
 
-  /* ---- Support button (floating) ----------------------------------- */
-  function initSupportFab() {
-    var wrap = document.getElementById("support-fab");
-    var btn = document.getElementById("support-fab-btn");
-    if (!wrap || !btn) return;
-
-    /* One class on the container drives the whole open state — panel,
-       heart rotation and hit-testing all hang off .is-open in the CSS. */
-    function setOpen(open) {
-      wrap.classList.toggle("is-open", open);
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-    }
-
-    btn.addEventListener("click", function () {
-      setOpen(!wrap.classList.contains("is-open"));
-    });
-    document.addEventListener("click", function (e) {
-      if (wrap.classList.contains("is-open") && !wrap.contains(e.target)) setOpen(false);
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && wrap.classList.contains("is-open")) {
-        setOpen(false);
-        btn.focus();
-      }
-    });
-  }
+  /* Removed: the floating support button. Its links now live in the footer
+     as plain text — see layouts/partials/extend-footer.html. */
 
   /* ---- Mermaid: lazy runtime + diagram lightbox --------------------- */
   function initMermaid() {
@@ -559,12 +378,7 @@
     initDialogs();
     initForms();
     initReadingProgress();
-    initProofCounters();
-    initRotors();
-    initScrollReveal();
-    initSectionReveal();
     initSearchHotkey();
-    initSupportFab();
     initMermaid();
     initBlogFilter();
     initGiscusThemeSync();
