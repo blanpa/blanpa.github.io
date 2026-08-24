@@ -36,7 +36,6 @@ PROMPTS["projects"] = {
     "s7-suite": "Siemens S7-1500 PLC with communication interface, industrial controller exchanging data blocks via protocol connection",
     "opcua-suite": "OPC-UA server and client architecture with information model tree, secure encrypted industrial data exchange",
     "i3x": "unified industrial data interface connecting diverse factory machines through a standardized API gateway, abstract manufacturing network",
-    "clab-interfaces": "compact embedded IoT gateway board with GPIO pins, serial ports, CAN bus and cellular antenna, industrial edge hardware",
 }
 
 PROMPTS["blog"] = {

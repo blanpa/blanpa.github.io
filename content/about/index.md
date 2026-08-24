@@ -153,7 +153,6 @@ I maintain several open-source Node-RED packages for industrial IoT on [npm](htt
 {{< github repo="blanpa/node-red-contrib-cip-suite" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-s7-suite" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-opcua-suite" showThumbnail=false >}}
-{{< github repo="blanpa/node-red-contrib-clab-interfaces" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-i3x" showThumbnail=false >}}
 </div>
 

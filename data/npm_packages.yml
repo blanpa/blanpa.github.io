@@ -10,7 +10,5 @@
   desc: Siemens S7 PLC communication
 - pkg: node-red-contrib-opcua-suite
   desc: OPC-UA industrial data exchange
-- pkg: node-red-contrib-clab-interfaces
-  desc: CompuLab IoT Gateway hardware interfaces
 - pkg: node-red-contrib-i3x
   desc: i3x open manufacturing API integration

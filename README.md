@@ -33,7 +33,7 @@ hugo server -D
 
 ## Projects
 
-The site showcases 8 open-source npm packages (the canonical list lives in `data/npm_packages.yml`):
+The site showcases 7 open-source npm packages (the canonical list lives in `data/npm_packages.yml`):
 
 - **node-red-contrib-condition-monitoring** — Vibration analysis & predictive maintenance
 - **node-red-contrib-nats-suite** — NATS messaging with JetStream support
@@ -41,7 +41,6 @@ The site showcases 8 open-source npm packages (the canonical list lives in `data
 - **node-red-contrib-cip-suite** — Allen-Bradley PLC & EtherNet/IP communication
 - **node-red-contrib-s7-suite** — Siemens S7 PLC communication
 - **node-red-contrib-opcua-suite** — OPC-UA industrial data exchange
-- **node-red-contrib-clab-interfaces** — CompuLab IoT Gateway hardware interfaces
 - **node-red-contrib-i3x** — i3x open manufacturing API integration
 
 ## Case Studies
