@@ -6,10 +6,6 @@ enableRobotsTXT = true
 
 [taxonomies]
   tag = "tags"
-  # Carried only by the blog posts, which are drafts — so /series/ builds
-  # empty in production. It has to stay declared all the same: without it
-  # layouts/partials/series/series.html fails on .Site.Taxonomies.series
-  # and a local `hugo -D` build errors out on the first post.
   series = "series"
 
 [outputs]

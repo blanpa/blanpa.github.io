@@ -6,7 +6,7 @@ enableSearch = true
 enableCodeCopy = true
 # defaultSocialImage intentionally unset: extend-head-uncached.html supplies
 # og:image (rich default on home, generated title cards on image-less pages).
-mainSections = ["projects"]
+mainSections = ["blog"]
 # Formspree form id used by the contact-form / contact-modal shortcodes.
 formspreeId = "myegapwn"
 disableImageOptimization = false
@@ -36,7 +36,7 @@ smartTOC = true
   # identity card.
   layout = "custom"
   homepageImage = ""
-  showRecent = false
+  showRecent = true
   showRecentItems = 5
 
 [article]

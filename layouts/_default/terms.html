@@ -16,18 +16,13 @@
     {{ end }}
     <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
     {{/* Tags are carried by both articles and project pages, so counting only
-         one section would understate what the index actually covers. The
-         articles clause disappears when no article section is present. */}}
+         the blog would understate what the index actually covers. */}}
     {{- $terms := .Data.Terms.ByCount -}}
     {{- $posts := len (where site.RegularPages "Section" "blog") -}}
     {{- $projects := len (where site.RegularPages "Section" "projects") -}}
     <p class="tag-cloud__intro">
-      {{- if eq (len $terms) 0 -}}
-        Nothing filed here yet.
-      {{- else -}}
-        {{ len $terms }} {{ cond (eq (len $terms) 1) "topic" "topics" }} across
-        {{ if gt $posts 0 }}{{ $posts }} articles and {{ end }}{{ $projects }} projects. Most-covered first.
-      {{- end -}}
+      {{ len $terms }} {{ cond (eq (len $terms) 1) "topic" "topics" }} across
+      {{ $posts }} articles and {{ $projects }} projects. Most-covered first.
     </p>
   </header>
 

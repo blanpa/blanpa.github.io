@@ -1,6 +1,5 @@
 ---
 title: "CI/CD for Node-RED Flows — Automated Testing and Deployment"
-draft: true
 tags: ["IIoT", "Node-RED", "JavaScript", "Docker"]
 description: "How to version control, test, and automatically deploy Node-RED flows — treating flows as code."
 date: 2026-05-09

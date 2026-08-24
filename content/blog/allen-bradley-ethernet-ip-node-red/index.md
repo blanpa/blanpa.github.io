@@ -1,6 +1,5 @@
 ---
 title: "Talking to Allen-Bradley PLCs from Node-RED — EtherNet/IP & CIP Explained"
-draft: true
 tags: ["IIoT", "Node-RED", "Allen-Bradley", "EtherNet-IP", "PLC"]
 description: "A practical guide to reading and writing Allen-Bradley ControlLogix, CompactLogix, and legacy SLC/PLC-5 tags from Node-RED over EtherNet/IP and CIP."
 date: 2026-06-27

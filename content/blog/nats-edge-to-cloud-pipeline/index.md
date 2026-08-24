@@ -1,6 +1,5 @@
 ---
 title: "Building a NATS-based Edge-to-Cloud Pipeline for Industrial IoT"
-draft: true
 tags: ["IIoT", "NATS", "Node-RED", "Docker"]
 description: "Architecture guide for connecting factory floor sensors to cloud analytics using NATS leaf nodes, JetStream, and key-value stores."
 date: 2026-03-21

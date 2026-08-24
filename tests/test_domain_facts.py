@@ -315,11 +315,15 @@ def test_own_package_names_are_real(pages, npm_packages):
         "node-red-contrib-healthcheck",
         "node-red-contrib-mynode",
     }
+    # Published on npm but no longer listed on the site: its GitHub source is
+    # private, so it left data/npm_packages.yml. The retrospective post still
+    # names it, and the name still resolves on npm.
+    delisted = {"node-red-contrib-clab-interfaces"}
     bad = {}
     for page in pages:
         for match in re.finditer(r"node-red-contrib-[a-z0-9-]+", page.body):
             name = match.group(0).rstrip("-")
-            if name not in known and name not in external:
+            if name not in known and name not in external and name not in delisted:
                 bad.setdefault(name, page.rel)
     assert not bad, (
         f"package names that are neither in data/npm_packages.yml nor a known "

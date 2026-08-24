@@ -1,6 +1,5 @@
 ---
 title: "i3x — The Open Manufacturing API That Breaks Data Silos"
-draft: true
 tags: ["IIoT", "REST API", "Node-RED", "JavaScript"]
 description: "How the i3x open manufacturing standard by CESMII provides vendor-agnostic access to industrial data — with practical Node-RED examples."
 date: 2026-03-05
