@@ -1,36 +1,71 @@
 #!/usr/bin/env python3
-"""Generate AI thumbnails for blog posts using Hugging Face Inference API (FLUX.1-schnell)."""
+"""Generate AI cover images for posts and projects (FLUX.1-schnell via Hugging Face)."""
 
 import os
-import io
-import json
-import urllib.request
-import urllib.parse
 import time
 import sys
 
 from PIL import Image  # pip install Pillow — used to encode hero images as webp
+from huggingface_hub import InferenceClient  # pip install huggingface_hub
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# The repository root, not tools/: this script lives one level down but
+# writes into content/. Getting this wrong makes every save land in a
+# tools/content/ tree that does not exist.
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WIDTH = 1200
 HEIGHT = 640  # FLUX prefers multiples of 64
 
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
-API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
+MODEL = "black-forest-labs/FLUX.1-schnell"
 
-STYLE_SUFFIX = (
-    "dark moody technical illustration, deep dark background with subtle teal and cyan accent lighting, "
-    "minimalist industrial aesthetic, clean vector-style elements, dark navy and black tones, "
-    "glowing circuit traces and data streams, no text, no words, no labels, no watermarks, "
-    "professional tech blog hero image, 8k quality"
-)
+# hf-inference used to serve this model directly and now answers 410
+# "deprecated and no longer supported by provider". It lives on at fal-ai,
+# nscale and wavespeed, which bill against Hugging Face credits — so the
+# calls go through the router's provider selection rather than a hardcoded
+# URL, and a provider going away is a config change and not a rewrite.
+# Check who still has it:
+#   curl -s "https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell\
+#   ?expand[]=inferenceProviderMapping"
+PROVIDER = os.environ.get("HF_PROVIDER", "fal-ai")
+
+# The covers are the last thing on the site still reading as generated — the
+# redesign commit said so and left them alone. Neon-on-black was the register
+# of the old palette; this is the register of the new one, so the wording is
+# the CSS tokens in prose: --paper against --ink, one oxide accent, hairlines
+# and no glow. Hex codes are in there because they cost nothing, but the model
+# works off the colour words, so those carry the description.
+#
+# "paper" matches the light theme, "ink" the dark one — and defaultAppearance
+# is dark, so whichever is picked is a bright or heavy block in the other.
+# There is no third option that suits both: a mid-grey suits neither.
+STYLES = {
+    "paper": (
+        "fine ink drawing on warm off-white paper, cream and bone background (#faf8f4), "
+        "charcoal linework with a single muted oxide-red accent, burnt sienna (#9c3d18), "
+        "technical etching with engraved crosshatch shading, hairline rules, "
+        "restrained editorial illustration for a printed journal, matte and flat, "
+        "generous empty paper around the subject, "
+        "no glow, no neon, no gradients, no dark background, "
+        "no text, no words, no labels, no watermarks"
+    ),
+    "ink": (
+        "fine chalk drawing on near-black warm charcoal ground (#16171a), "
+        "bone-white linework with a single muted oxide-red accent, terracotta (#d9744a), "
+        "technical etching with engraved crosshatch shading, hairline rules, "
+        "restrained editorial illustration, matte and flat, "
+        "generous empty ground around the subject, "
+        "no glow, no neon, no gradients, no teal, no cyan, no blue, "
+        "no text, no words, no labels, no watermarks"
+    ),
+}
+STYLE_SUFFIX = STYLES["paper"]  # reassigned from --style in main()
 
 # Map folders to specific scene prompts, keyed by section
 PROMPTS = {}
 
 PROMPTS["projects"] = {
     "condition-monitoring": "industrial vibration sensor attached to machine with real-time anomaly detection graphs and health scoring dashboard, predictive maintenance",
-    "nats-suite": "abstract network of glowing nodes connected by light beams in a dark void, data routing mesh with multiple endpoints, futuristic interconnected server topology",
+    "nats-suite": "abstract network of small nodes joined by fine ruled lines, data routing mesh with multiple endpoints, interconnected server topology drawn as a diagram",
     "kafka-suite": "distributed event streaming pipeline with partitioned topic logs flowing as parallel data rivers, horizontally scaled broker cluster with producers and consumers exchanging high-throughput message streams",
     "cip-suite": "Allen-Bradley ControlLogix PLC rack with EtherNet/IP communication cables and protocol data packets flowing, industrial automation",
     "s7-suite": "Siemens S7-1500 PLC with communication interface, industrial controller exchanging data blocks via protocol connection",
@@ -39,7 +74,7 @@ PROMPTS["projects"] = {
 }
 
 PROMPTS["blog"] = {
-    "nats-edge-to-cloud-pipeline": "industrial factory floor sensors connected to cloud servers via glowing data streams, NATS messaging nodes as relay points",
+    "nats-edge-to-cloud-pipeline": "industrial factory floor sensors connected to cloud servers by traced data lines, NATS messaging nodes as relay points",
     "ml-inference-edge-onnx-node-red": "neural network brain on a small edge device, machine learning inference on embedded hardware, data flowing from sensors through ML model",
     "predictive-maintenance-node-red": "industrial machine with vibration sensors and health monitoring graphs, predictive maintenance dashboard with signal waves",
     "mqtt-vs-sparkplug-vs-nats-vs-opcua": "four different messaging protocol symbols interconnected, industrial communication network comparison, data packets flowing",
@@ -60,76 +95,71 @@ PROMPTS["blog"] = {
 
 
 
-def generate_image(section, folder_name, prompt_text):
-    """Generate image via Hugging Face Inference API."""
+def generate_image(client, section, folder_name, prompt_text):
+    """Generate one cover and write it as webp. Returns True on success."""
     full_prompt = f"{prompt_text}, {STYLE_SUFFIX}"
-    content_dir = os.path.join(BASE_DIR, "content", section)
-    output_path = os.path.join(content_dir, folder_name, "featured.webp")
+    output_path = os.path.join(REPO_ROOT, "content", section, folder_name, "featured.webp")
 
     print(f"  Generating: {folder_name}...")
-    payload = json.dumps({
-        "inputs": full_prompt,
-        "parameters": {"width": WIDTH, "height": HEIGHT}
-    }).encode("utf-8")
-
-    req = urllib.request.Request(API_URL, data=payload, headers={
-        "Authorization": f"Bearer {HF_TOKEN}",
-        "Content-Type": "application/json",
-        "Accept": "image/png",
-    })
-
     for attempt in range(3):
         try:
-            with urllib.request.urlopen(req, timeout=180) as resp:
-                data = resp.read()
-                content_type = resp.headers.get("Content-Type", "")
-                if "json" in content_type:
-                    err = json.loads(data)
-                    if "estimated_time" in err:
-                        wait = int(err["estimated_time"]) + 5
-                        print(f"  Model loading, waiting {wait}s...")
-                        time.sleep(wait)
-                        continue
-                    print(f"  ERROR: {err}")
-                    return False
-                if len(data) < 5000:
-                    print(f"  SKIP (response too small: {len(data)} bytes)")
-                    return False
-                # Re-encode the PNG response as webp (~95% smaller at q82)
-                img = Image.open(io.BytesIO(data)).convert("RGB")
-                img.save(output_path, "WEBP", quality=82, method=6)
-                print(f"  OK ({os.path.getsize(output_path) // 1024} KB webp)")
-                return True
-        except urllib.error.HTTPError as e:
-            body = e.read().decode("utf-8", errors="replace")
-            if e.code == 503:
-                try:
-                    err = json.loads(body)
-                    wait = int(err.get("estimated_time", 30)) + 5
-                except Exception:
-                    wait = 30
-                print(f"  Model loading, waiting {wait}s... (attempt {attempt+1})")
-                time.sleep(wait)
-                continue
-            elif e.code == 429:
-                print(f"  Rate limited, waiting 60s... (attempt {attempt+1})")
+            img = client.text_to_image(
+                full_prompt, model=MODEL, width=WIDTH, height=HEIGHT
+            )
+        except Exception as e:
+            msg = str(e)
+            # 402 is the free tier's monthly inference credit running out.
+            # Retrying cannot fix it, and the remaining folders would each
+            # burn a request to learn the same thing.
+            if "402" in msg or "payment" in msg.lower() or "credits" in msg.lower():
+                print(f"  OUT OF CREDIT: {msg[:200]}")
+                raise SystemExit(
+                    "\nHugging Face inference credit is exhausted. Covers already "
+                    "written are kept; the rest are unchanged."
+                )
+            if "429" in msg or "rate" in msg.lower():
+                print(f"  Rate limited, waiting 60s... (attempt {attempt + 1})")
                 time.sleep(60)
                 continue
-            print(f"  ERROR {e.code}: {body[:200]}")
+            print(f"  ERROR: {type(e).__name__}: {msg[:200]}")
             return False
-        except Exception as e:
-            print(f"  ERROR: {e}")
-            return False
-    print(f"  FAILED after 3 attempts")
+
+        # Re-encode as webp (~95% smaller than the PNG the providers return)
+        img.convert("RGB").save(output_path, "WEBP", quality=82, method=6)
+        print(f"  OK ({os.path.getsize(output_path) // 1024} KB webp)")
+        return True
+
+    print("  FAILED after 3 attempts")
     return False
 
-
 def main():
-    # Usage: tools/generate-thumbnails.py [section] [filter]
+    # Usage: tools/generate-thumbnails.py [--style=paper|ink] [section] [filter]
     # section: blog, projects, or all (default: all)
     # filter: substring to match folder names
-    section = sys.argv[1] if len(sys.argv) > 1 else "all"
-    only = sys.argv[2] if len(sys.argv) > 2 else None
+    #
+    # Covers are committed, so a run that comes out wrong is undone with
+    # `git checkout -- content/`. Generate one first and look at it before
+    # spending the other twenty-three.
+    global STYLE_SUFFIX
+    argv = sys.argv[1:]
+    style = "paper"
+    for arg in list(argv):
+        if arg.startswith("--style="):
+            style = arg.split("=", 1)[1]
+            argv.remove(arg)
+    if style not in STYLES:
+        print(f"unknown style {style!r}: pick one of {', '.join(sorted(STYLES))}", file=sys.stderr)
+        return 2
+    STYLE_SUFFIX = STYLES[style]
+
+    if not HF_TOKEN:
+        print("HF_TOKEN is not set — the API rejects unauthenticated calls.", file=sys.stderr)
+        return 2
+
+    client = InferenceClient(provider=PROVIDER, api_key=HF_TOKEN)
+    print(f"style: {style}  provider: {PROVIDER}")
+    section = argv[0] if len(argv) > 0 else "all"
+    only = argv[1] if len(argv) > 1 else None
 
     if section == "all":
         sections = list(PROMPTS.keys())
@@ -151,7 +181,7 @@ def main():
         print(f"\n=== {sec} ({len(folders)} images) ===\n")
         for i, folder in enumerate(folders, 1):
             print(f"[{i}/{len(folders)}]", end="")
-            if generate_image(sec, folder, PROMPTS[sec][folder]):
+            if generate_image(client, sec, folder, PROMPTS[sec][folder]):
                 total_ok += 1
             else:
                 total_fail += 1
@@ -159,7 +189,8 @@ def main():
                 time.sleep(3)
 
     print(f"\nDone: {total_ok} generated, {total_fail} failed")
+    return 1 if total_fail else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
