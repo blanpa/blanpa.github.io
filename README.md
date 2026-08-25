@@ -9,7 +9,36 @@ unrelated to my employment, published under the MIT licence.
 ## Tech Stack
 
 - [Hugo](https://gohugo.io/) with the [Blowfish](https://blowfish.page/) theme
+- Styled after GitHub's [Primer](https://primer.style/foundations/color) — see [Design](#design)
 - Deployed via GitHub Actions to [GitHub Pages](https://blanpa.github.io)
+
+## Design
+
+The site follows GitHub's own design language rather than a palette of its
+own. Concretely:
+
+- **Colour.** Primer's roles, declared once in the `DESIGN TOKENS` block of
+  `assets/css/custom.css`: `--canvas` / `--canvas-subtle` / `--canvas-inset`,
+  `--border`, `--fg` / `--fg-muted`, `--accent-fg`. Dark is `#0d1117`, light
+  is `#ffffff`, links are blue, the one primary button is green, and the
+  current nav item carries the warm tab underline. The ink-and-paper names
+  the components were written against (`--paper`, `--ink`, `--rule`) are kept
+  as aliases onto those roles.
+- **Type.** The platform UI stack for everything and the platform mono for
+  code. No webfont is loaded at all.
+- **Shape.** One hairline border, 6px corners, a `--canvas-subtle` fill; no
+  shadows, no lifts on hover, no translucency. Labels and topic tags are the
+  only pills.
+- **The theme's own furniture.** Search, table of contents, pagination and
+  the prose plugin are coloured from `assets/css/schemes/primer.css`, a Blowfish
+  colour scheme built from the same values, so the theme's parts and the
+  site's parts agree instead of merely coexisting.
+- **Code.** `noClasses = false` in `config/_default/hugo.toml` hands
+  highlighting to the theme's stylesheet, which is generated from chroma's
+  `github` and `github-dark` styles. A code block is coloured the way
+  github.com colours it, and it follows the theme switch.
+- **Covers and diagrams.** Both are drawn from the same values; see
+  `tools/draw-covers.py` and the palette in `tools/render-diagrams.py`.
 
 ## Local Development
 
@@ -54,7 +83,7 @@ to publish one, including the rule that every figure has to be a measured one.
 
 Helper scripts for authoring (all need Python 3; none are part of the build):
 
-- `tools/generate-thumbnails.py` — generates AI cover images for posts and projects via the Hugging Face Inference API (needs `HF_TOKEN` and `pip install Pillow huggingface_hub`). `--style=paper` (default) draws ink on warm paper for the light theme, `--style=ink` the reverse for the dark one; covers are committed, so a bad run is undone with `git checkout -- content/`
+- `tools/generate-thumbnails.py` — generates AI cover images for posts and projects via the Hugging Face Inference API (needs `HF_TOKEN` and `pip install Pillow huggingface_hub`). `--style=paper` (default) draws graphite and accent blue on the light canvas, `--style=ink` the reverse for the dark one; covers are committed, so a bad run is undone with `git checkout -- content/`
 - `tools/draw-covers.py` — draws the post and project covers as schematics from the `:root` design tokens (needs `pip install cairosvg Pillow`). Deterministic and offline: same slug, same drawing, no API. This is what produced the covers in the repo. `tools/draw-covers.py og` redraws the two social cards in `assets/img/`; they are set in Noto Serif Bold (`assets/fonts/og-title.ttf`, OFL-1.1, licence alongside it) — a build-time asset that never reaches a visitor
 - `tools/generate-diagrams.py` — converts ASCII diagrams in posts to Mermaid shortcodes via the Claude API (needs `ANTHROPIC_API_KEY`)
 - `tools/render-diagrams.py` — renders the mermaid blocks to static SVG (see below); needs mermaid-cli

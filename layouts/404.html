@@ -12,11 +12,9 @@
 </div>
 
 <style>
-/* This page never got the ink-and-paper pass: it still had the mint-to-blue
-   gradient on the numerals and the primary button, mint hover tints, weight
-   900 and a lift-on-hover — the whole vocabulary the redesign removed
-   everywhere else. It is styled off the tokens now, and the buttons are the
-   same two the About hero uses. */
+/* Styled off the tokens, so it followed the site onto Primer with them. The
+   two controls are Primer's pair: a green primary and a default button, both
+   6px, neither of which moves on hover. */
 .error-404 {
   display: flex;
   justify-content: center;
@@ -31,7 +29,7 @@
 }
 .error-404__code {
   display: block;
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 5rem;
   font-weight: 600;
   line-height: 1;
@@ -56,29 +54,29 @@
 .error-404__btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1.15rem;
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 700;
+  padding: 0.3rem 1rem;
+  min-height: 32px;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 500;
   text-decoration: none;
-  transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
-  border: 1px solid rgb(var(--accent-rgb) / 0.4);
-  color: var(--accent);
+  transition: background-color 0.15s ease;
+  border: 1px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+  box-shadow: var(--shadow-sm);
 }
 .error-404__btn--primary {
-  background: var(--accent);
-  color: var(--accent-ink);
-  border-color: var(--accent);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border-color: var(--btn-primary-border);
 }
 @media (hover: hover) {
   .error-404__btn:hover {
-    background: rgb(var(--accent-rgb) / 0.12);
-    transform: translateY(-1px);
+    background: var(--btn-hover-bg);
   }
   .error-404__btn--primary:hover {
-    background: var(--accent);
-    filter: brightness(1.08);
-    transform: translateY(-1px);
+    background: var(--btn-primary-hover-bg);
   }
 }
 @media (max-width: 500px) {

@@ -1,4 +1,6 @@
-colorScheme = "noir"
+# assets/css/schemes/primer.css — GitHub's greys and blues, so the
+# theme's own furniture matches the site's.
+colorScheme = "primer"
 defaultAppearance = "dark"
 autoSwitchAppearance = true
 
@@ -21,7 +23,11 @@ highlightCurrentMenuArea = true
 smartTOC = true
 
 [header]
-  layout = "fixed-fill-blur"
+  # GitHub's header is a solid bar with a hairline under it, present from the
+  # first pixel of scroll. "fixed-fill-blur" instead fades a backdrop-blur in
+  # as you scroll, which is the one piece of chrome Primer has no equivalent
+  # for — and it needs JS on every scroll event to do it.
+  layout = "fixed-fill"
 
 [footer]
   showMenu = true

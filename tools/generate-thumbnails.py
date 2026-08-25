@@ -28,33 +28,32 @@ MODEL = "black-forest-labs/FLUX.1-schnell"
 #   ?expand[]=inferenceProviderMapping"
 PROVIDER = os.environ.get("HF_PROVIDER", "fal-ai")
 
-# The covers are the last thing on the site still reading as generated — the
-# redesign commit said so and left them alone. Neon-on-black was the register
-# of the old palette; this is the register of the new one, so the wording is
-# the CSS tokens in prose: --paper against --ink, one oxide accent, hairlines
-# and no glow. Hex codes are in there because they cost nothing, but the model
-# works off the colour words, so those carry the description.
+# The wording is the CSS tokens in prose: canvas against fg, one accent blue,
+# hairlines and no glow. Hex codes are in there because they cost nothing, but
+# the model works off the colour words, so those carry the description.
 #
 # "paper" matches the light theme, "ink" the dark one — and defaultAppearance
 # is dark, so whichever is picked is a bright or heavy block in the other.
-# There is no third option that suits both: a mid-grey suits neither.
+# There is no third option that suits both: a mid-grey suits neither. The
+# committed covers are drawn by tools/draw-covers.py, which needs no model and
+# no token; this is the alternative, and it has to speak the same palette.
 STYLES = {
     "paper": (
-        "fine ink drawing on warm off-white paper, cream and bone background (#faf8f4), "
-        "charcoal linework with a single muted oxide-red accent, burnt sienna (#9c3d18), "
+        "fine ink drawing on a cool light grey ground (#f6f8fa), "
+        "near-black graphite linework with a single clear blue accent (#0969da), "
         "technical etching with engraved crosshatch shading, hairline rules, "
         "restrained editorial illustration for a printed journal, matte and flat, "
-        "generous empty paper around the subject, "
+        "generous empty ground around the subject, "
         "no glow, no neon, no gradients, no dark background, "
         "no text, no words, no labels, no watermarks"
     ),
     "ink": (
-        "fine chalk drawing on near-black warm charcoal ground (#16171a), "
-        "bone-white linework with a single muted oxide-red accent, terracotta (#d9744a), "
+        "fine chalk drawing on a near-black blue-grey ground (#0d1117), "
+        "pale grey linework with a single clear blue accent (#4493f8), "
         "technical etching with engraved crosshatch shading, hairline rules, "
         "restrained editorial illustration, matte and flat, "
         "generous empty ground around the subject, "
-        "no glow, no neon, no gradients, no teal, no cyan, no blue, "
+        "no glow, no neon, no gradients, no teal, no cyan, "
         "no text, no words, no labels, no watermarks"
     ),
 }

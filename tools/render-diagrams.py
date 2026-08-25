@@ -48,34 +48,62 @@ OUT = REPO / "assets" / "diagrams"
 
 FENCE = re.compile(r"^([ \t]*)```mermaid[ \t]*\n(.*?)^\1```[ \t]*$", re.M | re.S)
 
-# Resolved from the site's CSS custom properties. Blowfish's mermaid.js reads
-# these at runtime via getComputedStyle; a static render has to be told them.
-# Changing one invalidates palette.sha1 and re-renders every diagram.
-PALETTE = {
-    "background": "rgb(255, 255, 255)",
-    "primaryColor": "rgb(255, 255, 255)",
-    "secondaryColor": "rgb(182, 240, 255)",
-    "tertiaryColor": "rgb(255, 255, 255)",
-    "primaryBorderColor": "rgb(204, 216, 222)",
-    "secondaryBorderColor": "rgb(28, 209, 255)",
-    "tertiaryBorderColor": "rgb(129, 146, 154)",
-    "lineColor": "rgb(74, 86, 92)",
-    "fontFamily": (
-        "ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,segoe ui,"
-        "Roboto,helvetica neue,Arial,noto sans,sans-serif"
-    ),
-    "fontSize": "16px",
-}
+# Primer, resolved from the site's CSS custom properties: a node is the page
+# canvas, its outline is border.default, the connectors are fg.muted, and the
+# one highlighted path is accent.fg. Nothing else carries colour, which is how
+# GitHub renders a mermaid block in a README.
+#
+# Both variants are mermaid's "base" theme fed a palette rather than one of
+# its built-ins. The dark one used to be mermaid's own "dark" theme — greys
+# and purples of its own choosing, on a page that had already committed to
+# GitHub's. Changing any value here invalidates palette.sha1 and re-renders
+# every diagram.
+FONT = (
+    "-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,"
+    "sans-serif"
+)
+FONT_SIZE = "16px"
+
+
+def palette(canvas, subtle, border, border_strong, fg, fg_muted,
+            accent, accent_subtle):
+    """Primer roles -> the ~10 mermaid theme variables that actually show."""
+    return {
+        "background": subtle,
+        "primaryColor": canvas,
+        "primaryBorderColor": border,
+        "primaryTextColor": fg,
+        "secondaryColor": accent_subtle,
+        "secondaryBorderColor": accent,
+        "secondaryTextColor": fg,
+        "tertiaryColor": subtle,
+        "tertiaryBorderColor": border_strong,
+        "tertiaryTextColor": fg,
+        "lineColor": fg_muted,
+        "textColor": fg,
+        "nodeTextColor": fg,
+        "titleColor": fg,
+        "edgeLabelBackground": subtle,
+        "fontFamily": FONT,
+        "fontSize": FONT_SIZE,
+    }
+
+
+PALETTE = palette(
+    canvas="#ffffff", subtle="#f6f8fa", border="#d1d9e0",
+    border_strong="#afb8c1", fg="#1f2328", fg_muted="#59636e",
+    accent="#0969da", accent_subtle="#ddf4ff",
+)
+
+PALETTE_DARK = palette(
+    canvas="#0d1117", subtle="#161b22", border="#30363d",
+    border_strong="#484f58", fg="#e6edf3", fg_muted="#8b949e",
+    accent="#4493f8", accent_subtle="#1c2b41",
+)
 
 VARIANTS = {
     "light": {"theme": "base", "themeVariables": PALETTE},
-    "dark": {
-        "theme": "dark",
-        "themeVariables": {
-            "fontFamily": PALETTE["fontFamily"],
-            "fontSize": PALETTE["fontSize"],
-        },
-    },
+    "dark": {"theme": "base", "themeVariables": PALETTE_DARK},
 }
 
 

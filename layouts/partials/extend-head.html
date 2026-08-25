@@ -1,10 +1,10 @@
 {{/* The flat page ground lives in assets/css/custom.css (SITE BACKGROUND
      section) — bundled, minified, and cacheable there. */}}
 
-{{/* No font preload any more. Headings moved to a system serif stack, so
-     the largest element on every page paints with zero font bytes and no
-     swap. JetBrains Mono is still self-hosted but only appears in version
-     strings and code, well below the fold — it is not worth a connection. */}}
+{{/* No webfont at all. Primer sets everything in the OS UI face and code in
+     the OS mono, so every page — headings, body and code alike — paints on
+     first frame with zero font bytes, no swap and no preload to get wrong.
+     The self-hosted JetBrains Mono went with the serif. */}}
 
 {{/* Speculation Rules — prefetch same-site links on hover/viewport so blog
      and project navigation feels instant. Progressive enhancement: browsers

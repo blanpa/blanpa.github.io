@@ -1,0 +1,64 @@
+/* Primer — GitHub's palette, as a Blowfish colour scheme.
+
+   Blowfish colours its own furniture (search, table of contents, pagination,
+   admonitions, tag pills, the prose plugin) from three Tailwind ramps, and
+   custom.css never reaches most of it. Feeding the ramps GitHub's greys and
+   blues is what makes the theme's parts and this site's parts agree instead
+   of merely coexisting.
+
+   One caveat is structural: a Blowfish ramp has to serve light and dark at
+   once — `text-neutral-800` is a light-mode heading and `dark:bg-neutral-800`
+   is the dark page canvas. So the low end of the neutral ramp is tuned for
+   light surfaces, the high end for dark ones, and the middle greys are the
+   ones that read on both. That is why neutral-800 is #0d1117: it is GitHub's
+   dark canvas, and near-black is also a perfectly good heading colour.
+
+   Values are Primer's, from https://primer.style/foundations/color. */
+
+:root {
+  /* Neutral — canvas, borders and text.
+     50/100  #f6f8fa  canvas.subtle (light)
+     200/300 #d1d9e0  border.default (light)
+     400/500          the two greys that work on either ground
+     600/700 #3d444d/#30363d  border.default (dark)
+     800     #0d1117  canvas.default (dark)  — and light heading ink
+     900     #010409  canvas.inset (dark) */
+  --color-neutral: 255, 255, 255;
+  --color-neutral-50: 246, 248, 250;
+  --color-neutral-100: 246, 248, 250;
+  --color-neutral-200: 209, 217, 224;
+  --color-neutral-300: 175, 184, 193;
+  --color-neutral-400: 139, 148, 158;
+  --color-neutral-500: 110, 118, 129;
+  --color-neutral-600: 61, 68, 77;
+  --color-neutral-700: 48, 54, 61;
+  --color-neutral-800: 13, 17, 23;
+  --color-neutral-900: 1, 4, 9;
+
+  /* Primary — the accent blue. 500 is the light-mode link (#0969da) and 400
+     the dark-mode one (#58a6ff), because that is which step each theme's
+     utilities reach for. */
+  --color-primary-50: 221, 244, 255;
+  --color-primary-100: 182, 227, 255;
+  --color-primary-200: 128, 204, 255;
+  --color-primary-300: 121, 192, 255;
+  --color-primary-400: 88, 166, 255;
+  --color-primary-500: 9, 105, 218;
+  --color-primary-600: 5, 80, 174;
+  --color-primary-700: 3, 61, 139;
+  --color-primary-800: 12, 45, 107;
+  --color-primary-900: 5, 29, 77;
+
+  /* Secondary — success green, the colour of a merged pull request and of
+     the one primary button on this site. */
+  --color-secondary-50: 218, 251, 225;
+  --color-secondary-100: 172, 238, 187;
+  --color-secondary-200: 111, 221, 139;
+  --color-secondary-300: 74, 194, 107;
+  --color-secondary-400: 61, 181, 93;
+  --color-secondary-500: 35, 134, 54;
+  --color-secondary-600: 31, 136, 61;
+  --color-secondary-700: 26, 127, 55;
+  --color-secondary-800: 17, 99, 41;
+  --color-secondary-900: 4, 79, 30;
+}

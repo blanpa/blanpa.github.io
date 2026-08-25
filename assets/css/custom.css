@@ -42,117 +42,188 @@
      HOMEPAGE LIVELINESS
      ABOUT
      SITE BACKGROUND
+     LABEL RESET
+     GITHUB CHROME
+     LINKS
+     MARKDOWN BODY
+     CODE BLOCKS
+     TABLE OF CONTENTS
+     FOCUS
+     THEME FURNITURE
    ============================================== */
 
 /* ==============================================
-   TYPOGRAPHY — self-hosted (GDPR-safe, no CDN)
+   TYPOGRAPHY — GitHub's stack, which is the platform's stack
 
-   Display is a serif, and it is a system stack: every OS ships one of
-   these, so headings cost zero bytes and render on first paint. That is
-   also the point aesthetically — a geometric display sans (Space Grotesk,
-   Poppins, Sora) is the house face of every generated portfolio, and the
-   reason this site read as one. A book serif over a plain UI sans is the
-   register of something written rather than assembled.
+   Primer sets everything in the OS UI face and nothing else: no webfont,
+   no display serif, no second register for headings. That is why GitHub
+   pages paint instantly and why a repo README, an issue and a settings
+   screen all read as one surface. This site follows it exactly, so the
+   only bytes on the wire are the ones the OS already has.
 
-   JetBrains Mono stays, but only where the content is genuinely machine
-   text: versions, package names, download figures, code. Using mono as
-   decoration — uppercase, letterspaced, on ordinary labels — was the
-   other half of the problem.
+   Code is the platform mono for the same reason — and because the theme's
+   syntax colours are literally `hugo gen chromastyles --style=github`, a
+   code block here now matches a code block on github.com down to the
+   background.
    ============================================== */
-@font-face {
-  font-family: "JetBrains Mono";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/jetbrains-mono-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "JetBrains Mono";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("/fonts/jetbrains-mono-600.woff2") format("woff2");
-}
 
 /* ==============================================
-   DESIGN TOKENS
+   DESIGN TOKENS — Primer
+
+   One-to-one with GitHub's own colour roles rather than a palette
+   invented here: canvas / border / fg / accent, dark first and light
+   overridden below. Keeping the names is the point — when a component
+   below asks for `--canvas-subtle` it gets the same grey GitHub uses for
+   the same job, so the pieces agree without being tuned against each
+   other.
+
+   The old ink-and-paper names (--paper, --ink, --rule, --surface) are
+   kept as aliases: ~2500 lines of components resolve through them, and
+   pointing them at the Primer roles moves the whole site in one place.
    ============================================== */
 :root {
-  /* Ink on paper. The old palette was one saturated mint (#00c8a5) on
-     near-black, applied to every border, label, number and chip — the
-     colour was doing the work that size and spacing should do. The accent
-     here is an oxide that reads industrial without glowing, and it appears
-     only on links, the one primary button, and the current nav item.
-     --accent-rgb feeds rgb(... / alpha) for the few tinted surfaces. */
-  --accent: #d9744a;
-  --accent-rgb: 217 116 74;
-  --accent-ink: #1a0e07; /* text on accent-filled surfaces */
-  --accent-on-light: #9c3d18; /* legacy alias, kept: 28 call sites */
+  /* Surfaces — GitHub dark default. --canvas is exactly the background
+     chroma paints behind a code block (#0d1117), so code sits flush in
+     the page instead of floating in a darker box. */
+  --canvas: #0d1117;
+  --canvas-subtle: #161b22;
+  --canvas-inset: #010409;
+  --canvas-overlay: #161b22;
 
-  /* Surfaces — dark is the base, light overrides below. */
-  --paper: #16171a;
-  --paper-raised: #1d1e22;
-  --ink: #e7e4de;
-  --ink-soft: #9c988f;
-  --ink-faint: #6e6a63;
-  --rule: #2c2d31;
-  --rule-strong: #43444a;
+  --border: #30363d;
+  --border-muted: #21262d;
+  --border-strong-c: #484f58;
 
-  /* Fonts */
-  --font-display: "Iowan Old Style", Charter, "Bitstream Charter",
-    "Sitka Text", Cambria, Georgia, serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --fg: #e6edf3;
+  --fg-muted: #8b949e;
+  --fg-subtle: #6e7681;
 
-  /* Type scale. Body is 17px: this site is read, not scanned. */
-  --text-xs: 0.8125rem;
-  --text-sm: 0.9375rem;
-  --text-base: 1.0625rem;
-  --text-lg: 1.1875rem;
-  --text-xl: 1.375rem;
-  --text-2xl: 1.75rem;
-  --text-3xl: 2.25rem;
-  --text-display: clamp(2.4rem, 1.6rem + 3.2vw, 3.75rem);
+  /* Blue is the link colour, green is the one primary action, and the
+     warm underline marks the current nav item — the three colours GitHub
+     lets itself use on a page of chrome. */
+  --accent-fg: #4493f8;
+  --accent-emphasis: #1f6feb;
+  --accent-subtle: rgba(56, 139, 253, 0.1);
+  --accent-muted: rgba(56, 139, 253, 0.4);
 
-  /* Geometry. Near-square corners and no shadows: the pill-and-glass
-     vocabulary is what made every element look like the same component. */
-  --radius-sm: 2px;
-  --radius: 3px;
-  --radius-lg: 4px;
+  --btn-bg: #21262d;
+  --btn-hover-bg: #30363d;
+  --btn-border: #30363d;
+  --btn-primary-bg: #238636;
+  --btn-primary-hover-bg: #29903b;
+  --btn-primary-border: rgba(240, 246, 252, 0.1);
+  --btn-primary-fg: #ffffff;
 
-  /* Legacy aliases so the component sections below keep resolving. */
-  --surface: rgba(255, 255, 255, 0.025);
-  --surface-hover: rgba(255, 255, 255, 0.05);
-  --border-soft: var(--rule);
-  --border-strong: var(--rule-strong);
-}
-:root:not(.dark) {
-  --accent: #9c3d18;
-  --accent-rgb: 156 61 24;
+  --nav-underline: #f78166;
+  --success-fg: #3fb950;
+  --danger-fg: #f85149;
+  /* Inline code and other quiet fills: a translucent grey, so it works on
+     canvas and on canvas-subtle alike. */
+  --neutral-muted: rgba(110, 118, 129, 0.4);
+  --overlay-shadow: 0 8px 24px rgba(1, 4, 9, 0.6);
+  --shadow-sm: 0 0 transparent;
+
+  /* Fonts — Primer's own stacks, verbatim. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  /* Kept: ~30 rules ask for the display face by name. On GitHub there is
+     no display face, so it resolves to the same stack as everything else. */
+  --font-display: var(--font-sans);
+
+  /* Type scale — GitHub's: 16px body, 14px for secondary text, 12px for
+     metadata. Nothing between the steps. */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-display: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+
+  /* Geometry. 6px is the Primer radius — boxes, buttons, inputs and code
+     blocks all take it; only labels and avatars are rounder. */
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 6px;
+  --radius-pill: 2em;
+
+  /* Aliases — the ink-and-paper vocabulary the components below speak. */
+  --accent: var(--accent-fg);
+  --accent-rgb: 68 147 248;
   --accent-ink: #ffffff;
-  --accent-on-light: #9c3d18;
-
-  --paper: #faf8f4;
-  --paper-raised: #ffffff;
-  --ink: #1b1a17;
-  --ink-soft: #5c584f;
-  --ink-faint: #8a857a;
-  --rule: #e2ddd3;
-  --rule-strong: #c7c1b4;
-
-  --surface: rgba(0, 0, 0, 0.015);
-  --surface-hover: rgba(0, 0, 0, 0.035);
-  --border-soft: var(--rule);
-  --border-strong: var(--rule-strong);
+  --accent-on-light: var(--accent-fg); /* legacy alias, kept: 28 call sites */
+  --paper: var(--canvas);
+  --paper-raised: var(--canvas-subtle);
+  --ink: var(--fg);
+  --ink-soft: var(--fg-muted);
+  --ink-faint: var(--fg-subtle);
+  --rule: var(--border);
+  --rule-strong: var(--border-strong-c);
+  --surface: var(--canvas-subtle);
+  --surface-hover: rgba(177, 186, 196, 0.08);
+  --border-soft: var(--border);
+  --border-strong: var(--border-strong-c);
 }
 
-/* Headings are the serif; body copy stays on the theme's system sans so
-   the two registers stay distinct. Optical sizing: the serif needs less
-   negative tracking than the geometric sans it replaces. */
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
+:root:not(.dark) {
+  --canvas: #ffffff;
+  --canvas-subtle: #f6f8fa;
+  --canvas-inset: #f6f8fa;
+  --canvas-overlay: #ffffff;
+
+  --border: #d1d9e0;
+  --border-muted: #d8dee4;
+  --border-strong-c: #afb8c1;
+
+  --fg: #1f2328;
+  --fg-muted: #59636e;
+  --fg-subtle: #6e7781;
+
+  --accent-fg: #0969da;
+  --accent-emphasis: #0969da;
+  --accent-subtle: #ddf4ff;
+  --accent-muted: rgba(84, 174, 255, 0.4);
+
+  --btn-bg: #f6f8fa;
+  --btn-hover-bg: #eef1f4;
+  --btn-border: #d1d9e0;
+  --btn-primary-bg: #1f883d;
+  --btn-primary-hover-bg: #1a7f37;
+  --btn-primary-border: rgba(31, 35, 40, 0.15);
+
+  --nav-underline: #fd8c73;
+  --success-fg: #1a7f37;
+  --danger-fg: #cf222e;
+  --neutral-muted: rgba(175, 184, 193, 0.2);
+  --overlay-shadow: 0 8px 24px rgba(31, 35, 40, 0.2);
+  /* The one shadow Primer keeps in light mode: a single hairline under a
+     resting control, which is why GitHub's buttons look seated. */
+  --shadow-sm: 0 1px 0 rgba(31, 35, 40, 0.04);
+
+  --accent-rgb: 9 105 218;
+  --accent-ink: #ffffff;
+  --surface-hover: rgba(208, 215, 222, 0.32);
+}
+
+/* Body copy: 16px on a 1.5 line, the measurement every Primer surface is
+   built on. Blowfish ships text-lg/leading-7 (18px/28px) on <body>, which
+   is a reading-blog measure, not GitHub's. */
+body[class] {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+}
+
+/* Headings are the same face as the text, separated by weight and size
+   alone — Primer has no heading font and no negative tracking. */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
   font-weight: 600;
-  letter-spacing: -0.005em;
-  line-height: 1.18;
+  letter-spacing: normal;
+  line-height: 1.25;
 }
 h1 { font-size: var(--text-3xl); }
 
@@ -366,20 +437,20 @@ code, kbd, pre, samp {
   gap: 0.55rem;
   margin: 0 0 3rem;
   padding: 0.8rem 1.6rem;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--btn-primary-border);
   border-radius: var(--radius);
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
   font-family: inherit;
-  font-size: var(--text-base);
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 @media (hover: hover) {
   .home-contact-btn:hover {
-    background: transparent;
-    color: var(--accent);
+    background: var(--btn-primary-hover-bg);
+    color: var(--btn-primary-fg);
   }
 }
 .home-contact-btn svg { flex-shrink: 0; }
@@ -400,9 +471,8 @@ code, kbd, pre, samp {
   color: inherit;
 }
 .contact-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  animation: modal-bg-in 0.3s ease-out;
+  background: rgba(1, 4, 9, 0.8);
+  animation: modal-bg-in 0.2s ease-out;
 }
 
 @keyframes modal-bg-in {
@@ -415,74 +485,53 @@ code, kbd, pre, samp {
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  padding: 2.5rem;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(180deg, #161616 0%, #111 100%);
-  box-shadow:
-    0 0 0 1px rgb(var(--accent-rgb) / 0.08),
-    0 24px 80px rgba(0, 0, 0, 0.6),
-    0 0 60px rgb(var(--accent-rgb) / 0.05);
-  animation: modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-:root:not(.dark) .contact-dialog__inner {
-  background: linear-gradient(180deg, #fff 0%, #f8f8f8 100%);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow:
-    0 0 0 1px rgb(var(--accent-rgb) / 0.08),
-    0 24px 80px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--canvas-overlay);
+  box-shadow: var(--overlay-shadow);
+  animation: modal-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes modal-in {
-  from { opacity: 0; transform: translateY(24px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* A Primer dialog header: the title is text, and the rule under it is the
+   border that separates header from body. */
 .contact-dialog__inner > h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0 0 1.5rem 0;
-  color: var(--accent);
-}
-:root:not(.dark) .contact-dialog__inner > h2 {
-  color: var(--accent-on-light);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
 }
 
 .contact-dialog__close {
   position: absolute;
-  top: 1rem;
-  right: 1.25rem;
-  width: 36px;
-  height: 36px;
+  top: 0.9rem;
+  right: 1rem;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  font-size: 1.4rem;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  font-size: 1.25rem;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.5);
-  transition: all 0.2s ease;
+  color: var(--fg-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
   line-height: 1;
   padding: 0;
-}@media (hover: hover) {
-
-  .contact-dialog__close:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
 }
-:root:not(.dark) .contact-dialog__close {
-  color: rgba(0, 0, 0, 0.4);
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.08);
-}@media (hover: hover) {
-
-  :root:not(.dark) .contact-dialog__close:hover {
-    color: #000;
-    background: rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .contact-dialog__close:hover {
+    color: var(--fg);
+    background: var(--btn-hover-bg);
   }
 }
 
@@ -503,29 +552,29 @@ code, kbd, pre, samp {
   margin-bottom: 1.25rem;
 }
 
+/* Primer form label: sentence case, 14px, semibold, the body colour. */
 .contact-dialog .form-group label {
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-  margin-bottom: 0.4rem;
-}
-:root:not(.dark) .contact-dialog .form-group label {
-  color: var(--accent);
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 0.3rem;
 }
 
 .contact-dialog .form-group input,
 .contact-dialog .form-group select,
 .contact-dialog .form-group textarea {
   width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: #f5f5f5;
-  font-size: 0.92rem;
-  transition: all 0.25s ease;
+  padding: 0.35rem 0.75rem;
+  min-height: 32px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--canvas);
+  color: var(--fg);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -535,46 +584,28 @@ code, kbd, pre, samp {
 .contact-dialog .form-group select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23908c84' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1rem center;
-  padding-right: 2.5rem;
+  background-position: right 0.6rem center;
+  padding-right: 2rem;
   cursor: pointer;
 }
 
 .contact-dialog .form-group select option {
-  background: #161616;
-  color: #f5f5f5;
+  background: var(--canvas-overlay);
+  color: var(--fg);
   padding: 0.5rem;
-}
-:root:not(.dark) .contact-dialog .form-group select option {
-  background: #fff;
-  color: #1a1a1a;
 }
 .contact-dialog .form-group input:focus,
 .contact-dialog .form-group select:focus,
 .contact-dialog .form-group textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.15), 0 4px 12px rgb(var(--accent-rgb) / 0.08);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-:root:not(.dark) .contact-dialog .form-group input,
-:root:not(.dark) .contact-dialog .form-group select,
-:root:not(.dark) .contact-dialog .form-group textarea {
-  border-color: rgba(0, 0, 0, 0.12);
-  background-color: #f5f5f5;
-  color: #1a1a1a;
+  border-color: var(--accent-emphasis);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-muted);
 }
 :root:not(.dark) .contact-dialog .form-group select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23008a70' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-color: #f5f5f5;
   background-repeat: no-repeat;
   background-position: right 1rem center;
-}
-:root:not(.dark) .contact-dialog .form-group input:focus,
-:root:not(.dark) .contact-dialog .form-group select:focus,
-:root:not(.dark) .contact-dialog .form-group textarea:focus {
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.12), 0 4px 12px rgb(var(--accent-rgb) / 0.06);
 }
 
 .contact-dialog .form-group textarea {
@@ -584,22 +615,21 @@ code, kbd, pre, samp {
 .contact-dialog .contact-submit {
   width: 100%;
   justify-content: center;
-  padding: 0.9rem 2rem;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 700;
-  border: none;
+  padding: 0.35rem 1rem;
+  min-height: 32px;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  font-weight: 500;
+  border: 1px solid var(--btn-primary-border);
   margin-top: 0.5rem;
-  transition: all 0.25s ease;
+  transition: background-color 0.15s ease;
   box-sizing: border-box;
-}@media (hover: hover) {
-
+}
+@media (hover: hover) {
   .contact-dialog .contact-submit:hover {
-    background: var(--accent);
-    box-shadow: 0 6px 24px rgb(var(--accent-rgb) / 0.3);
-    transform: translateY(-2px);
+    background: var(--btn-primary-hover-bg);
   }
 }
 .contact-dialog .contact-submit:disabled {
@@ -615,10 +645,10 @@ code, kbd, pre, samp {
   min-height: 1.4em;
 }
 .contact-dialog .form-status--success {
-  color: var(--accent);
+  color: var(--success-fg);
 }
 .contact-dialog .form-status--error {
-  color: #ff6b6b;
+  color: var(--danger-fg);
 }
 
 @media (max-width: 768px) {
@@ -626,10 +656,10 @@ code, kbd, pre, samp {
     gap: 1rem 1.75rem;
   }
   .contact-dialog__inner {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
   .home-contact-btn {
-    padding: 1rem 2.5rem;
+    padding: 0.5rem 1rem;
     width: 100%;
     max-width: 420px;
   }
@@ -676,22 +706,23 @@ code, kbd, pre, samp {
 }
 
 /* ==============================================
-   CARD BASE — a hairline, not a pane of glass
+   CARD BASE — Primer's .Box
 
    The .glass name is kept because ~20 templates reference the class; what
-   it does is the opposite now. Translucent fills, 16px corners and a lift
-   on hover made every block on the site the same object. A card here is a
-   rule and some space, and hover changes only what you can click.
+   it does is a Box: canvas-subtle fill, one hairline border, 6px corners,
+   no shadow and no lift. Every panel on the site is this object, which is
+   how GitHub gets a repo page, an issue and a settings pane to look like
+   one product.
    ============================================== */
 .glass {
-  border: 1px solid var(--rule);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: transparent;
-  transition: border-color 0.15s ease;
+  background: var(--canvas-subtle);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 @media (hover: hover) {
   .glass:hover {
-    border-color: var(--rule-strong);
+    border-color: var(--border-strong-c);
   }
 }
 
@@ -740,28 +771,17 @@ code, kbd, pre, samp {
   text-decoration: none;
   color: inherit;
   margin: 2rem 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}@media (hover: hover) {
-
-  .project-featured:hover {
-    border-color: rgb(var(--accent-rgb) / 0.35);
-    background: rgba(255, 255, 255, 0.07);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 50px rgb(var(--accent-rgb) / 0.12);
-  }
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
+  transition: border-color 0.15s ease;
 }
-:root:not(.dark) .project-featured {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
-}@media (hover: hover) {
-
-  :root:not(.dark) .project-featured:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
+/* A Box does not lift, glow or tint on hover: the border goes from
+   border-default to the accent, which is the whole of GitHub's hover
+   vocabulary for a clickable panel. */
+@media (hover: hover) {
+  .project-featured:hover {
+    border-color: var(--accent-fg);
   }
 }
 
@@ -779,7 +799,7 @@ code, kbd, pre, samp {
 }
 
 .project-featured__content {
-  padding: 2.5rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -800,10 +820,10 @@ code, kbd, pre, samp {
   color: var(--ink-faint);
 }
 .project-featured__content h2 {
-  font-size: 1.75rem;
-  font-weight: 800;
-  margin: 0 0 0.75rem 0;
-  line-height: 1.2;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.25;
 }
 .project-featured__content p {
   margin: 0;
@@ -867,10 +887,10 @@ code, kbd, pre, samp {
   flex-wrap: wrap;
   gap: 1.25rem 3rem;
   margin: 2rem 0;
-  padding: 1.5rem 1.75rem;
-  border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  background: var(--surface);
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
 }
 .case-result { display: flex; flex-direction: column; gap: 0.3rem; }
 .case-result__value {
@@ -917,15 +937,15 @@ code, kbd, pre, samp {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
   color: inherit;
   text-decoration: none;
-  transition: border-color 0.25s ease, transform 0.25s ease;
-}@media (hover: hover) {
-
-  .case-card:hover { border-color: rgb(var(--accent-rgb) / 0.35); transform: translateY(-2px); }
+  transition: border-color 0.15s ease;
+}
+@media (hover: hover) {
+  .case-card:hover { border-color: var(--accent-fg); }
 }
 .case-card__img { aspect-ratio: 16 / 9; overflow: hidden; }
 .case-card__img img { width: 100%; height: 100%; object-fit: cover; }
@@ -996,11 +1016,11 @@ code, kbd, pre, samp {
    two ways forward. */
 .article-cta {
   margin: 3rem 0 0;
-  padding: 1.6rem 1.75rem;
-  border: 1px solid var(--border-soft);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 14px 14px 0;
-  background: var(--surface);
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-fg);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
 }
 :root:not(.dark) .article-cta { border-left-color: var(--accent-on-light); }
 .article-cta__kicker {
@@ -1026,17 +1046,19 @@ code, kbd, pre, samp {
 .article-cta__primary {
   display: inline-flex;
   align-items: center;
-  padding: 0.55rem 1.3rem;
-  border-radius: 9999px;
-  background: var(--accent);
-  color: var(--accent-ink);
+  padding: 0.3rem 1rem;
+  min-height: 32px;
+  border: 1px solid var(--btn-primary-border);
+  border-radius: var(--radius);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
-  transition: filter 0.2s ease, transform 0.2s ease;
-}@media (hover: hover) {
-
-  .article-cta__primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  transition: background-color 0.15s ease;
+}
+@media (hover: hover) {
+  .article-cta__primary:hover { background: var(--btn-primary-hover-bg); }
 }
 :root:not(.dark) .article-cta__primary { background: var(--accent-on-light); color: #fff; }
 .article-cta__secondary {
@@ -1080,15 +1102,21 @@ code, kbd, pre, samp {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.35rem 0.7rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: transparent;
-  color: inherit;
-  font-size: var(--text-sm);
-  font-weight: 400;
+  padding: 0.15rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--accent-subtle);
+  color: var(--accent-fg);
+  font-size: var(--text-xs);
+  font-weight: 500;
   text-decoration: none;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease;
+}
+@media (hover: hover) {
+  .tag-cloud__chip:hover {
+    background: var(--accent-emphasis);
+    color: #ffffff;
+  }
 }
 @media (hover: hover) {
   .tag-cloud__chip:hover {
@@ -1155,24 +1183,21 @@ code, kbd, pre, samp {
 /* ==============================================
    SERIES CALLOUT IN ARTICLES
    ============================================== */
-/* Blowfish paints the "part of a series" opener with the colour scheme's
-   primary — which in noir is a blue-grey, so on a dark page it was the only
-   light block on screen and shouted louder than the table of contents next
-   to it. Same surface treatment as the rest of the site's boxes, with the
-   accent carrying the emphasis instead of a slab of colour. */
+/* Blowfish paints the "part of a series" opener with a slab of the primary
+   ramp, which on a dark page was the only light block on screen and shouted
+   louder than the table of contents next to it. It is a Box like everything
+   else, with an accent stripe carrying the emphasis. */
 main details > summary[class*="bg-primary-"] {
-  background: var(--surface) !important;
+  background: var(--canvas-subtle) !important;
   color: inherit !important;
-  border-left: 3px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-}@media (hover: hover) {
-
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-fg);
+  border-radius: var(--radius);
+}
+@media (hover: hover) {
   main details > summary[class*="bg-primary-"]:hover {
     background: var(--surface-hover) !important;
   }
-}
-:root:not(.dark) main details > summary[class*="bg-primary-"] {
-  border-left-color: var(--accent-on-light);
 }
 
 /* ==============================================
@@ -1184,8 +1209,9 @@ main details > summary[class*="bg-primary-"] {
    image was sliced away — diagrams ended mid-box. `contain` shows the whole
    picture; the frame keeps it from floating in the page. */
 #main-content > article > .rounded-md:has(> img.object-cover) {
-  background: var(--surface);
-  border: 1px solid var(--border-soft);
+  background: var(--canvas-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 0.75rem;
 }
 #main-content > article > .rounded-md > img.object-cover {
@@ -1203,11 +1229,19 @@ main details > summary[class*="bg-primary-"] {
 }
 /* Grid cards are ~300px wide: downloads, version and date beside the heading
    squeezed it into "NATS Messa / ging Suite". Stack them there; the featured
-   card is wide enough to keep them on one line. */
+   card is wide enough to keep them on one line — until the viewport is a
+   phone, where it is not, and the title broke to one syllable a line. */
 .project-card .project-card__meta {
   flex-direction: column;
   align-items: flex-start;
   gap: 0.4rem;
+}
+@media (max-width: 640px) {
+  .project-card__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
 }
 .project-card__meta > h2,
 .project-card__meta > h3 {
@@ -1275,28 +1309,14 @@ main details > summary[class*="bg-primary-"] {
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}@media (hover: hover) {
-
-  .project-card:hover {
-    border-color: rgb(var(--accent-rgb) / 0.35);
-    background: rgba(255, 255, 255, 0.07);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgb(var(--accent-rgb) / 0.1);
-  }
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
+  transition: border-color 0.15s ease;
 }
-:root:not(.dark) .project-card {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
-}@media (hover: hover) {
-
-  :root:not(.dark) .project-card:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .project-card:hover {
+    border-color: var(--accent-fg);
   }
 }
 
@@ -1311,12 +1331,6 @@ main details > summary[class*="bg-primary-"] {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
-}@media (hover: hover) {
-
-  .project-card:hover .project-card__img img {
-    transform: scale(1.05);
-  }
 }
 
 .project-card__content {
@@ -1326,9 +1340,9 @@ main details > summary[class*="bg-primary-"] {
   flex-direction: column;
 }
 .project-card__content h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
   line-height: 1.3;
 }
 .project-card__content p {
@@ -1350,28 +1364,14 @@ main details > summary[class*="bg-primary-"] {
   text-decoration: none;
   color: inherit;
   margin: 2rem 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}@media (hover: hover) {
-
-  .blog-featured:hover {
-    border-color: rgb(var(--accent-rgb) / 0.35);
-    background: rgba(255, 255, 255, 0.07);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 50px rgb(var(--accent-rgb) / 0.12);
-  }
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
+  transition: border-color 0.15s ease;
 }
-:root:not(.dark) .blog-featured {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
-}@media (hover: hover) {
-
-  :root:not(.dark) .blog-featured:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
+@media (hover: hover) {
+  .blog-featured:hover {
+    border-color: var(--accent-fg);
   }
 }
 
@@ -1386,16 +1386,10 @@ main details > summary[class*="bg-primary-"] {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}@media (hover: hover) {
-
-  .blog-featured:hover .blog-featured__img img {
-    transform: scale(1.04);
-  }
 }
 
 .blog-featured__content {
-  padding: 2.5rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1416,18 +1410,15 @@ main details > summary[class*="bg-primary-"] {
   color: var(--ink-faint);
 }
 .blog-featured__date {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.65);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--fg-muted);
   margin-bottom: 0.6rem;
 }
-:root:not(.dark) .blog-featured__date {
-  color: rgba(0, 0, 0, 0.4);
-}
 .blog-featured__content h2 {
-  font-size: 1.6rem;
-  font-weight: 800;
-  margin: 0 0 0.75rem 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
   line-height: 1.25;
 }
 .blog-featured__content p {
@@ -1464,32 +1455,18 @@ main details > summary[class*="bg-primary-"] {
 
 .blog-feed-item {
   display: flex;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
+  gap: 1rem;
+  padding: 1rem;
   text-decoration: none;
   color: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}@media (hover: hover) {
-
-  .blog-feed-item:hover {
-    border-color: rgb(var(--accent-rgb) / 0.3);
-    background: rgba(255, 255, 255, 0.06);
-    transform: translateX(6px);
-    box-shadow: 0 6px 25px rgb(var(--accent-rgb) / 0.08);
-  }
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
+  transition: border-color 0.15s ease;
 }
-:root:not(.dark) .blog-feed-item {
-  border-color: rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.5);
-}@media (hover: hover) {
-
-  :root:not(.dark) .blog-feed-item:hover {
-    border-color: rgb(var(--accent-rgb) / 0.35);
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+@media (hover: hover) {
+  .blog-feed-item:hover {
+    border-color: var(--accent-fg);
   }
 }
 
@@ -1497,7 +1474,8 @@ main details > summary[class*="bg-primary-"] {
   flex-shrink: 0;
   width: 100px;
   height: 100px;
-  border-radius: 12px;
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius);
   overflow: hidden;
   position: relative;
 }
@@ -1507,12 +1485,6 @@ main details > summary[class*="bg-primary-"] {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
-}@media (hover: hover) {
-
-  .blog-feed-item:hover .blog-feed-item__img img {
-    transform: scale(1.08);
-  }
 }
 
 .blog-feed-item__body {
@@ -1540,26 +1512,19 @@ main details > summary[class*="bg-primary-"] {
   color: var(--accent);
 }
 .blog-feed-item__series {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.15rem 0.55rem;
-  border-radius: 9999px;
-  background: rgb(var(--accent-rgb) / 0.12);
-  color: var(--accent);
-  border: 1px solid rgb(var(--accent-rgb) / 0.2);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-:root:not(.dark) .blog-feed-item__series {
-  background: rgb(var(--accent-rgb) / 0.08);
-  color: var(--accent);
-  border-color: rgb(var(--accent-rgb) / 0.2);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  padding: 0 0.55rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent-subtle);
+  color: var(--accent-fg);
+  border: 1px solid transparent;
 }
 
 .blog-feed-item__body h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin: 0 0 0.3rem 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
   line-height: 1.3;
 }
 .blog-feed-item__body p {
@@ -1585,7 +1550,7 @@ main details > summary[class*="bg-primary-"] {
   .blog-feed-item__img {
     width: 100%;
     height: 160px;
-    border-radius: 10px;
+    border-radius: var(--radius);
   }
 }
 
@@ -1594,21 +1559,17 @@ main details > summary[class*="bg-primary-"] {
    ============================================== */
 .about-hero {
   margin: 1.5rem 0 2.5rem;
-  padding: 2rem 2.5rem;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-}
-:root:not(.dark) .about-hero {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
 }
 
 .about-hero__title {
-  font-size: 1.6rem;
-  font-weight: 800;
+  font-size: var(--text-xl);
+  font-weight: 600;
   line-height: 1.3;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.75rem 0;
 }
 .about-hero__title .accent {
   color: var(--accent);
@@ -1646,14 +1607,10 @@ main details > summary[class*="bg-primary-"] {
 }
 
 .skill-group {
-  padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.03);
-}
-:root:not(.dark) .skill-group {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
 }
 
 .skill-group__title {
@@ -1732,25 +1689,22 @@ a.skill-chip { color: inherit; }
   position: absolute;
   left: -2rem;
   top: 1.5rem;
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: #0a0a0a;
-  border: 3px solid var(--accent);
+  background: var(--accent-fg);
+  border: 3px solid var(--canvas);
   z-index: 1;
-  transform: translateX(-0.5px);
-}
-:root:not(.dark) .timeline-marker {
-  background: #fff;
+  transform: translateX(1.5px);
 }
 
 .timeline-content {
   padding: 1.5rem 1.75rem;
 }
 .timeline-content h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
 }
 .timeline-content p {
   margin: 0;
@@ -1828,7 +1782,7 @@ a.skill-chip { color: inherit; }
 }
 
 .service-card {
-  padding: 2rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
 }
@@ -1851,8 +1805,8 @@ a.skill-chip { color: inherit; }
 }
 
 .service-card h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: var(--text-base);
+  font-weight: 600;
   margin: 0 0 0.5rem 0;
 }
 .service-card p {
@@ -1894,8 +1848,8 @@ a.skill-chip { color: inherit; }
 }
 
 .process-step h4 {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: 600;
   margin: 0 0 0.4rem 0;
 }
 .process-step p {
@@ -1910,14 +1864,10 @@ a.skill-chip { color: inherit; }
    ============================================== */
 .npm-stats-table {
   margin: 1rem 0 2rem;
-  border-radius: 16px;
+  border-radius: var(--radius);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-}
-:root:not(.dark) .npm-stats-table {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--border);
+  background: var(--canvas);
 }
 
 .npm-stats-table table {
@@ -1925,27 +1875,19 @@ a.skill-chip { color: inherit; }
   border-collapse: collapse;
 }
 .npm-stats-table thead th {
-  padding: 0.9rem 1.25rem;
+  padding: 0.5rem 1rem;
   text-align: left;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-:root:not(.dark) .npm-stats-table thead th {
-  color: var(--accent);
-  border-bottom-color: rgba(0, 0, 0, 0.06);
+  color: var(--fg-muted);
+  background: var(--canvas-subtle);
+  border-bottom: 1px solid var(--border);
 }
 
 .npm-stats-table tbody td {
-  padding: 0.75rem 1.25rem;
-  font-size: 0.88rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-:root:not(.dark) .npm-stats-table tbody td {
-  border-bottom-color: rgba(0, 0, 0, 0.04);
+  padding: 0.5rem 1rem;
+  font-size: var(--text-sm);
+  border-bottom: 1px solid var(--border-muted);
 }
 
 .npm-stats-table tbody tr:last-child td {
@@ -1953,26 +1895,23 @@ a.skill-chip { color: inherit; }
 }
 
 .npm-stats-table tbody tr {
-  transition: background 0.2s ease;
-}@media (hover: hover) {
-
+  transition: background-color 0.15s ease;
+}
+@media (hover: hover) {
   .npm-stats-table tbody tr:hover {
-    background: rgb(var(--accent-rgb) / 0.06);
+    background: var(--canvas-subtle);
   }
 }
 
 .npm-stats-table tbody td a {
-  color: var(--accent);
-  font-weight: 600;
+  color: var(--accent-fg);
+  font-weight: 500;
   text-decoration: none;
-}@media (hover: hover) {
-
+}
+@media (hover: hover) {
   .npm-stats-table tbody td a:hover {
     text-decoration: underline;
   }
-}
-:root:not(.dark) .npm-stats-table tbody td a {
-  color: var(--accent);
 }
 
 .npm-stats-table .npm-dl {
@@ -1982,14 +1921,11 @@ a.skill-chip { color: inherit; }
 
 .npm-stats-table .npm-stats-updated {
   margin: 0;
-  padding: 0.6rem 1.25rem;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.45);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-:root:not(.dark) .npm-stats-table .npm-stats-updated {
-  color: rgba(0, 0, 0, 0.45);
-  border-top-color: rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 1rem;
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+  background: var(--canvas-subtle);
+  border-top: 1px solid var(--border);
 }
 
 /* ==============================================
@@ -2000,14 +1936,10 @@ a.skill-chip { color: inherit; }
   flex-direction: column;
   align-items: center;
   margin: 1.5rem 0 2.5rem;
-  padding: 2rem;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-}
-:root:not(.dark) .tech-arch {
-  border-color: rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.5);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--canvas-subtle);
 }
 
 .tech-arch__layer {
@@ -2038,13 +1970,13 @@ a.skill-chip { color: inherit; }
    arrows between them, so the nodes are now uniform and the diagram reads
    as one drawing rather than four palettes. */
 .tech-arch__node {
-  padding: 0.3rem 0.65rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  background: transparent;
-  font-size: var(--text-sm);
-  font-weight: 400;
-  color: var(--ink-soft);
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--canvas);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--fg-muted);
   cursor: default;
 }
 .node--edge,
@@ -2066,77 +1998,28 @@ a.skill-chip { color: inherit; }
   text-decoration: none !important;
 }
 .github-card-wrapper > a > div {
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 16px !important;
-  background: rgba(20, 27, 36, 0.6) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  background: var(--canvas-subtle) !important;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}@media (hover: hover) {
-
+  transition: border-color 0.15s ease;
+  box-shadow: none;
+}
+@media (hover: hover) {
   .github-card-wrapper > a > div:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4) !important;
-    background: rgba(20, 27, 36, 0.8) !important;
-    box-shadow: 0 12px 40px rgb(var(--accent-rgb) / 0.15);
-    transform: translateY(-2px);
+    border-color: var(--accent-fg) !important;
   }
 }
 .github-card-wrapper > a > div > div:first-child {
   position: relative;
 }
-.github-card-wrapper > a > div > div:first-child::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(20, 27, 36, 0.45) 0%, rgba(20, 27, 36, 0.85) 100%);
-  pointer-events: none;
-  transition: background 0.3s ease;
-}@media (hover: hover) {
-
-  .github-card-wrapper:hover > a > div > div:first-child::after {
-    background: linear-gradient(180deg, rgba(20, 27, 36, 0.35) 0%, rgba(20, 27, 36, 0.75) 100%);
-  }
-}
-.github-card-wrapper img {
-  filter: brightness(0.7) contrast(1.1) saturate(0.85);
-  transition: filter 0.3s ease;
-}@media (hover: hover) {
-
-  .github-card-wrapper:hover img {
-    filter: brightness(0.8) contrast(1.1) saturate(0.95);
-  }
-}
 .github-card-wrapper [class*="text-neutral-800"] {
-  color: rgba(245, 245, 245, 0.95) !important;
+  color: var(--fg) !important;
 }
 .github-card-wrapper [id$="-description"] {
-  color: rgba(245, 245, 245, 0.7) !important;
+  color: var(--fg-muted) !important;
 }
 
-:root:not(.dark) .github-card-wrapper > a > div {
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  background: rgba(255, 255, 255, 0.85) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-}@media (hover: hover) {
-
-  :root:not(.dark) .github-card-wrapper > a > div:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4) !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
-  }
-}
-:root:not(.dark) .github-card-wrapper img {
-  filter: none;
-}
-:root:not(.dark) .github-card-wrapper > a > div > div:first-child::after {
-  display: none;
-}
-:root:not(.dark) .github-card-wrapper [class*="text-neutral-800"] {
-  color: rgba(20, 20, 20, 0.95) !important;
-}
-:root:not(.dark) .github-card-wrapper [id$="-description"] {
-  color: rgba(20, 20, 20, 0.7) !important;
-}
 
 /* ==============================================
    BLOG CATEGORY FILTER CHIPS
@@ -2169,51 +2052,33 @@ a.skill-chip { color: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.45rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 0.15rem 0.7rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--canvas-subtle);
+  color: var(--fg-muted);
+  font-size: var(--text-xs);
+  font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
   text-decoration: none;
   user-select: none;
-}@media (hover: hover) {
-
+}
+@media (hover: hover) {
   .blog-filter-chip:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4);
-    color: var(--accent);
-    background: rgb(var(--accent-rgb) / 0.08);
+    border-color: var(--accent-fg);
+    color: var(--accent-fg);
   }
 }
 .blog-filter-chip.is-active {
-  border-color: var(--accent);
-  background: rgb(var(--accent-rgb) / 0.15);
-  color: var(--accent);
+  border-color: transparent;
+  background: var(--accent-subtle);
+  color: var(--accent-fg);
 }
 .blog-filter-chip__count {
   font-size: 0.7rem;
   opacity: 0.5;
-}
-:root:not(.dark) .blog-filter-chip {
-  border-color: rgba(0, 0, 0, 0.1);
-  background: rgba(0, 0, 0, 0.03);
-  color: rgba(0, 0, 0, 0.5);
-}@media (hover: hover) {
-
-  :root:not(.dark) .blog-filter-chip:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4);
-    color: var(--accent);
-    background: rgb(var(--accent-rgb) / 0.08);
-  }
-}
-:root:not(.dark) .blog-filter-chip.is-active {
-  border-color: var(--accent);
-  background: rgb(var(--accent-rgb) / 0.12);
-  color: var(--accent);
 }
 
 /* ==============================================
@@ -2230,21 +2095,21 @@ a.skill-chip { color: inherit; }
    POLISH PASS — contrast, sticky TOC, blog grid
    ============================================== */
 
-/* Footer: better contrast for legal/copyright text */
+/* Footer: Primer's own — muted text, and links that only colour on hover. */
 #site-footer .text-neutral-500,
 #site-footer .dark\:text-neutral-400,
-.dark #site-footer p,
-.dark #site-footer a {
-  color: rgba(245, 245, 245, 0.6) !important;
-}@media (hover: hover) {
-
-  #site-footer a:hover {
-    color: var(--accent) !important;
-  }
+#site-footer p,
+#site-footer a:not(.support-note a) {
+  color: var(--fg-muted) !important;
 }
-:root:not(.dark) #site-footer p,
-:root:not(.dark) #site-footer a {
-  color: rgba(20, 20, 20, 0.65) !important;
+#site-footer .support-note a {
+  color: var(--accent-fg) !important;
+}
+@media (hover: hover) {
+  #site-footer a:hover {
+    color: var(--accent-fg) !important;
+    text-decoration: underline;
+  }
 }
 
 /* Sticky TOC — make sure it stays visible while scrolling */
@@ -2271,10 +2136,9 @@ a.skill-chip { color: inherit; }
   color: var(--accent-on-light) !important;
 }
 
-/* Links in prose. Blowfish's noir scheme uses a blue-grey primary-600 for
-   these, which was both hard to read in light mode (2.73:1 on white) and
-   a second accent colour competing with the site's own. One accent, both
-   themes, contrast checked: 6.5:1 light, 5.7:1 dark. */
+/* Links in prose. One accent in both themes, and it is Primer's own link
+   colour: #0969da measures 4.6:1 on white and #4493f8 6.3:1 on #0d1117 —
+   both AA at body size, which is why GitHub picked that pair. */
 .article-content p a,
 .article-content li a,
 .article-content td a,
@@ -2298,7 +2162,9 @@ a.skill-chip { color: inherit; }
   }
 }
 
-/* Card description text — better contrast */
+/* Card description text: one muted grey, no opacity games. Stacking
+   opacity on a token colour is how the same text ended up at four
+   different greys depending on which card it was in. */
 .project-featured__content p,
 .project-card__content p,
 .blog-featured__content p,
@@ -2306,18 +2172,8 @@ a.skill-chip { color: inherit; }
 .service-card p,
 .process-step p,
 .about-hero__text {
-  opacity: 0.85;
-  color: rgba(245, 245, 245, 0.85);
-}
-:root:not(.dark) .project-featured__content p,
-:root:not(.dark) .project-card__content p,
-:root:not(.dark) .blog-featured__content p,
-:root:not(.dark) .blog-feed-item__body p,
-:root:not(.dark) .service-card p,
-:root:not(.dark) .process-step p,
-:root:not(.dark) .about-hero__text {
-  color: rgba(20, 20, 20, 0.75);
   opacity: 1;
+  color: var(--fg-muted);
 }
 
 /* Blog feed: 2-column grid on larger screens */
@@ -2335,12 +2191,7 @@ a.skill-chip { color: inherit; }
   .blog-feed-item__img {
     width: 100%;
     height: 160px;
-    border-radius: 12px;
-  }@media (hover: hover) {
-
-      .blog-feed-item:hover {
-        transform: translateY(-4px);
-      }
+    border-radius: var(--radius);
   }
 }
 
@@ -2375,30 +2226,17 @@ a.skill-chip { color: inherit; }
 .mermaid-wrapper {
   position: relative;
   margin: 1.5rem 0;
-  padding: 1.25rem;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.025);
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--canvas-subtle);
   overflow-x: auto;
   cursor: zoom-in;
-  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  transition: border-color 0.15s ease;
 }
 @media (hover: hover) {
   .mermaid-wrapper:hover {
-    border-color: rgb(var(--accent-rgb) / 0.35);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 6px 24px rgb(var(--accent-rgb) / 0.08);
-  }
-}
-:root:not(.dark) .mermaid-wrapper {
-  border-color: rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.6);
-}
-@media (hover: hover) {
-  :root:not(.dark) .mermaid-wrapper:hover {
-    border-color: rgb(var(--accent-rgb) / 0.4);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    border-color: var(--accent-fg);
   }
 }
 
@@ -2426,10 +2264,10 @@ a.skill-chip { color: inherit; }
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.55);
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 9999px;
+  color: var(--fg-muted);
+  background: var(--canvas);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
   opacity: 0;
   transition: opacity 0.2s ease;
   pointer-events: none;
@@ -2450,11 +2288,6 @@ a.skill-chip { color: inherit; }
   .mermaid-zoom-hint {
     opacity: 1;
   }
-}
-:root:not(.dark) .mermaid-zoom-hint {
-  color: rgba(20, 20, 20, 0.6);
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(0, 0, 0, 0.08);
 }
 
 /* Lightbox / zoomed mode — a native <dialog>, so the platform handles the
@@ -2483,11 +2316,7 @@ a.skill-chip { color: inherit; }
   animation: mermaid-fade-in 0.2s ease-out;
 }
 .mermaid-lightbox::backdrop {
-  background: rgba(10, 10, 10, 0.92);
-  backdrop-filter: blur(10px);
-}
-:root:not(.dark) .mermaid-lightbox::backdrop {
-  background: rgba(245, 245, 245, 0.96);
+  background: rgba(1, 4, 9, 0.8);
 }
 
 @keyframes mermaid-fade-in {
@@ -2523,34 +2352,23 @@ a.skill-chip { color: inherit; }
   position: fixed;
   top: 1.25rem;
   right: 1.25rem;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  font-size: 1.4rem;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  border: 1px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--fg);
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s ease;
   z-index: 1;
-}@media (hover: hover) {
-
-  .mermaid-lightbox__close:hover {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
 }
-:root:not(.dark) .mermaid-lightbox__close {
-  border-color: rgba(0, 0, 0, 0.15);
-  background: rgba(0, 0, 0, 0.06);
-  color: #1a1a1a;
-}@media (hover: hover) {
-
-  :root:not(.dark) .mermaid-lightbox__close:hover {
-    background: rgba(0, 0, 0, 0.12);
+@media (hover: hover) {
+  .mermaid-lightbox__close:hover {
+    background: var(--btn-hover-bg);
   }
 }
 
@@ -2561,42 +2379,30 @@ a.skill-chip { color: inherit; }
   transform: translateX(-50%);
   display: flex;
   gap: 0.5rem;
-  padding: 0.4rem;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(8px);
+  padding: 0.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--canvas-overlay);
+  box-shadow: var(--overlay-shadow);
   z-index: 1;
-}
-:root:not(.dark) .mermaid-lightbox__controls {
-  border-color: rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.85);
 }
 
 .mermaid-lightbox__controls button {
-  min-width: 38px;
-  height: 38px;
-  padding: 0 0.75rem;
-  border-radius: 10px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.6rem;
+  border-radius: var(--radius);
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.95rem;
-  font-weight: 600;
+  color: var(--fg);
+  font-size: var(--text-sm);
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
-}@media (hover: hover) {
-
-  .mermaid-lightbox__controls button:hover {
-    background: rgba(255, 255, 255, 0.12);
-  }
+  transition: background-color 0.15s ease;
 }
-:root:not(.dark) .mermaid-lightbox__controls button {
-  color: #1a1a1a;
-}@media (hover: hover) {
-
-  :root:not(.dark) .mermaid-lightbox__controls button:hover {
-    background: rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .mermaid-lightbox__controls button:hover {
+    background: var(--btn-hover-bg);
   }
 }
 
@@ -2639,8 +2445,7 @@ body.mermaid-lightbox-open {
   display: block;
   height: 100%;
   width: 0;
-  background: var(--accent);
-  box-shadow: 0 0 8px rgb(var(--accent-rgb) / 0.5);
+  background: var(--accent-fg);
   transition: width 0.1s linear;
 }
 
@@ -2693,8 +2498,7 @@ body.mermaid-lightbox-open {
   flex-shrink: 0;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgb(var(--accent-rgb) / 0.35);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
 }
 .about-hero__body { min-width: 0; }
 .about-hero__actions {
@@ -2707,28 +2511,23 @@ body.mermaid-lightbox-open {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 1.15rem;
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 700;
+  padding: 0.3rem 1rem;
+  min-height: 32px;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 500;
   text-decoration: none;
-  transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 .about-btn--primary {
-  background: var(--accent);
-  color: var(--accent-ink);
-}@media (hover: hover) {
-
-  .about-btn--primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  border: 1px solid var(--btn-primary-border);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  box-shadow: var(--shadow-sm);
 }
-.about-btn--ghost {
-  border: 1px solid rgb(var(--accent-rgb) / 0.4);
-  color: var(--accent);
-}@media (hover: hover) {
-
-  .about-btn--ghost:hover { background: rgb(var(--accent-rgb) / 0.12); transform: translateY(-1px); }
+@media (hover: hover) {
+  .about-btn--primary:hover { background: var(--btn-primary-hover-bg); }
 }
-:root:not(.dark) .about-btn--ghost { color: var(--accent); border-color: rgb(var(--accent-rgb) / 0.4); }
 
 /* About proof line — same sentence treatment as the homepage. */
 .about-stats {
@@ -2848,7 +2647,7 @@ body::after { content: none; }
    LABEL RESET — the decorative-mono sweep
 
    Across the components above, roughly a dozen small labels shared one
-   treatment: JetBrains Mono, uppercase, 0.06–0.08em tracking, accent
+   treatment: mono, uppercase, 0.06–0.08em tracking, accent
    colour. Dates, table headers, form labels, sector names, diagram tiers.
    Used once it is a nice detail; used on everything it stops being a
    signal and becomes the site's texture — and it was a large part of why
@@ -2860,6 +2659,11 @@ body::after { content: none; }
    rather than edited in place so the decision is visible and reversible.
    ============================================== */
 .contact-dialog .form-group label,
+.series-nav__pos,
+.series-nav__step,
+.article-cta__secondary,
+.tag-cloud__count,
+.term-meta__all,
 .case-facts dt,
 .case-result__label,
 .case-stack__label,
@@ -2919,4 +2723,411 @@ a[href*="/tags/"]:not(.tag-cloud__chip) > span.flex {
 a[href*="/tags/"]:not(.tag-cloud__chip) ~ a[href*="/tags/"]:not(.tag-cloud__chip)::before {
   content: "· ";
   color: var(--ink-faint);
+}
+
+/* ==============================================
+   GITHUB CHROME — the header bar
+
+   GitHub's global bar is solid from the first pixel, sits on the inset
+   canvas (a shade darker than the page in dark, a shade lighter in
+   light), and is separated from the content by one hairline. No blur, no
+   shadow, no transparency — which also means no scroll listener.
+   The header layout is set to "fixed-fill" in params.toml; these rules
+   give that container Primer's colours.
+   ============================================== */
+.fixed.inset-x-0.z-100 {
+  background: var(--canvas-inset) !important;
+  border-bottom: 1px solid var(--border);
+}
+/* Blowfish reserves 148px above the content for the bar. GitHub's is 64px,
+   and the 24px below it is the gap every GitHub page opens with. */
+.min-h-\[148px\] {
+  min-height: 5.5rem;
+}
+.main-menu {
+  min-height: 3.5rem;
+}
+.main-menu nav {
+  height: 3.5rem;
+}
+.main-menu a,
+.main-menu button {
+  color: var(--fg);
+  font-size: var(--text-sm);
+}
+@media (hover: hover) {
+  .main-menu a:hover,
+  .main-menu button:hover {
+    color: var(--fg-muted) !important;
+  }
+}
+/* The current section. GitHub marks the selected tab with a warm underline
+   along the bottom of the bar, under otherwise unchanged text — the one
+   place on a page of chrome where a colour is spent on state rather than on
+   a link. Blowfish tags the current item by adding .active to the <span>
+   inside the link (see highlightCurrentMenuArea), and styles it as a 3px
+   text underline; this replaces that with the tab rule. */
+.main-menu nav a {
+  position: relative;
+  height: 100%;
+}
+.main-menu nav span.active {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--fg);
+}
+.main-menu nav a:has(span.active)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 6px 6px 0 0;
+  background: var(--nav-underline);
+}
+
+/* ==============================================
+   LINKS — Primer's, which is: blue, and underlined only on hover
+
+   The site used a permanent underline in a tinted accent on every link
+   outside prose. GitHub underlines on hover and nowhere else; body copy in
+   an article is the single exception, where the underline is what tells
+   you a link is there at all — and Primer keeps that one too.
+   ============================================== */
+.home-hero__secondary,
+.home-featured__all,
+.support-note a,
+.support-card,
+.cv-button,
+.rss-subscribe,
+.about-btn--ghost,
+a.skill-chip,
+.article-cta__secondary,
+.term-meta__all,
+.series-nav__name {
+  color: var(--accent-fg);
+  text-decoration: none;
+  text-decoration-color: currentColor;
+}
+@media (hover: hover) {
+  .home-hero__secondary:hover,
+  .home-featured__all:hover,
+  .support-note a:hover,
+  .support-card:hover,
+  .cv-button:hover,
+  .rss-subscribe:hover,
+  .about-btn--ghost:hover,
+  a.skill-chip:hover,
+  .article-cta__secondary:hover,
+  .term-meta__all:hover,
+  .series-nav__name:hover {
+    color: var(--accent-fg);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Prose links keep their underline, in the link colour rather than a
+   washed-out tint of it. */
+.article-content p a,
+.article-content li a,
+.article-content td a,
+.article-content blockquote a,
+.prose p a,
+.prose li a {
+  color: var(--accent-fg);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: currentColor;
+}
+
+/* ==============================================
+   MARKDOWN BODY — github-markdown-css, essentially
+
+   A post on this site is a long technical document with code, tables and
+   diagrams in it, which is the exact thing GitHub's markdown stylesheet
+   was written for. Rules under the top two heading levels, a grey rule
+   down the side of a quotation, bordered table cells with banded rows:
+   these are the parts people read as "GitHub".
+   ============================================== */
+.article-content h1,
+.article-content h2 {
+  margin-top: 1.5em;
+  margin-bottom: 0.6em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border-muted);
+}
+.article-content h1 { font-size: 2em; }
+.article-content h2 { font-size: 1.5em; }
+.article-content h3 { font-size: 1.25em; }
+.article-content h4 { font-size: 1em; }
+.article-content h5 { font-size: 0.875em; }
+.article-content h6 { font-size: 0.85em; color: var(--fg-muted); }
+
+.article-content blockquote {
+  margin-left: 0;
+  padding: 0 1em;
+  color: var(--fg-muted);
+  border-left: 0.25em solid var(--border);
+  font-style: normal;
+}
+.article-content blockquote p:first-child { margin-top: 0; }
+.article-content blockquote p:last-child { margin-bottom: 0; }
+
+.article-content hr {
+  height: 0.25em;
+  margin: 1.5em 0;
+  padding: 0;
+  background: var(--border-muted);
+  border: 0;
+}
+
+/* Tables scroll inside their own box rather than widening the page. */
+.article-content table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.article-content table th,
+.article-content table td {
+  padding: 0.375rem 0.8125rem;
+  border: 1px solid var(--border);
+}
+.article-content table th {
+  font-weight: 600;
+  background: var(--canvas-subtle);
+}
+.article-content table tr {
+  background: var(--canvas);
+  border-top: 1px solid var(--border-muted);
+}
+.article-content table tr:nth-child(2n) {
+  background: var(--canvas-subtle);
+}
+
+/* Inline code: a translucent grey that works on either canvas, 85% of the
+   surrounding size, no border. */
+.article-content code:not(.chroma code):not(pre code),
+.prose :where(code):not(:where(pre *)) {
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+  background: var(--neutral-muted);
+  border-radius: var(--radius);
+  color: inherit;
+  font-weight: 400;
+}
+.prose :where(code):not(:where(pre *))::before,
+.prose :where(code):not(:where(pre *))::after {
+  content: none;
+}
+
+/* ==============================================
+   CODE BLOCKS
+
+   The syntax colours already are GitHub's — the theme generates them with
+   `hugo gen chromastyles --style=github` / `--style=github-dark`. What was
+   missing is the container: chroma paints the block in the page canvas, so
+   on a canvas-coloured page it had no edges at all. Primer sets code on
+   canvas-subtle, 6px corners, no border and no shadow.
+   ============================================== */
+html:not(.dark) .chroma,
+html.dark .chroma,
+html:not(.dark) .chroma .bg,
+html.dark .chroma .bg {
+  background-color: var(--canvas-subtle);
+}
+.highlight-wrapper {
+  border-radius: var(--radius);
+  box-shadow: none;
+  border: 1px solid var(--border-muted);
+}
+.highlight-wrapper pre,
+.article-content pre {
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+.codeblock-title {
+  background: var(--canvas-inset) !important;
+  border-color: var(--border-muted) !important;
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+}
+
+/* ==============================================
+   TABLE OF CONTENTS
+
+   Sidebar navigation, so: no underlines at rest, muted until hovered, and
+   the current heading marked by weight and colour.
+   ============================================== */
+.toc a,
+#TableOfContents a {
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .toc a:hover,
+  #TableOfContents a:hover {
+    color: var(--accent-fg);
+    text-decoration: underline;
+  }
+}
+#TableOfContents a.active {
+  color: var(--accent-fg) !important;
+  font-weight: 600;
+}
+
+/* ==============================================
+   FOCUS — one ring, everywhere
+
+   Primer's focus treatment is a 2px accent outline offset from the
+   control, on every focusable thing, and nothing else. Replacing the
+   assorted per-component rings with it is most of what "consistent" means
+   for keyboard users.
+   ============================================== */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-fg);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--accent-muted);
+  color: var(--fg);
+}
+
+/* ==============================================
+   THEME FURNITURE — search, scroll-to-top, sharing
+
+   Blowfish's own controls, given the Primer button: canvas-subtle fill,
+   hairline border, 6px corners, and a fill change on hover.
+   ============================================== */
+#search-button,
+#scroll-to-top,
+.sharing-links a {
+  border-radius: var(--radius);
+}
+
+/* The search overlay. Blowfish scrims the page with a translucent neutral
+   and blurs it; Primer dims with a flat wash and lets the dialog's own
+   border and shadow do the separating — which matters more here, because the
+   panel and the page canvas are now the same two greys. */
+#search-wrapper {
+  background: rgba(1, 4, 9, 0.6) !important;
+  backdrop-filter: none !important;
+}
+:root:not(.dark) #search-wrapper {
+  background: rgba(140, 149, 159, 0.3) !important;
+}
+#search-modal {
+  border-color: var(--border) !important;
+  border-radius: var(--radius) !important;
+  background: var(--canvas-overlay) !important;
+  box-shadow: var(--overlay-shadow) !important;
+}
+#search-modal header {
+  border-bottom: 1px solid var(--border);
+}
+/* The field is the dialog: no box of its own, the way a command palette
+   works. It is also the only focusable thing in here, so nothing is lost by
+   dropping the ring. */
+#search-query {
+  border: 0;
+  outline: none;
+  color: var(--fg);
+  font-size: var(--text-base);
+}
+#search-query::placeholder {
+  color: var(--fg-subtle);
+}
+/* A result is a row in a list, and a row highlights by filling, not by
+   tinting itself with the accent. */
+#search-results a {
+  border-radius: var(--radius) !important;
+  background: transparent !important;
+  color: inherit;
+}
+@media (hover: hover) {
+  #search-results a:hover {
+    background: var(--surface-hover) !important;
+  }
+}
+#search-results a:focus {
+  background: var(--surface-hover) !important;
+  outline: 2px solid var(--accent-fg);
+  outline-offset: -2px;
+}
+
+/* ==============================================
+   PROSE PALETTE — the theme's typography plugin, on Primer tokens
+
+   Blowfish drives article text through Tailwind Typography, which reads
+   its colours from ~18 --tw-prose-* variables rather than from anything
+   custom.css can reach: body copy was neutral-300 (a grey) where GitHub
+   sets fg.default, inline code was the secondary ramp (green), and the
+   quote rule was the primary one (blue). Re-pointing the variables fixes
+   all of it at the source, in both themes at once — the dark rules
+   forward each token to its --tw-prose-invert-* twin, so both halves are
+   declared here.
+   ============================================== */
+.prose {
+  --tw-prose-body: var(--fg);
+  --tw-prose-headings: var(--fg);
+  --tw-prose-lead: var(--fg-muted);
+  --tw-prose-links: var(--accent-fg);
+  --tw-prose-bold: var(--fg);
+  --tw-prose-counters: var(--fg-muted);
+  --tw-prose-bullets: var(--border-strong-c);
+  --tw-prose-hr: var(--border-muted);
+  --tw-prose-quotes: var(--fg-muted);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--fg-muted);
+  --tw-prose-kbd: var(--fg);
+  --tw-prose-code: var(--fg);
+  --tw-prose-pre-code: var(--fg);
+  --tw-prose-pre-bg: var(--canvas-subtle);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border-muted);
+
+  --tw-prose-invert-body: var(--fg);
+  --tw-prose-invert-headings: var(--fg);
+  --tw-prose-invert-lead: var(--fg-muted);
+  --tw-prose-invert-links: var(--accent-fg);
+  --tw-prose-invert-bold: var(--fg);
+  --tw-prose-invert-counters: var(--fg-muted);
+  --tw-prose-invert-bullets: var(--border-strong-c);
+  --tw-prose-invert-hr: var(--border-muted);
+  --tw-prose-invert-quotes: var(--fg-muted);
+  --tw-prose-invert-quote-borders: var(--border);
+  --tw-prose-invert-captions: var(--fg-muted);
+  --tw-prose-invert-kbd: var(--fg);
+  --tw-prose-invert-code: var(--fg);
+  --tw-prose-invert-pre-code: var(--fg);
+  --tw-prose-invert-pre-bg: var(--canvas-subtle);
+  --tw-prose-invert-th-borders: var(--border);
+  --tw-prose-invert-td-borders: var(--border-muted);
+}
+
+/* ==============================================
+   ARTICLE HERO — the cover, framed
+
+   With the header now 64px the cover ran straight into the bar, and a
+   full-bleed image is the one element on the site with no edge of its
+   own. It gets the Box treatment the diagrams and cards already have.
+   ============================================== */
+#main-content > article > .rounded-md:has(> img),
+.single_hero_basic {
+  margin-top: 1rem;
+  border-radius: var(--radius);
+  overflow: hidden;
 }

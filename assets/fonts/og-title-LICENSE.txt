@@ -1,4 +1,4 @@
-assets/fonts/og-title.ttf is Noto Serif Bold.
+assets/fonts/og-title.ttf is Noto Sans Bold.
 
 Copyright 2010, 2012-2020 Google Inc.
 Copyright 2015-2020 Google LLC.

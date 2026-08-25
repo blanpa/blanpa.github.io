@@ -38,16 +38,18 @@ from PIL import Image
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W, H = 1200, 640
 
-# assets/css/custom.css :root — the light theme's values. The covers are drawn
-# on paper because the redesign is ink on paper; on the dark theme they read
-# as a printed plate, which is the same relationship a figure has to a page.
-PAPER = "#faf8f4"
-INK = "#1b1a17"
-INK_SOFT = "#5c584f"
-INK_FAINT = "#8a857a"
-RULE = "#e2ddd3"
-RULE_STRONG = "#c7c1b4"
-ACCENT = "#9c3d18"
+# assets/css/custom.css :root — the light theme's values, which are Primer's.
+# The ground is canvas.subtle rather than pure white, so in light mode a cover
+# is the same grey as the card it sits in and has no edge of its own; on the
+# dark theme it reads as a printed plate, the same relationship a figure has
+# to a page.
+PAPER = "#f6f8fa"
+INK = "#1f2328"
+INK_SOFT = "#59636e"
+INK_FAINT = "#9198a1"
+RULE = "#d1d9e0"
+RULE_STRONG = "#afb8c1"
+ACCENT = "#0969da"
 
 HAIR = 1.5   # --rule weight: the hairline everything is built from
 LINE = 2.4   # structural edges
@@ -658,9 +660,9 @@ OG_W, OG_H = 1200, 630
 
 
 def og_canvas(with_brand=True):
-    """Paper, an oxide rule where the mint bar used to be, and a schematic in
-    the right third — the same vocabulary as the covers, held back to a rule
-    weight so an overlaid title always wins."""
+    """The light canvas, an accent rule where the mint bar used to be, and a
+    schematic in the right third — the same vocabulary as the covers, held
+    back to a rule weight so an overlaid title always wins."""
     c = Canvas("og")
     c.parts = []
 
