@@ -1,6 +1,6 @@
-# assets/css/schemes/primer.css — GitHub's greys and blues, so the
-# theme's own furniture matches the site's.
-colorScheme = "primer"
+# assets/css/schemes/graphite.css — graphite greys and a signal amber, so
+# the theme's own furniture matches the site's.
+colorScheme = "graphite"
 defaultAppearance = "dark"
 autoSwitchAppearance = true
 

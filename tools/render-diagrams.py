@@ -55,8 +55,8 @@ FENCE = re.compile(r"^([ \t]*)```mermaid[ \t]*\n(.*?)^\1```[ \t]*$", re.M | re.S
 #
 # Both variants are mermaid's "base" theme fed a palette rather than one of
 # its built-ins. The dark one used to be mermaid's own "dark" theme — greys
-# and purples of its own choosing, on a page that had already committed to
-# GitHub's. Changing any value here invalidates palette.sha1 and re-renders
+# and purples of its own choosing, on a page that had already committed to a
+# palette. Changing any value here invalidates palette.sha1 and re-renders
 # every diagram.
 FONT = (
     "-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,"
@@ -67,7 +67,7 @@ FONT_SIZE = "16px"
 
 def palette(canvas, subtle, border, border_strong, fg, fg_muted,
             accent, accent_subtle):
-    """Primer roles -> the ~10 mermaid theme variables that actually show."""
+    """Site colour roles -> the ~10 mermaid theme variables that show."""
     return {
         "background": subtle,
         "primaryColor": canvas,
@@ -89,16 +89,18 @@ def palette(canvas, subtle, border, border_strong, fg, fg_muted,
     }
 
 
+# assets/css/custom.css :root — keep the two in step, or a diagram stops
+# matching the page it sits on.
 PALETTE = palette(
-    canvas="#ffffff", subtle="#f6f8fa", border="#d1d9e0",
-    border_strong="#afb8c1", fg="#1f2328", fg_muted="#59636e",
-    accent="#0969da", accent_subtle="#ddf4ff",
+    canvas="#ffffff", subtle="#f7f6f4", border="#ddd8d0",
+    border_strong="#b8b1a6", fg="#1c1e22", fg_muted="#5c5952",
+    accent="#a35b00", accent_subtle="#fdf3dc",
 )
 
 PALETTE_DARK = palette(
-    canvas="#0d1117", subtle="#161b22", border="#30363d",
-    border_strong="#484f58", fg="#e6edf3", fg_muted="#8b949e",
-    accent="#4493f8", accent_subtle="#1c2b41",
+    canvas="#17191d", subtle="#1e2126", border="#33373f",
+    border_strong="#4a4f59", fg="#e9e7e3", fg_muted="#9ba0a8",
+    accent="#f0b429", accent_subtle="#3a2c0c",
 )
 
 VARIANTS = {

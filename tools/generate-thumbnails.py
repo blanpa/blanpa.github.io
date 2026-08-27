@@ -39,8 +39,8 @@ PROVIDER = os.environ.get("HF_PROVIDER", "fal-ai")
 # no token; this is the alternative, and it has to speak the same palette.
 STYLES = {
     "paper": (
-        "fine ink drawing on a cool light grey ground (#f6f8fa), "
-        "near-black graphite linework with a single clear blue accent (#0969da), "
+        "fine ink drawing on a warm light grey ground (#f7f6f4), "
+        "near-black graphite linework with a single burnt-amber accent (#a35b00), "
         "technical etching with engraved crosshatch shading, hairline rules, "
         "restrained editorial illustration for a printed journal, matte and flat, "
         "generous empty ground around the subject, "
@@ -48,8 +48,8 @@ STYLES = {
         "no text, no words, no labels, no watermarks"
     ),
     "ink": (
-        "fine chalk drawing on a near-black blue-grey ground (#0d1117), "
-        "pale grey linework with a single clear blue accent (#4493f8), "
+        "fine chalk drawing on a near-black graphite ground (#17191d), "
+        "pale grey linework with a single signal-amber accent (#f0b429), "
         "technical etching with engraved crosshatch shading, hairline rules, "
         "restrained editorial illustration, matte and flat, "
         "generous empty ground around the subject, "

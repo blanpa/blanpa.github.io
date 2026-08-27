@@ -38,18 +38,18 @@ from PIL import Image
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W, H = 1200, 640
 
-# assets/css/custom.css :root — the light theme's values, which are Primer's.
-# The ground is canvas.subtle rather than pure white, so in light mode a cover
+# assets/css/custom.css :root — the light theme's values. The ground is
+# canvas.subtle rather than pure white, so in light mode a cover
 # is the same grey as the card it sits in and has no edge of its own; on the
 # dark theme it reads as a printed plate, the same relationship a figure has
 # to a page.
-PAPER = "#f6f8fa"
-INK = "#1f2328"
-INK_SOFT = "#59636e"
-INK_FAINT = "#9198a1"
-RULE = "#d1d9e0"
-RULE_STRONG = "#afb8c1"
-ACCENT = "#0969da"
+PAPER = "#f7f6f4"
+INK = "#1c1e22"
+INK_SOFT = "#5c5952"
+INK_FAINT = "#8d887f"
+RULE = "#ddd8d0"
+RULE_STRONG = "#b8b1a6"
+ACCENT = "#a35b00"
 
 HAIR = 1.5   # --rule weight: the hairline everything is built from
 LINE = 2.4   # structural edges

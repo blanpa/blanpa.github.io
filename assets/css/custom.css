@@ -53,87 +53,97 @@
    ============================================== */
 
 /* ==============================================
-   TYPOGRAPHY — GitHub's stack, which is the platform's stack
+   TYPOGRAPHY — the platform stack, no webfont
 
-   Primer sets everything in the OS UI face and nothing else: no webfont,
-   no display serif, no second register for headings. That is why GitHub
-   pages paint instantly and why a repo README, an issue and a settings
-   screen all read as one surface. This site follows it exactly, so the
-   only bytes on the wire are the ones the OS already has.
+   Everything is set in the OS UI face: no webfont, no display serif, no
+   second register for headings. That is why the pages paint instantly —
+   the only bytes on the wire are the ones the OS already has. Headings
+   are separated from body copy by weight and size alone.
 
-   Code is the platform mono for the same reason — and because the theme's
-   syntax colours are literally `hugo gen chromastyles --style=github`, a
-   code block here now matches a code block on github.com down to the
-   background.
+   Code is the platform mono. Its colours are not the theme's; see CODE
+   BLOCKS, which replaces chroma's generated palette with this one's.
    ============================================== */
 
 /* ==============================================
-   DESIGN TOKENS — Primer
+   DESIGN TOKENS — Graphite & Signal Amber
 
-   One-to-one with GitHub's own colour roles rather than a palette
-   invented here: canvas / border / fg / accent, dark first and light
-   overridden below. Keeping the names is the point — when a component
-   below asks for `--canvas-subtle` it gets the same grey GitHub uses for
-   the same job, so the pieces agree without being tuned against each
-   other.
+   The palette is built for the subject: graphite for the machine, amber
+   for the signal. Surfaces are quiet greys — a near-black graphite in
+   dark mode, warm paper in light — and exactly one colour is allowed to
+   be loud. That colour is amber, the shop-floor signal lamp, and it does
+   every job an accent does here: links, the current nav item, the one
+   primary button, focus rings.
 
-   The old ink-and-paper names (--paper, --ink, --rule, --surface) are
-   kept as aliases: ~2500 lines of components resolve through them, and
-   pointing them at the Primer roles moves the whole site in one place.
+   Roles, not hues, are what the components below ask for: canvas /
+   border / fg / accent, dark first and light overridden underneath.
+   A component asking for `--canvas-subtle` gets the same grey everywhere
+   it is used, so the pieces agree without being tuned against each other.
+
+   The ink-and-paper names (--paper, --ink, --rule, --surface) are kept as
+   aliases: ~2500 lines of components resolve through them, and pointing
+   them at the roles moves the whole site in one place.
+
+   Contrast, measured, all AA or better:
+     dark   fg 14.3:1   fg-muted 6.7:1   accent 9.4:1
+     light  fg 16.7:1   fg-muted 7.0:1   accent 5.2:1
    ============================================== */
 :root {
-  /* Surfaces — GitHub dark default. --canvas is exactly the background
-     chroma paints behind a code block (#0d1117), so code sits flush in
-     the page instead of floating in a darker box. */
-  --canvas: #0d1117;
-  --canvas-subtle: #161b22;
-  --canvas-inset: #010409;
-  --canvas-overlay: #161b22;
+  /* Surfaces — graphite. --canvas is the ground the page and the code
+     blocks share, so nothing floats in a darker box. */
+  --canvas: #17191d;
+  --canvas-subtle: #1e2126;
+  --canvas-inset: #0e1013;
+  --canvas-overlay: #1e2126;
 
-  --border: #30363d;
-  --border-muted: #21262d;
-  --border-strong-c: #484f58;
+  --border: #33373f;
+  --border-muted: #262a31;
+  --border-strong-c: #4a4f59;
 
-  --fg: #e6edf3;
-  --fg-muted: #8b949e;
-  --fg-subtle: #6e7681;
+  --fg: #e9e7e3;
+  --fg-muted: #9ba0a8;
+  --fg-subtle: #767c85;
 
-  /* Blue is the link colour, green is the one primary action, and the
-     warm underline marks the current nav item — the three colours GitHub
-     lets itself use on a page of chrome. */
-  --accent-fg: #4493f8;
-  --accent-emphasis: #1f6feb;
-  --accent-subtle: rgba(56, 139, 253, 0.1);
-  --accent-muted: rgba(56, 139, 253, 0.4);
+  /* Amber is the whole accent budget: link, nav underline, primary
+     button, focus ring. On a dark ground it can be bright (#f0b429,
+     9.4:1); the emphasis step is the fill behind dark ink. */
+  --accent-fg: #f0b429;
+  --accent-emphasis: #d99a1a;
+  --accent-subtle: rgba(240, 180, 41, 0.12);
+  --accent-muted: rgba(240, 180, 41, 0.4);
 
-  --btn-bg: #21262d;
-  --btn-hover-bg: #30363d;
-  --btn-border: #30363d;
-  --btn-primary-bg: #238636;
-  --btn-primary-hover-bg: #29903b;
-  --btn-primary-border: rgba(240, 246, 252, 0.1);
-  --btn-primary-fg: #ffffff;
+  --btn-bg: #23262c;
+  --btn-hover-bg: #2c3038;
+  --btn-border: #3a3f48;
+  /* The primary button is the accent itself, with dark ink on it — on a
+     graphite page a filled amber rectangle is unmistakably the one
+     action, and it needs no second colour to say so. */
+  --btn-primary-bg: #f0b429;
+  --btn-primary-hover-bg: #f5c451;
+  --btn-primary-border: rgba(0, 0, 0, 0.2);
+  --btn-primary-fg: #1a1509;
 
-  --nav-underline: #f78166;
-  --success-fg: #3fb950;
-  --danger-fg: #f85149;
+  --nav-underline: #f0b429;
+  /* Semantic only — form status lines. Teal rather than a signal green,
+     so success never competes with the accent. */
+  --success-fg: #4db6a0;
+  --danger-fg: #e5534b;
   /* Inline code and other quiet fills: a translucent grey, so it works on
      canvas and on canvas-subtle alike. */
-  --neutral-muted: rgba(110, 118, 129, 0.4);
-  --overlay-shadow: 0 8px 24px rgba(1, 4, 9, 0.6);
+  --neutral-muted: rgba(126, 130, 138, 0.4);
+  --overlay-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   --shadow-sm: 0 0 transparent;
 
-  /* Fonts — Primer's own stacks, verbatim. */
+  /* Fonts — the platform stacks. */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-  /* Kept: ~30 rules ask for the display face by name. On GitHub there is
-     no display face, so it resolves to the same stack as everything else. */
+  /* Kept: ~30 rules ask for the display face by name. There is no display
+     face, so it resolves to the same stack as everything else. */
   --font-display: var(--font-sans);
 
-  /* Type scale — GitHub's: 16px body, 14px for secondary text, 12px for
-     metadata. Nothing between the steps. */
+  /* Type scale: 16px body, 14px for secondary text, 12px for metadata.
+     Nothing between the steps. */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -143,8 +153,8 @@
   --text-3xl: 2rem;
   --text-display: clamp(2rem, 1.4rem + 2.4vw, 3rem);
 
-  /* Geometry. 6px is the Primer radius — boxes, buttons, inputs and code
-     blocks all take it; only labels and avatars are rounder. */
+  /* Geometry. 6px on boxes, buttons, inputs and code blocks alike; only
+     labels and avatars are rounder. */
   --radius-sm: 4px;
   --radius: 6px;
   --radius-lg: 6px;
@@ -152,8 +162,11 @@
 
   /* Aliases — the ink-and-paper vocabulary the components below speak. */
   --accent: var(--accent-fg);
-  --accent-rgb: 68 147 248;
-  --accent-ink: #ffffff;
+  --accent-rgb: 240 180 41;
+  /* The ink that goes *on* the accent. Dark mode fills with bright amber,
+     so it is near-black; light mode fills with burnt amber, so it is
+     white. Anything painting text on --accent-emphasis must use this. */
+  --accent-ink: #1a1509;
   --accent-on-light: var(--accent-fg); /* legacy alias, kept: 28 call sites */
   --paper: var(--canvas);
   --paper-raised: var(--canvas-subtle);
@@ -163,54 +176,60 @@
   --rule: var(--border);
   --rule-strong: var(--border-strong-c);
   --surface: var(--canvas-subtle);
-  --surface-hover: rgba(177, 186, 196, 0.08);
+  --surface-hover: rgba(190, 186, 178, 0.08);
   --border-soft: var(--border);
   --border-strong: var(--border-strong-c);
 }
 
 :root:not(.dark) {
+  /* Warm paper rather than a blue-white: it sits under the same amber
+     without either one turning grey. */
   --canvas: #ffffff;
-  --canvas-subtle: #f6f8fa;
-  --canvas-inset: #f6f8fa;
+  --canvas-subtle: #f7f6f4;
+  --canvas-inset: #f7f6f4;
   --canvas-overlay: #ffffff;
 
-  --border: #d1d9e0;
-  --border-muted: #d8dee4;
-  --border-strong-c: #afb8c1;
+  --border: #ddd8d0;
+  --border-muted: #e6e2db;
+  --border-strong-c: #b8b1a6;
 
-  --fg: #1f2328;
-  --fg-muted: #59636e;
-  --fg-subtle: #6e7781;
+  --fg: #1c1e22;
+  --fg-muted: #5c5952;
+  --fg-subtle: #7a766e;
 
-  --accent-fg: #0969da;
-  --accent-emphasis: #0969da;
-  --accent-subtle: #ddf4ff;
-  --accent-muted: rgba(84, 174, 255, 0.4);
+  /* Bright amber cannot carry text on white, so light mode uses the
+     burnt step: #a35b00 is 5.2:1 on the canvas and 4.8:1 on the subtle
+     grey. Same hue, same signal, legible ground. */
+  --accent-fg: #a35b00;
+  --accent-emphasis: #8f4f00;
+  --accent-subtle: #fdf3dc;
+  --accent-muted: rgba(163, 91, 0, 0.35);
 
-  --btn-bg: #f6f8fa;
-  --btn-hover-bg: #eef1f4;
-  --btn-border: #d1d9e0;
-  --btn-primary-bg: #1f883d;
-  --btn-primary-hover-bg: #1a7f37;
-  --btn-primary-border: rgba(31, 35, 40, 0.15);
+  --btn-bg: #f7f6f4;
+  --btn-hover-bg: #efece7;
+  --btn-border: #ddd8d0;
+  --btn-primary-bg: #a35b00;
+  --btn-primary-hover-bg: #8f4f00;
+  --btn-primary-border: rgba(28, 30, 34, 0.15);
+  --btn-primary-fg: #ffffff;
 
-  --nav-underline: #fd8c73;
-  --success-fg: #1a7f37;
-  --danger-fg: #cf222e;
-  --neutral-muted: rgba(175, 184, 193, 0.2);
-  --overlay-shadow: 0 8px 24px rgba(31, 35, 40, 0.2);
-  /* The one shadow Primer keeps in light mode: a single hairline under a
-     resting control, which is why GitHub's buttons look seated. */
-  --shadow-sm: 0 1px 0 rgba(31, 35, 40, 0.04);
+  --nav-underline: #d9871f;
+  --success-fg: #0f6f5c;
+  --danger-fg: #b4262a;
+  --neutral-muted: rgba(184, 177, 166, 0.25);
+  --overlay-shadow: 0 8px 24px rgba(28, 30, 34, 0.2);
+  /* The one shadow light mode keeps: a single hairline under a resting
+     control, which is what makes a button look seated rather than drawn. */
+  --shadow-sm: 0 1px 0 rgba(28, 30, 34, 0.04);
 
-  --accent-rgb: 9 105 218;
+  --accent-rgb: 163 91 0;
   --accent-ink: #ffffff;
-  --surface-hover: rgba(208, 215, 222, 0.32);
+  --surface-hover: rgba(184, 177, 166, 0.22);
 }
 
-/* Body copy: 16px on a 1.5 line, the measurement every Primer surface is
-   built on. Blowfish ships text-lg/leading-7 (18px/28px) on <body>, which
-   is a reading-blog measure, not GitHub's. */
+/* Body copy: 16px on a 1.5 line, the measure every surface here is built
+   on. Blowfish ships text-lg/leading-7 (18px/28px) on <body>, which is a
+   reading-blog measure, not this one. */
 body[class] {
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -218,7 +237,7 @@ body[class] {
 }
 
 /* Headings are the same face as the text, separated by weight and size
-   alone — Primer has no heading font and no negative tracking. */
+   alone — there is no heading face and no negative tracking. */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
   font-weight: 600;
@@ -498,7 +517,7 @@ code, kbd, pre, samp {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* A Primer dialog header: the title is text, and the rule under it is the
+/* Dialog header: the title is text, and the rule under it is the
    border that separates header from body. */
 .contact-dialog__inner > h2 {
   font-size: var(--text-lg);
@@ -552,7 +571,7 @@ code, kbd, pre, samp {
   margin-bottom: 1.25rem;
 }
 
-/* Primer form label: sentence case, 14px, semibold, the body colour. */
+/* Form label: sentence case, 14px, semibold, the body colour. */
 .contact-dialog .form-group label {
   display: block;
   font-size: var(--text-sm);
@@ -602,8 +621,8 @@ code, kbd, pre, samp {
   box-shadow: 0 0 0 3px var(--accent-muted);
 }
 :root:not(.dark) .contact-dialog .form-group select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23008a70' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-color: #f5f5f5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a35b00' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-color: var(--canvas-subtle);
   background-repeat: no-repeat;
   background-position: right 1rem center;
 }
@@ -706,7 +725,7 @@ code, kbd, pre, samp {
 }
 
 /* ==============================================
-   CARD BASE — Primer's .Box
+   CARD BASE — the one box
 
    The .glass name is kept because ~20 templates reference the class; what
    it does is a Box: canvas-subtle fill, one hairline border, 6px corners,
@@ -777,7 +796,7 @@ code, kbd, pre, samp {
   transition: border-color 0.15s ease;
 }
 /* A Box does not lift, glow or tint on hover: the border goes from
-   border-default to the accent, which is the whole of GitHub's hover
+   border-default to the accent, which is the whole of the hover
    vocabulary for a clickable panel. */
 @media (hover: hover) {
   .project-featured:hover {
@@ -1060,7 +1079,7 @@ code, kbd, pre, samp {
 @media (hover: hover) {
   .article-cta__primary:hover { background: var(--btn-primary-hover-bg); }
 }
-:root:not(.dark) .article-cta__primary { background: var(--accent-on-light); color: #fff; }
+:root:not(.dark) .article-cta__primary { background: var(--accent-on-light); color: var(--accent-ink); }
 .article-cta__secondary {
   display: inline-flex;
   align-items: center;
@@ -1115,7 +1134,7 @@ code, kbd, pre, samp {
 @media (hover: hover) {
   .tag-cloud__chip:hover {
     background: var(--accent-emphasis);
-    color: #ffffff;
+    color: var(--accent-ink);
   }
 }
 @media (hover: hover) {
@@ -1161,7 +1180,7 @@ code, kbd, pre, samp {
 /* ==============================================
    GITHUB REPO GRID (About)
    ============================================== */
-/* Eight repositories, one under the other, each preceded by GitHub's social
+/* Eight repositories, one under the other, each preceded by the social
    preview image: the section ran 6197px — 60% of the whole About page — for
    eight near-identical grey slabs. The thumbnails are off (showThumbnail in
    the shortcode) and what is left fits two to a row. */
@@ -2095,7 +2114,7 @@ a.skill-chip { color: inherit; }
    POLISH PASS — contrast, sticky TOC, blog grid
    ============================================== */
 
-/* Footer: Primer's own — muted text, and links that only colour on hover. */
+/* Footer: muted text, and links that only colour on hover. */
 #site-footer .text-neutral-500,
 #site-footer .dark\:text-neutral-400,
 #site-footer p,
@@ -2136,8 +2155,8 @@ a.skill-chip { color: inherit; }
   color: var(--accent-on-light) !important;
 }
 
-/* Links in prose. One accent in both themes, and it is Primer's own link
-   colour: #0969da measures 4.6:1 on white and #4493f8 6.3:1 on #0d1117 —
+/* Links in prose. One accent in both themes, and it is the signal amber:
+   #a35b00 measures 5.2:1 on white and #f0b429 9.4:1 on #17191d —
    both AA at body size, which is why GitHub picked that pair. */
 .article-content p a,
 .article-content li a,
@@ -2728,18 +2747,18 @@ a[href*="/tags/"]:not(.tag-cloud__chip) ~ a[href*="/tags/"]:not(.tag-cloud__chip
 /* ==============================================
    GITHUB CHROME — the header bar
 
-   GitHub's global bar is solid from the first pixel, sits on the inset
+   The global bar is solid from the first pixel, sits on the inset
    canvas (a shade darker than the page in dark, a shade lighter in
    light), and is separated from the content by one hairline. No blur, no
    shadow, no transparency — which also means no scroll listener.
    The header layout is set to "fixed-fill" in params.toml; these rules
-   give that container Primer's colours.
+   give that container the site's colours.
    ============================================== */
 .fixed.inset-x-0.z-100 {
   background: var(--canvas-inset) !important;
   border-bottom: 1px solid var(--border);
 }
-/* Blowfish reserves 148px above the content for the bar. GitHub's is 64px,
+/* Blowfish reserves 148px above the content for the bar. This one is 64px,
    and the 24px below it is the gap every GitHub page opens with. */
 .min-h-\[148px\] {
   min-height: 5.5rem;
@@ -2788,12 +2807,12 @@ a[href*="/tags/"]:not(.tag-cloud__chip) ~ a[href*="/tags/"]:not(.tag-cloud__chip
 }
 
 /* ==============================================
-   LINKS — Primer's, which is: blue, and underlined only on hover
+   LINKS — the accent, and underlined only on hover
 
    The site used a permanent underline in a tinted accent on every link
    outside prose. GitHub underlines on hover and nowhere else; body copy in
    an article is the single exception, where the underline is what tells
-   you a link is there at all — and Primer keeps that one too.
+   you a link is there at all — and that one is kept.
    ============================================== */
 .home-hero__secondary,
 .home-featured__all,
@@ -2847,7 +2866,7 @@ a.skill-chip,
    MARKDOWN BODY — github-markdown-css, essentially
 
    A post on this site is a long technical document with code, tables and
-   diagrams in it, which is the exact thing GitHub's markdown stylesheet
+   diagrams in it, which is the exact thing a markdown stylesheet
    was written for. Rules under the top two heading levels, a grey rule
    down the side of a quotation, bordered table cells with banded rows:
    these are the parts people read as "GitHub".
@@ -2929,17 +2948,155 @@ a.skill-chip,
 /* ==============================================
    CODE BLOCKS
 
-   The syntax colours already are GitHub's — the theme generates them with
-   `hugo gen chromastyles --style=github` / `--style=github-dark`. What was
-   missing is the container: chroma paints the block in the page canvas, so
-   on a canvas-coloured page it had no edges at all. Primer sets code on
-   canvas-subtle, 6px corners, no border and no shadow.
+   Two things the theme's chroma gets wrong here. The container: chroma
+   paints the block in the page canvas, so on a canvas-coloured page it
+   had no edges at all — code sits on canvas-subtle instead, 6px corners,
+   no border and no shadow. And the colours: the generated styles are
+   `--style=github` / `--style=github-dark`, which put a green on every
+   YAML key and a blue on every string. On a page with this much code
+   that is not a detail — it is the palette, and it was neither this
+   one's greys nor its amber.
+
+   The replacement below keeps chroma's structure (six roles, one hue
+   each, so code stays scannable) and moves the hues into the site's
+   family: warm rust, sand and plum, with one dusty blue as the single
+   cool counterpoint that keeps names distinct from strings. Every value
+   is AA or better on --canvas-subtle in its own theme.
    ============================================== */
 html:not(.dark) .chroma,
 html.dark .chroma,
 html:not(.dark) .chroma .bg,
 html.dark .chroma .bg {
   background-color: var(--canvas-subtle);
+  color: var(--fg);
+}
+
+/* Syntax roles. Declared here rather than with the other tokens because
+   nothing outside a code block may use them: they are tuned against
+   --canvas-subtle, not against the page. */
+:root {
+  --code-comment: #8a8f98;  /* 5.0:1 */
+  --code-keyword: #f2846b;  /* 6.4:1  rust */
+  --code-name: #9fc2d9;     /* 8.6:1  dusty blue */
+  --code-string: #d6b06a;   /* 7.9:1  sand */
+  --code-number: #e0a3c8;   /* 7.9:1  plum */
+  --code-fn: #c9a8e0;       /* 7.8:1  lilac */
+}
+:root:not(.dark) {
+  --code-comment: #6f6a61;  /* 4.9:1 */
+  --code-keyword: #a03e28;  /* 6.1:1 */
+  --code-name: #2f5d80;     /* 6.5:1 */
+  --code-string: #7a5512;   /* 6.2:1 */
+  --code-number: #8d3d6b;   /* 6.5:1 */
+  --code-fn: #6b4aa0;       /* 6.3:1 */
+}
+
+/* The theme's rules are `html:not(.dark) .chroma .k` — same specificity,
+   so these have to carry the same shape and simply come later. */
+html:not(.dark) .chroma .c, html.dark .chroma .c,
+html:not(.dark) .chroma .ch, html.dark .chroma .ch,
+html:not(.dark) .chroma .cm, html.dark .chroma .cm,
+html:not(.dark) .chroma .c1, html.dark .chroma .c1,
+html:not(.dark) .chroma .cs, html.dark .chroma .cs,
+html:not(.dark) .chroma .cp, html.dark .chroma .cp,
+html:not(.dark) .chroma .cpf, html.dark .chroma .cpf,
+html:not(.dark) .chroma .go, html.dark .chroma .go,
+html:not(.dark) .chroma .gp, html.dark .chroma .gp,
+html:not(.dark) .chroma .w, html.dark .chroma .w,
+html:not(.dark) .chroma .ln, html.dark .chroma .ln,
+html:not(.dark) .chroma .lnt, html.dark .chroma .lnt {
+  color: var(--code-comment);
+}
+
+html:not(.dark) .chroma .k, html.dark .chroma .k,
+html:not(.dark) .chroma .kd, html.dark .chroma .kd,
+html:not(.dark) .chroma .kn, html.dark .chroma .kn,
+html:not(.dark) .chroma .kr, html.dark .chroma .kr,
+html:not(.dark) .chroma .kt, html.dark .chroma .kt,
+html:not(.dark) .chroma .nn, html.dark .chroma .nn,
+html:not(.dark) .chroma .o, html.dark .chroma .o,
+html:not(.dark) .chroma .ow, html.dark .chroma .ow,
+html:not(.dark) .chroma .gt, html.dark .chroma .gt {
+  color: var(--code-keyword);
+}
+
+html:not(.dark) .chroma .na, html.dark .chroma .na,
+html:not(.dark) .chroma .nt, html.dark .chroma .nt,
+html:not(.dark) .chroma .ni, html.dark .chroma .ni,
+html:not(.dark) .chroma .nl, html.dark .chroma .nl,
+html:not(.dark) .chroma .nv, html.dark .chroma .nv,
+html:not(.dark) .chroma .vc, html.dark .chroma .vc,
+html:not(.dark) .chroma .vg, html.dark .chroma .vg,
+html:not(.dark) .chroma .vi, html.dark .chroma .vi,
+html:not(.dark) .chroma .vm, html.dark .chroma .vm,
+html:not(.dark) .chroma .py, html.dark .chroma .py,
+html:not(.dark) .chroma .kc, html.dark .chroma .kc,
+html:not(.dark) .chroma .kp, html.dark .chroma .kp,
+html:not(.dark) .chroma .no, html.dark .chroma .no,
+html:not(.dark) .chroma .nc, html.dark .chroma .nc,
+html:not(.dark) .chroma .ne, html.dark .chroma .ne,
+html:not(.dark) .chroma .ld, html.dark .chroma .ld,
+html:not(.dark) .chroma .gh, html.dark .chroma .gh,
+html:not(.dark) .chroma .gu, html.dark .chroma .gu {
+  color: var(--code-name);
+}
+
+html:not(.dark) .chroma .l, html.dark .chroma .l,
+html:not(.dark) .chroma .s, html.dark .chroma .s,
+html:not(.dark) .chroma .sa, html.dark .chroma .sa,
+html:not(.dark) .chroma .sb, html.dark .chroma .sb,
+html:not(.dark) .chroma .sc, html.dark .chroma .sc,
+html:not(.dark) .chroma .dl, html.dark .chroma .dl,
+html:not(.dark) .chroma .sd, html.dark .chroma .sd,
+html:not(.dark) .chroma .s2, html.dark .chroma .s2,
+html:not(.dark) .chroma .se, html.dark .chroma .se,
+html:not(.dark) .chroma .sh, html.dark .chroma .sh,
+html:not(.dark) .chroma .si, html.dark .chroma .si,
+html:not(.dark) .chroma .sx, html.dark .chroma .sx,
+html:not(.dark) .chroma .sr, html.dark .chroma .sr,
+html:not(.dark) .chroma .s1, html.dark .chroma .s1,
+html:not(.dark) .chroma .ss, html.dark .chroma .ss {
+  color: var(--code-string);
+}
+
+html:not(.dark) .chroma .m, html.dark .chroma .m,
+html:not(.dark) .chroma .mb, html.dark .chroma .mb,
+html:not(.dark) .chroma .mf, html.dark .chroma .mf,
+html:not(.dark) .chroma .mh, html.dark .chroma .mh,
+html:not(.dark) .chroma .mi, html.dark .chroma .mi,
+html:not(.dark) .chroma .il, html.dark .chroma .il,
+html:not(.dark) .chroma .mo, html.dark .chroma .mo {
+  color: var(--code-number);
+}
+
+html:not(.dark) .chroma .nf, html.dark .chroma .nf,
+html:not(.dark) .chroma .fm, html.dark .chroma .fm,
+html:not(.dark) .chroma .nd, html.dark .chroma .nd {
+  color: var(--code-fn);
+}
+
+html:not(.dark) .chroma .err, html.dark .chroma .err,
+html:not(.dark) .chroma .gr, html.dark .chroma .gr {
+  color: var(--danger-fg);
+  background-color: transparent;
+}
+
+/* Diff markers. Red and green is the convention, and green is the one
+   thing this palette does not own — so an added line is marked in the
+   accent's own family and a removed one in the danger red, both as a
+   wash behind the text rather than as a text colour. */
+html:not(.dark) .chroma .gi, html.dark .chroma .gi {
+  color: var(--fg);
+  background-color: var(--accent-subtle);
+}
+html:not(.dark) .chroma .gd, html.dark .chroma .gd {
+  color: var(--fg);
+  background-color: rgba(229, 83, 75, 0.16);
+}
+
+/* The highlighted-line wash: the accent at a tenth, not a flat grey. */
+html:not(.dark) .chroma .hl, html.dark .chroma .hl {
+  background-color: var(--accent-subtle);
 }
 .highlight-wrapper {
   border-radius: var(--radius);
@@ -2984,7 +3141,7 @@ html.dark .chroma .bg {
 /* ==============================================
    FOCUS — one ring, everywhere
 
-   Primer's focus treatment is a 2px accent outline offset from the
+   The focus treatment is a 2px accent outline offset from the
    control, on every focusable thing, and nothing else. Replacing the
    assorted per-component rings with it is most of what "consistent" means
    for keyboard users.
@@ -3009,7 +3166,7 @@ textarea:focus-visible {
 /* ==============================================
    THEME FURNITURE — search, scroll-to-top, sharing
 
-   Blowfish's own controls, given the Primer button: canvas-subtle fill,
+   Blowfish's own controls, given the site button: canvas-subtle fill,
    hairline border, 6px corners, and a fill change on hover.
    ============================================== */
 #search-button,
@@ -3019,7 +3176,7 @@ textarea:focus-visible {
 }
 
 /* The search overlay. Blowfish scrims the page with a translucent neutral
-   and blurs it; Primer dims with a flat wash and lets the dialog's own
+   and blurs it; this dims with a flat wash and lets the dialog's own
    border and shadow do the separating — which matters more here, because the
    panel and the page canvas are now the same two greys. */
 #search-wrapper {
@@ -3069,7 +3226,7 @@ textarea:focus-visible {
 }
 
 /* ==============================================
-   PROSE PALETTE — the theme's typography plugin, on Primer tokens
+   PROSE PALETTE — the theme's typography plugin, on the site tokens
 
    Blowfish drives article text through Tailwind Typography, which reads
    its colours from ~18 --tw-prose-* variables rather than from anything

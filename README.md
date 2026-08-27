@@ -9,34 +9,38 @@ unrelated to my employment, published under the MIT licence.
 ## Tech Stack
 
 - [Hugo](https://gohugo.io/) with the [Blowfish](https://blowfish.page/) theme
-- Styled after GitHub's [Primer](https://primer.style/foundations/color) — see [Design](#design)
+- Graphite greys and a signal amber — see [Design](#design)
 - Deployed via GitHub Actions to [GitHub Pages](https://blanpa.github.io)
 
 ## Design
 
-The site follows GitHub's own design language rather than a palette of its
-own. Concretely:
+The palette is built for the subject: graphite for the machine, amber for the
+signal. Surfaces are quiet, and exactly one colour is allowed to be loud.
+Concretely:
 
-- **Colour.** Primer's roles, declared once in the `DESIGN TOKENS` block of
-  `assets/css/custom.css`: `--canvas` / `--canvas-subtle` / `--canvas-inset`,
-  `--border`, `--fg` / `--fg-muted`, `--accent-fg`. Dark is `#0d1117`, light
-  is `#ffffff`, links are blue, the one primary button is green, and the
-  current nav item carries the warm tab underline. The ink-and-paper names
-  the components were written against (`--paper`, `--ink`, `--rule`) are kept
-  as aliases onto those roles.
+- **Colour.** Roles rather than hues, declared once in the `DESIGN TOKENS`
+  block of `assets/css/custom.css`: `--canvas` / `--canvas-subtle` /
+  `--canvas-inset`, `--border`, `--fg` / `--fg-muted`, `--accent-fg`. Dark is
+  `#17191d` graphite, light is white over warm `#f7f6f4` paper, and the amber
+  (`#f0b429` on dark, the burnt `#a35b00` on light) does every accent job
+  there is: links, the current nav item, the one primary button, focus rings.
+  Every pairing is WCAG AA or better. The ink-and-paper names the components
+  were written against (`--paper`, `--ink`, `--rule`) are kept as aliases onto
+  those roles.
 - **Type.** The platform UI stack for everything and the platform mono for
   code. No webfont is loaded at all.
 - **Shape.** One hairline border, 6px corners, a `--canvas-subtle` fill; no
   shadows, no lifts on hover, no translucency. Labels and topic tags are the
   only pills.
 - **The theme's own furniture.** Search, table of contents, pagination and
-  the prose plugin are coloured from `assets/css/schemes/primer.css`, a Blowfish
-  colour scheme built from the same values, so the theme's parts and the
-  site's parts agree instead of merely coexisting.
+  the prose plugin are coloured from `assets/css/schemes/graphite.css`, a
+  Blowfish colour scheme built from the same values, so the theme's parts and
+  the site's parts agree instead of merely coexisting.
 - **Code.** `noClasses = false` in `config/_default/hugo.toml` hands
-  highlighting to the theme's stylesheet, which is generated from chroma's
-  `github` and `github-dark` styles. A code block is coloured the way
-  github.com colours it, and it follows the theme switch.
+  highlighting to the cascade: the theme's chroma stylesheet supplies the
+  structure, and the `CODE BLOCKS` block of `custom.css` recolours it into six
+  roles in the site's own family — rust, sand, plum, lilac and one dusty blue,
+  per theme.
 - **Covers and diagrams.** Both are drawn from the same values; see
   `tools/draw-covers.py` and the palette in `tools/render-diagrams.py`.
 

@@ -4,8 +4,8 @@
        no feature image of their own. */ -}}
 {{- $base := resources.Get "img/og-base.png" -}}
 {{- /* Noto Sans Bold — the card is the one artefact people see before they
-       arrive, so it is set in the same voice as the site: Primer's UI face,
-       and Noto Sans is the closest thing to it that can be shipped as a file.
+       arrive, so it is set in the same voice as the site: the platform UI
+       face, and Noto Sans is the closest thing to it shippable as a file.
        OFL-1.1, unmodified; see assets/fonts/og-title-LICENSE.txt. Build-time
        only: the visitor gets the rendered PNG, never the font. */ -}}
 {{- $font := resources.Get "fonts/og-title.ttf" -}}
@@ -28,7 +28,7 @@
   {{- /* Colours match assets/css/custom.css :root — accent.fg on the kicker,
        fg.default on the title, on the canvas.subtle ground the base card is
        drawn on (tools/draw-covers.py og). */ -}}
-  {{- $img = $img.Filter (images.Text $kicker (dict "color" "#0969da" "size" 30 "x" 82 "y" 128 "font" $font)) -}}
+  {{- $img = $img.Filter (images.Text $kicker (dict "color" "#a35b00" "size" 30 "x" 82 "y" 128 "font" $font)) -}}
 
   {{- /* Word-wrap the title to ~24 chars per line, capped at 4 lines. */ -}}
   {{- $lines := slice -}}
@@ -50,7 +50,7 @@
 
   {{- $y := 185 -}}
   {{- range $line := $lines -}}
-    {{- $img = $img.Filter (images.Text $line (dict "color" "#1f2328" "size" 64 "x" 80 "y" $y "font" $font)) -}}
+    {{- $img = $img.Filter (images.Text $line (dict "color" "#1c1e22" "size" 64 "x" 80 "y" $y "font" $font)) -}}
     {{- $y = add $y 84 -}}
   {{- end -}}
 

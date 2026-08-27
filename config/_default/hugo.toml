@@ -26,9 +26,8 @@ enableRobotsTXT = true
 # Syntax highlighting. Hugo's default is noClasses = true, which writes the
 # colours inline — and inline means one palette for both themes: every code
 # block on the site was Monokai (#272822), including on the light theme, and
-# the theme's own stylesheet never got a look in. With classes, Blowfish's
-# chroma.css takes over, and that file is `hugo gen chromastyles --style=github`
-# and `--style=github-dark` — so a code block is coloured exactly the way
-# github.com colours it, and it follows the theme switch.
+# no stylesheet ever got a look in. With classes, the cascade decides: the
+# theme's chroma.css supplies the structure and assets/css/custom.css
+# (CODE BLOCKS) recolours it into the site's palette, per theme.
 [markup.highlight]
   noClasses = false
