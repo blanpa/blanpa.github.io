@@ -8,12 +8,9 @@ build:
 ## Information pursuant to § 5 TMG
 
 **First and Last Name**
-Your Street 123
-12345 Your City
-Germany
 
 **Contact:**
-Email: your@email.example
+Email: blanpa@pm.me
 
 ## Liability for Content
 

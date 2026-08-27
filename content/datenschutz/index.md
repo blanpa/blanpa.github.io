@@ -52,7 +52,7 @@ You have the right at any time to:
 - **Data portability**
 - **Withdraw consent** you have given at any time with effect for the future (Art. 7 (3) GDPR)
 
-To exercise these rights, you can contact me at any time via email at **your@email.example**.
+To exercise these rights, you can contact me at any time via email at **blanpa@pm.me**.
 
 In addition, you have the right to lodge a complaint with a data protection supervisory authority (Art. 77 GDPR), in particular in the EU member state of your habitual residence, your place of work, or the place of the alleged infringement.
 

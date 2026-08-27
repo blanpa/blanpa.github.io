@@ -106,7 +106,11 @@ smartTOC = true
   image = "img/author.png"
   headline = "IIoT Software Developer — from PLC to cloud"
   bio = "Building industrial connectivity solutions with Node-RED, OPC-UA, NATS, and edge computing."
+  # Plain address (no mailto:) — rss.xml feeds it to managingEditor/author,
+  # which RSS expects as a bare address.
+  email = "blanpa@pm.me"
   links = [
+    { email = "mailto:blanpa@pm.me" },
     { github = "https://github.com/blanpa" },
     { linkedin = "https://linkedin.com/in/blanpa" },
     { medium = "https://medium.com/@blanpa" },
