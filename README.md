@@ -4,7 +4,8 @@ Personal portfolio website — IIoT Software Developer writing about industrial
 connectivity with Node-RED, OPC-UA, NATS, and edge computing.
 
 The site and the npm packages it documents are private open-source work,
-unrelated to my employment, published under the MIT licence.
+unrelated to my employment, published under the MIT licence (the IO-Link
+suite under Apache-2.0).
 
 ## Tech Stack
 
@@ -66,7 +67,7 @@ hugo server -D
 
 ## Projects
 
-The site showcases 7 open-source npm packages (the canonical list lives in `data/npm_packages.yml`):
+The site showcases 8 open-source npm packages (the canonical list lives in `data/npm_packages.yml`):
 
 - **node-red-contrib-condition-monitoring** — Vibration analysis & predictive maintenance
 - **node-red-contrib-nats-suite** — NATS messaging with JetStream support
@@ -75,6 +76,7 @@ The site showcases 7 open-source npm packages (the canonical list lives in `data
 - **node-red-contrib-s7-suite** — Siemens S7 PLC communication
 - **node-red-contrib-opcua-suite** — OPC-UA industrial data exchange
 - **node-red-contrib-i3x** — i3x open manufacturing API integration
+- **node-red-contrib-iolink-suite** — IO-Link masters & IODD decoding
 
 ## Case Studies
 

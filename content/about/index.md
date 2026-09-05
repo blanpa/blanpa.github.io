@@ -93,6 +93,7 @@ date: 2026-03-05
       <span class="tech-arch__node node--edge">Siemens S7</span>
       <span class="tech-arch__node node--edge">Allen-Bradley</span>
       <span class="tech-arch__node node--edge">Modbus</span>
+      <span class="tech-arch__node node--edge">IO-Link</span>
       <span class="tech-arch__node node--edge">CompuLab</span>
     </div>
   </div>
@@ -140,7 +141,7 @@ date: 2026-03-05
 
 I maintain several open-source Node-RED packages for industrial IoT on [npm](https://www.npmjs.com/~blanpa):
 
-<p class="section-note">Private open-source work, unrelated to my employment. Built in my own time and published under the MIT licence.</p>
+<p class="section-note">Private open-source work, unrelated to my employment. Built in my own time and published under the MIT licence (the IO-Link suite under Apache-2.0).</p>
 
 {{< npm-stats >}}
 
@@ -154,6 +155,7 @@ I maintain several open-source Node-RED packages for industrial IoT on [npm](htt
 {{< github repo="blanpa/node-red-contrib-s7-suite" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-opcua-suite" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-i3x" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-iolink-suite" showThumbnail=false >}}
 </div>
 
 ## Experience

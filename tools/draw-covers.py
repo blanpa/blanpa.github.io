@@ -18,7 +18,7 @@ cairosvg would need the font installed system-wide to set it, and a cover that
 renders differently depending on the machine is worse than one that says
 nothing. Ticks and marks stand in for labels.
 
-    tools/draw-covers.py                  all 24
+    tools/draw-covers.py                  all 25
     tools/draw-covers.py blog             one section
     tools/draw-covers.py blog modbus      one cover
     tools/draw-covers.py --svg …          also keep the .svg next to the .webp
@@ -615,6 +615,56 @@ def m_secure_link(c, blocks=4, sink="chart"):
     c.ticks(mx - 20, cy + 2, 3, 20, 16, ACCENT, HAIR)
 
 
+def m_ports(c, ports=8, accent_port=2):
+    """An IO-Link master with a sensor on every port, and the device
+    description the one accented port is decoded through."""
+    x, y, w, h = BOX
+    # The master: a flat box across the top with a status header, its ports
+    # along the lower edge. It stops short of the right edge to leave room
+    # for the IODD.
+    mx, mw, mh = x + 40, w - 232, 88
+    c.rect(mx, y, mw, mh, INK, LINE)
+    c.line(mx, y + 22, mx + mw, y + 22, RULE_STRONG, HAIR)
+    for k in range(4):
+        c.dot(mx + 18 + k * 16, y + 11, 3, INK_FAINT, HAIR)
+    c.ticks(mx + mw - 92, y + 36, 6, 14, 26, INK_FAINT, HAIR)
+    # The ports, and the sensor hanging off each on its three-wire drop.
+    step = mw / (ports + 1)
+    sy = y + h - 96
+    for i in range(ports):
+        px = mx + step * (i + 1)
+        hit = i == accent_port
+        edge = ACCENT if hit else INK_SOFT
+        c.rect(px - 8, y + mh - 12, 16, 12, edge, BOLD if hit else HAIR, fill=PAPER, r=2)
+        c.line(px, y + mh, px, sy, ACCENT if hit else RULE_STRONG,
+               LINE if hit else HAIR)
+        # A cylinder sensor: a body with a rounded sensing face, an M12 nut on top.
+        bx = px + c.jitter(2)
+        c.rect(bx - 14, sy, 28, 12, edge, HAIR, r=2)
+        c.path(f"M {bx - 20:.1f} {sy + 12:.1f} L {bx - 20:.1f} {sy + 66:.1f} "
+               f"A 20 20 0 0 0 {bx + 20:.1f} {sy + 66:.1f} L {bx + 20:.1f} {sy + 12:.1f} Z",
+               edge, BOLD if hit else LINE)
+        c.line(bx - 12, sy + 30, bx + 12, sy + 30,
+               ACCENT if hit else INK_FAINT, HAIR)
+        c.line(bx - 12, sy + 44, bx + 12, sy + 44,
+               ACCENT if hit else INK_FAINT, HAIR)
+    # The IODD: a document with a folded corner, its record items as rows,
+    # tied to the master's decoder by a dashed run. Not the accent: it is
+    # what the accented port is read through, not the thing itself.
+    dx, dy, dw, dh = x + w - 132, y + 4, 132, 164
+    fold = 22
+    c.path(f"M {dx:.1f} {dy:.1f} L {dx + dw - fold:.1f} {dy:.1f} "
+           f"L {dx + dw:.1f} {dy + fold:.1f} L {dx + dw:.1f} {dy + dh:.1f} "
+           f"L {dx:.1f} {dy + dh:.1f} Z", INK_SOFT, LINE)
+    c.path(f"M {dx + dw - fold:.1f} {dy:.1f} L {dx + dw - fold:.1f} {dy + fold:.1f} "
+           f"L {dx + dw:.1f} {dy + fold:.1f}", INK_SOFT, HAIR)
+    for k in range(6):
+        run = dw * (0.38 + 0.36 * c.rand())
+        c.line(dx + 16, dy + 42 + k * 20, dx + 16 + run, dy + 42 + k * 20,
+               INK_FAINT, HAIR)
+    c.line(mx + mw, y + mh / 2, dx, y + mh / 2, RULE_STRONG, HAIR, dash="4 6")
+
+
 # Each cover names its motif and the parameters that make it this page's.
 COVERS = {
     "projects": {
@@ -625,6 +675,7 @@ COVERS = {
         "s7-suite": lambda c: m_secure_link(c, blocks=5, sink="blocks"),
         "opcua-suite": lambda c: m_tree(c, depth=3),
         "i3x": lambda c: m_api(c, clients=4, consumers=6, shape_offset=0),
+        "iolink-suite": lambda c: m_ports(c, ports=8, accent_port=2),
     },
     "blog": {
         "nats-edge-to-cloud-pipeline": lambda c: m_gateway(c),

@@ -12,3 +12,5 @@
   desc: OPC-UA industrial data exchange
 - pkg: node-red-contrib-i3x
   desc: i3x open manufacturing API integration
+- pkg: node-red-contrib-iolink-suite
+  desc: IO-Link masters & IODD decoding
