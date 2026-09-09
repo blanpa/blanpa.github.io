@@ -18,7 +18,7 @@ cairosvg would need the font installed system-wide to set it, and a cover that
 renders differently depending on the machine is worse than one that says
 nothing. Ticks and marks stand in for labels.
 
-    tools/draw-covers.py                  all 25
+    tools/draw-covers.py                  all 26
     tools/draw-covers.py blog             one section
     tools/draw-covers.py blog modbus      one cover
     tools/draw-covers.py --svg …          also keep the .svg next to the .webp
@@ -665,6 +665,71 @@ def m_ports(c, ports=8, accent_port=2):
     c.line(mx + mw, y + mh / 2, dx, y + mh / 2, RULE_STRONG, HAIR, dash="4 6")
 
 
+def m_explorer(c, rows=8, accent_row=3):
+    """A two-pane explorer: the subject namespace as a tree on the left, and
+    on the right the payload of the one selected subject with its history."""
+    x, y, w, h = BOX
+    # The window itself. Every other motif here is a schematic of a system;
+    # this project *is* the window, so the frame is the subject.
+    c.rect(x, y, w, h, INK, LINE)
+    c.line(x, y + 28, x + w, y + 28, RULE_STRONG, HAIR)
+    for k in range(3):
+        c.dot(x + 20 + k * 16, y + 14, 3.5, INK_FAINT, HAIR)
+    c.ticks(x + w - 104, y + 8, 4, 24, 12, INK_FAINT, HAIR)
+    split = x + w * 0.44
+    c.line(split, y + 28, split, y + h, RULE_STRONG, HAIR)
+
+    # Left: the tree. A NATS subject is its dots, so the indent carries the
+    # depth and the marks stand in for the names; the short rule at the right
+    # edge of the pane is the rate column that makes the tree a live one.
+    depths = (0, 1, 2, 2, 1, 2, 3, 1)
+    step = (h - 76) / rows
+    ry = y + 52
+    hit_y = ry
+    for i in range(rows):
+        d = depths[i % len(depths)]
+        rx = x + 24 + d * 26
+        hit = i == accent_row
+        if hit:
+            hit_y = ry
+            c.rect(x + 10, ry - 13, split - x - 20, 26, ACCENT, LINE, r=2)
+        deeper = i + 1 < rows and depths[(i + 1) % len(depths)] > d
+        if deeper:
+            # A branch: the disclosure caret, open.
+            c.path(f"M {rx:.1f} {ry - 6:.1f} L {rx + 10:.1f} {ry - 6:.1f} "
+                   f"L {rx + 5:.1f} {ry + 4:.1f} Z",
+                   ACCENT if hit else INK_SOFT, HAIR,
+                   fill=ACCENT if hit else INK_SOFT)
+        else:
+            c.dot(rx + 5, ry - 1, 2.5, ACCENT if hit else INK_FAINT, HAIR,
+                  fill=ACCENT if hit else INK_FAINT)
+        run = (split - rx - 108) * (0.44 + 0.46 * c.rand())
+        c.line(rx + 20, ry, rx + 20 + run, ry,
+               ACCENT if hit else INK_FAINT, LINE if hit else HAIR)
+        c.line(split - 46, ry, split - 18, ry, RULE_STRONG, HAIR)
+        ry += step
+
+    # Right: what the selected subject is, above what it has been doing.
+    px, pw = split + 34, x + w - split - 68
+    c.rect(px, y + 48, pw, 128, INK_SOFT, HAIR)
+    for k, indent in enumerate((0, 20, 20, 40, 20)):
+        run = (pw - 64 - indent) * (0.40 + 0.48 * c.rand())
+        c.line(px + 18 + indent, y + 70 + k * 22,
+               px + 18 + indent + run, y + 70 + k * 22, INK_FAINT, HAIR)
+    c.line(split - 12, hit_y, px, hit_y, RULE_STRONG, HAIR, dash="4 6")
+
+    gx, gy, gw, gh = px, y + 208, pw, 68
+    c.line(gx, gy + gh, gx + gw, gy + gh, INK_SOFT, HAIR)
+    c.line(gx, gy, gx, gy + gh, INK_SOFT, HAIR)
+    pts = []
+    n = 44
+    for i in range(n + 1):
+        t = i / n
+        v = 0.54 + 0.28 * math.sin(t * 8.0) + 0.13 * math.sin(t * 21.0 + 1.1)
+        pts.append((gx + gw * t, gy + gh * (1 - min(max(v, 0.06), 0.94))))
+    c.polyline(pts, INK, LINE)
+
+
 # Each cover names its motif and the parameters that make it this page's.
 COVERS = {
     "projects": {
@@ -676,6 +741,7 @@ COVERS = {
         "opcua-suite": lambda c: m_tree(c, depth=3),
         "i3x": lambda c: m_api(c, clients=4, consumers=6, shape_offset=0),
         "iolink-suite": lambda c: m_ports(c, ports=8, accent_port=2),
+        "nats-explorer": lambda c: m_explorer(c, rows=8, accent_row=3),
     },
     "blog": {
         "nats-edge-to-cloud-pipeline": lambda c: m_gateway(c),

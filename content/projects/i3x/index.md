@@ -2,7 +2,7 @@
 title: "i3X Manufacturing API"
 description: "Node-RED integration for the i3X open manufacturing data standard by CESMII"
 tags: ["Node-RED", "JavaScript", "REST API", "IIoT"]
-weight: 7
+weight: 8
 date: 2026-03-03
 # npm package this project ships as — the card shows its download count.
 npm: "node-red-contrib-i3x"

@@ -139,9 +139,9 @@ date: 2026-03-05
 
 ## Open Source
 
-I maintain several open-source Node-RED packages for industrial IoT on [npm](https://www.npmjs.com/~blanpa):
+I maintain several open-source Node-RED packages for industrial IoT on [npm](https://www.npmjs.com/~blanpa), and [NATS Explorer](/projects/nats-explorer/) — a management tool and message explorer for NATS — as a desktop app and a container image:
 
-<p class="section-note">Private open-source work, unrelated to my employment. Built in my own time and published under the MIT licence (the IO-Link suite under Apache-2.0).</p>
+<p class="section-note">Private open-source work, unrelated to my employment. Built in my own time. The Node-RED packages are MIT, the IO-Link suite Apache-2.0, NATS Explorer AGPL-3.0.</p>
 
 {{< npm-stats >}}
 
@@ -156,6 +156,7 @@ I maintain several open-source Node-RED packages for industrial IoT on [npm](htt
 {{< github repo="blanpa/node-red-contrib-opcua-suite" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-i3x" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-iolink-suite" showThumbnail=false >}}
+{{< github repo="blanpa/nats-explorer" showThumbnail=false >}}
 </div>
 
 ## Experience

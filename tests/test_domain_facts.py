@@ -36,6 +36,7 @@ KNOWN_PORTS = {
     1883: "MQTT",
     2222: "EtherNet/IP implicit I/O (UDP)",
     3000: "Grafana",
+    3002: "NATS Explorer web UI",
     4222: "NATS client",
     4840: "OPC-UA",
     5432: "PostgreSQL / TimescaleDB",
@@ -346,14 +347,22 @@ def test_project_npm_mapping_resolves(pages, npm_packages):
     )
 
 
-def test_every_project_declares_its_package(pages):
-    """Every project here ships as an npm package; a missing `npm:` means a
-    card without a download count."""
+def test_every_project_says_where_it_ships(pages):
+    """A project page has to name the thing a reader can go and get.
+
+    For the Node-RED suites that is `npm:`, which also drives the download
+    count on the card. NATS Explorer ships as installers, binaries and a
+    container image instead, so it names its repository with `repo:` — and
+    the structured data in the page head reads whichever is there.
+    """
     missing = [
         page.rel for page in pages
-        if page.section == "projects" and not page.meta.get("npm")
+        if page.section == "projects"
+        and not (page.meta.get("npm") or page.meta.get("repo"))
     ]
-    assert not missing, f"project pages without an `npm:` field: {missing}"
+    assert not missing, (
+        f"project pages with neither an `npm:` nor a `repo:` field: {missing}"
+    )
 
 
 def test_shared_figures_agree_across_posts(pages):

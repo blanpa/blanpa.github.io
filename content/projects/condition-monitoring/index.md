@@ -2,7 +2,7 @@
 title: "Condition Monitoring Suite"
 description: "Industrial-grade predictive maintenance and anomaly detection for Node-RED"
 tags: ["Node-RED", "JavaScript", "Python", "Machine Learning", "IIoT"]
-weight: 1
+weight: 2
 date: 2025-11-16
 # npm package this project ships as — the card shows its download count.
 npm: "node-red-contrib-condition-monitoring"

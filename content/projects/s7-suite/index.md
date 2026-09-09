@@ -2,7 +2,7 @@
 title: "S7 Communication Suite"
 description: "Node-RED nodes for Siemens S7 PLC communication with dual backend support"
 tags: ["Node-RED", "TypeScript", "Siemens", "IIoT"]
-weight: 5
+weight: 6
 date: 2026-03-01
 # npm package this project ships as — the card shows its download count.
 npm: "node-red-contrib-s7-suite"

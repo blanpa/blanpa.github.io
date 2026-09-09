@@ -2,7 +2,7 @@
 title: "NATS Messaging Suite"
 description: "Full-featured NATS integration for Node-RED with JetStream and KV store support"
 tags: ["Node-RED", "JavaScript", "NATS", "IIoT"]
-weight: 2
+weight: 3
 date: 2025-12-03
 # npm package this project ships as — the card shows its download count.
 npm: "node-red-contrib-nats-suite"

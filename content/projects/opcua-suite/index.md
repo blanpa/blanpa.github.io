@@ -2,7 +2,7 @@
 title: "OPC-UA Suite"
 description: "Modern OPC-UA client/server suite for Node-RED with connection pooling and batch operations"
 tags: ["Node-RED", "JavaScript", "OPC-UA", "IIoT"]
-weight: 6
+weight: 7
 date: 2026-03-06
 # npm package this project ships as — the card shows its download count.
 npm: "node-red-contrib-opcua-suite"

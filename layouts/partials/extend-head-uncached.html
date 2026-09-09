@@ -48,10 +48,17 @@
 
 {{- if and .IsPage (eq .Section "projects") -}}
 {{/* Project pages describe published software, so say so in a form search
-     engines can use: version, licence and repository come out as rich
-     results where a plain title would not. */}}
+     engines can use: licence and repository come out as rich results where a
+     plain title would not.
+
+     Most projects here are a Node-RED package on npm whose repository is
+     named after it, so `npm:` alone answers every question. A project that is
+     none of those says so in its front matter — `repo`, `language`,
+     `platform`, and `license` as an SPDX id. Without those overrides this
+     block called the IO-Link suite MIT and NATS Explorer JavaScript. */}}
 {{- $repo := "" -}}
 {{- with .Params.npm -}}{{- $repo = printf "https://github.com/blanpa/%s" . -}}{{- end -}}
+{{- with .Params.repo -}}{{- $repo = printf "https://github.com/%s" . -}}{{- end -}}
 {{- $img := "" -}}
 {{- with .Resources.GetMatch "featured.*" -}}{{- $img = .Permalink -}}{{- end -}}
 {{- $software := dict
@@ -61,14 +68,18 @@
   "description" .Description
   "url" .Permalink
   "codeRepository" $repo
-  "programmingLanguage" "JavaScript"
-  "runtimePlatform" "Node-RED"
-  "license" "https://opensource.org/licenses/MIT"
+  "programmingLanguage" (.Params.language | default "JavaScript")
+  "runtimePlatform" (.Params.platform | default "Node-RED")
+  "license" (printf "https://spdx.org/licenses/%s.html" (.Params.license | default "MIT"))
   "author" (dict "@type" "Person" "name" $author.name "url" .Site.BaseURL)
 -}}
 {{- with $img -}}{{- $software = merge $software (dict "image" .) -}}{{- end -}}
-{{- with .Params.npm -}}
-  {{- $software = merge $software (dict "downloadUrl" (printf "https://www.npmjs.com/package/%s" .)) -}}
+{{- if .Params.npm -}}
+  {{- $software = merge $software (dict "downloadUrl" (printf "https://www.npmjs.com/package/%s" .Params.npm)) -}}
+{{- else -}}
+  {{- with .Params.repo -}}
+    {{- $software = merge $software (dict "downloadUrl" (printf "https://github.com/%s/releases" .)) -}}
+  {{- end -}}
 {{- end -}}
 <script type="application/ld+json">{{ $software | jsonify (dict "indent" "  ") | safeJS }}</script>
 {{- end -}}

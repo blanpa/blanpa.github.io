@@ -2,7 +2,7 @@
 title: "Kafka Suite"
 description: "Comprehensive Apache Kafka integration for Node-RED with Schema Registry, dual-backend support, and managed service presets"
 tags: ["Node-RED", "JavaScript", "Kafka", "IIoT"]
-weight: 3
+weight: 4
 date: 2026-04-10
 # npm package this project ships as — the card shows its download count.
 npm: "node-red-contrib-kafka-suite"

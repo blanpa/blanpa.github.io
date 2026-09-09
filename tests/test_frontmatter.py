@@ -70,6 +70,24 @@ def test_tags_have_one_spelling_site_wide(pages):
     assert not inconsistent, f"tags spelled inconsistently across pages: {inconsistent}"
 
 
+# The SPDX ids the projects here actually use. `license:` becomes an
+# spdx.org URL in the page's structured data, so a typo is a dead link in the
+# one place a human never looks.
+SPDX_IDS = {"MIT", "Apache-2.0", "AGPL-3.0-or-later"}
+
+
+def test_project_licence_is_a_known_spdx_id(pages):
+    wrong = {
+        page.rel: page.meta["license"]
+        for page in pages
+        if page.meta.get("license") and page.meta["license"] not in SPDX_IDS
+    }
+    assert not wrong, (
+        f"`license:` values that are not SPDX ids this site uses: {wrong} — "
+        f"fix the id, or add it to SPDX_IDS in this test"
+    )
+
+
 def test_featured_image_exists(post):
     """Posts without an image fall back to a generated card — fine, but a
     filename that no longer matches is silently ignored, which is not."""
