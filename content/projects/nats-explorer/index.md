@@ -8,7 +8,7 @@ date: 2026-09-08
 # container image, so `repo` says where the source is, the way `npm:` does for
 # the Node-RED suites. All four feed the SoftwareSourceCode block in
 # layouts/partials/extend-head-uncached.html, which without them would call
-# every project here JavaScript on Node-RED under MIT.
+# every project here JavaScript on Node-RED under Apache-2.0.
 repo: "blanpa/nats-explorer"
 language: "Go, TypeScript"
 platform: "Desktop app, Docker, standalone binary"
@@ -77,7 +77,7 @@ The tree is the part that has to survive a real namespace, so it is kept on the 
 
 ## JetStream, KV and Object Store
 
-- **Streams** — create, edit, purge and delete; page backwards from the newest sequence; live tail; consumers managed per stream
+- **Streams** — create, edit, purge and delete; page backwards from the newest sequence; live tail; consumers managed per stream, and paused with a deadline the server keeps
 - **Key-Value** — browse buckets, edit and purge keys, read the full revision history, and watch a bucket update live from a server-side watch
 - **Object Store** — drag and drop in, download out, delete objects and stores
 - **Domains** — a connection can target a JetStream domain or API prefix, so a leaf node reaches the hub's JetStream and back, and each pane can switch domains as you go
@@ -93,12 +93,30 @@ Recorded messages are what turns a live view into something you can investigate:
 | Where | What it keeps |
 |---|---|
 | **In memory** | Bounded by a byte budget (256 MB by default) shared across connections, 1 000 messages per subject, oldest-first eviction |
-| **On disk** | `HISTORY_DB` tees every record into SQLite — batched inserts, a bounded queue that drops rather than blocks, retention by age |
+| **On disk** | `HISTORY_DB` tees every record into SQLite — batched inserts, a bounded queue that drops rather than blocks, retention by age or forever, and a CEL expression to narrow what is written |
 | **Time ranges** | A picker from 15 minutes to 7 days shows any past window in the same view as the live feed |
 | **Search** | Over one subject and its subtree or across the namespace, answered by an FTS5 index when a persistent history is configured |
+| **Export** | JSON, CSV, NDJSON, CSV with one column per field, payloads only, or a replay script for the `nats` CLI |
 | **Long ranges** | Minute aggregates computed in the same write transaction, so a week of a numeric field is a few hundred points on the wire |
 
 On top of that sit two things that read the payloads rather than the envelope. A **[CEL](https://cel.dev/) filter** such as `payload.temp > 80` keeps only the subjects whose last message matches, and narrows the message list, the search, the time ranges and the charts with it. A **derived schema** walks the recorded messages of a subject and reports the fields with their types, presence, ranges and examples — plus a marker when the newer half of the samples has drifted from the older half, which is how you find out a device firmware changed without being told.
+
+## Debugging
+
+The questions that usually end in an afternoon with the `nats` CLI have an answer on screen:
+
+- **What matches this subject?** — which subscriptions cover it, which streams store it and through which pattern, which consumers would see it, which alert rules watch it and which pinned schema judges it
+- **Follow one message** — a request and its reply, an order and its shipment: the messages that belong together live on different subjects, tied by a value inside them, and are listed as one trail
+- **What a consumer is stuck on** — "37 ack pending" names the message the ack floor cannot move past, with its sequence, subject and payload
+- **Where a stream's sequences are missing** — so "my consumer skipped a message" and "the stream never had it" stop looking the same
+- **How long a message took to get here** — the delay between the producer's own timestamp and the arrival, as a figure and as a chart
+- **Headers that explain themselves** — eighteen server headers such as `Nats-Expected-Last-Subject-Sequence` carry their meaning next to their name
+
+## Charts and Schema
+
+Clicking a number in a payload charts that field over time — up to six at once, each on its own axis or overlaid, with seven reductions from min/max to rate per second, and a drag across the chart to zoom into a stretch of it. A silence is drawn as a hole rather than a ramp, because a straight line between two values is exactly what a steady sensor looks like.
+
+The derived schema can be **pinned as the expected one**. From then on every message in a list carries its verdict — a green edge while it matches, a red one with the violations when it does not — `valid` becomes a variable in the CEL filter, and the schema can be copied out as JSON Schema or a TypeScript interface.
 
 ## Alerts
 
@@ -125,10 +143,10 @@ A time range plus the server snapshot exports as one zip, and opens again in any
 | Backend | Go 1.26, chi, gorilla/websocket, nats.go, SQLite |
 | Client | React 19, TypeScript, Vite, Tailwind, Zustand, Radix UI |
 | Desktop | Wails — the same Go server behind the system webview |
-| Delivery | Docker image, five server binaries, installers for Windows, macOS and Linux |
+| Delivery | Docker image, Helm chart, five server binaries, installers for Windows, macOS and Linux |
 
 ## Licence
 
-NATS Explorer is [AGPL-3.0-or-later](https://spdx.org/licenses/AGPL-3.0-or-later.html) rather than MIT like the Node-RED suites: it is an application people run for others, and the licence is what keeps a hosted, modified copy's source available to the people using it. Self-hosting, modifying and using it commercially are all fine.
+NATS Explorer is [AGPL-3.0-or-later](https://spdx.org/licenses/AGPL-3.0-or-later.html) rather than Apache-2.0 like the Node-RED suites: it is an application people run for others, and the licence is what keeps a hosted, modified copy's source available to the people using it. Self-hosting, modifying and using it commercially are all fine.
 
 For the Node-RED side of the same protocol — nodes for publishing, subscribing, JetStream and the KV store inside a flow — see the [NATS Messaging Suite](/projects/nats-suite/), and [NATS as an edge-to-cloud pipeline](/blog/nats-edge-to-cloud-pipeline/) for what the two are usually doing together.

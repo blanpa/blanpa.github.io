@@ -14,3 +14,5 @@
   desc: i3x open manufacturing API integration
 - pkg: node-red-contrib-iolink-suite
   desc: IO-Link masters & IODD decoding
+- pkg: node-red-contrib-ros2-suite
+  desc: ROS 2 topics, services, actions & TF over rosbridge

@@ -6,9 +6,6 @@ weight: 9
 date: 2026-09-04
 # npm package this project ships as — the card shows its download count.
 npm: "node-red-contrib-iolink-suite"
-# The one suite that is not MIT; the structured data in the page head
-# defaults to MIT without this.
-license: "Apache-2.0"
 ---
 
 ## The Problem

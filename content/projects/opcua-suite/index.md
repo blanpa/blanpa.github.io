@@ -93,4 +93,4 @@ flowchart LR
 - **600+ tests** across 30 spec files, including integration tests against an embedded test server
 - Docker support for local development and CI
 - Automatic datatype detection from JavaScript primitives
-- MIT licensed
+- Apache-2.0 licensed

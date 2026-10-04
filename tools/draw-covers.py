@@ -18,7 +18,7 @@ cairosvg would need the font installed system-wide to set it, and a cover that
 renders differently depending on the machine is worse than one that says
 nothing. Ticks and marks stand in for labels.
 
-    tools/draw-covers.py                  all 26
+    tools/draw-covers.py                  all 27
     tools/draw-covers.py blog             one section
     tools/draw-covers.py blog modbus      one cover
     tools/draw-covers.py --svg …          also keep the .svg next to the .webp
@@ -730,6 +730,79 @@ def m_explorer(c, rows=8, accent_row=3):
     c.polyline(pts, INK, LINE)
 
 
+def m_robot(c, rays=15):
+    """A mobile robot in a floor plan: the map frame in one corner, the path
+    driven from it, and the robot with its own frame and the scan it sees —
+    the transform between the two frames being the thing a flow asks for."""
+    x, y, w, h = BOX
+    # The room, with a door gap in the top wall and two pieces of furniture
+    # the scan can land on.
+    c.polyline([(x + w * 0.46, y), (x, y), (x, y + h), (x + w, y + h),
+                (x + w, y), (x + w * 0.58, y)], INK_SOFT, LINE)
+    c.rect(x + w * 0.30, y + h * 0.36, 92, 70, RULE_STRONG, HAIR)
+    c.rect(x + w - 150, y + h - 92, 150, 92, RULE_STRONG, HAIR)
+    # The map frame: two axes with arrowheads out of the lower left corner.
+    ox, oy = x + 34, y + h - 34
+    for dx, dy in ((58, 0), (0, -58)):
+        c.line(ox, oy, ox + dx, oy + dy, INK, LINE)
+        tx, ty = ox + dx, oy + dy
+        px, py = (0, 7) if dx else (7, 0)
+        ux, uy = (dx and 12, dy and -12)
+        c.path(f"M {tx + px:.1f} {ty + py:.1f} L {tx + ux:.1f} {ty + uy:.1f} "
+               f"L {tx - px:.1f} {ty - py:.1f} Z", INK, HAIR, fill=INK)
+    c.dot(ox, oy, 4, INK, HAIR)
+    # The robot, heading up and to the right.
+    rx, ry, rr = x + w * 0.60, y + h * 0.56, 34
+    heading = -0.52
+    # What it has driven: a dashed run from the map origin around the table.
+    c.path(f"M {ox + 20:.1f} {oy - 20:.1f} C {x + w * 0.20:.1f} {y + h * 0.20:.1f}, "
+           f"{x + w * 0.44:.1f} {y + h * 1.02:.1f}, {rx - 30:.1f} {ry + 18:.1f}",
+           RULE_STRONG, HAIR, dash="4 6")
+    # The scan: rays out of the robot to the first wall each one meets, a
+    # dot where it lands. Only every third ray is drawn; the dots are the
+    # data, the rays just say where they came from.
+    for i in range(rays):
+        a = heading + (i / (rays - 1) - 0.5) * 2.5
+        dx, dy = math.cos(a), math.sin(a)
+        ts = []
+        if dx > 0:
+            ts.append((x + w - rx) / dx)
+        if dx < 0:
+            ts.append((x - rx) / dx)
+        if dy > 0:
+            ts.append((y + h - ry) / dy)
+        if dy < 0:
+            ts.append((y - ry) / dy)
+        # The cabinet in the corner is nearer than the walls behind it.
+        bx, by = x + w - 150, y + h - 92
+        if dx > 0 and by <= ry + dy * (bx - rx) / dx <= y + h:
+            ts.append((bx - rx) / dx)
+        if dy > 0 and bx <= rx + dx * (by - ry) / dy <= x + w:
+            ts.append((by - ry) / dy)
+        t = min(ts)
+        hx, hy = rx + dx * t, ry + dy * t
+        if hy <= y and x + w * 0.46 < hx < x + w * 0.58:
+            continue  # out through the door: nothing comes back
+        t += c.jitter(2.5) - 7
+        hx, hy = rx + dx * t, ry + dy * t
+        if i % 3 == 1:
+            c.line(rx + dx * (rr + 8), ry + dy * (rr + 8), hx, hy, RULE, HAIR)
+        c.dot(hx, hy, 3, INK_FAINT, HAIR, fill=INK_FAINT)
+    # The body: a disc, a wheel either side of the heading, and its own
+    # frame — the accent, because this pose is the answer.
+    c.dot(rx, ry, rr, ACCENT, BOLD)
+    nx, ny = -math.sin(heading), math.cos(heading)
+    for side in (-1, 1):
+        wx, wy = rx + nx * (rr - 5) * side, ry + ny * (rr - 5) * side
+        c.line(wx - math.cos(heading) * 13, wy - math.sin(heading) * 13,
+               wx + math.cos(heading) * 13, wy + math.sin(heading) * 13,
+               ACCENT, BOLD + 2)
+    c.line(rx, ry, rx + math.cos(heading) * 62, ry + math.sin(heading) * 62,
+           ACCENT, LINE)
+    c.line(rx, ry, rx - nx * 44, ry - ny * 44, ACCENT, HAIR)
+    c.dot(rx, ry, 4, ACCENT, HAIR, fill=ACCENT)
+
+
 # Each cover names its motif and the parameters that make it this page's.
 COVERS = {
     "projects": {
@@ -742,6 +815,7 @@ COVERS = {
         "i3x": lambda c: m_api(c, clients=4, consumers=6, shape_offset=0),
         "iolink-suite": lambda c: m_ports(c, ports=8, accent_port=2),
         "nats-explorer": lambda c: m_explorer(c, rows=8, accent_row=3),
+        "ros2-suite": lambda c: m_robot(c, rays=15),
     },
     "blog": {
         "nats-edge-to-cloud-pipeline": lambda c: m_gateway(c),

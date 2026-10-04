@@ -4,8 +4,8 @@ Personal portfolio website — IIoT Software Developer writing about industrial
 connectivity with Node-RED, OPC-UA, NATS, and edge computing.
 
 The site and the software it documents are private open-source work,
-unrelated to my employment: the npm packages under the MIT licence (the
-IO-Link suite under Apache-2.0), NATS Explorer under AGPL-3.0.
+unrelated to my employment: the npm packages under Apache-2.0, NATS Explorer
+under AGPL-3.0.
 
 ## Tech Stack
 
@@ -67,7 +67,7 @@ hugo server -D
 
 ## Projects
 
-The site showcases 8 open-source npm packages (the canonical list lives in `data/npm_packages.yml`):
+The site showcases 9 open-source npm packages (the canonical list lives in `data/npm_packages.yml`):
 
 - **node-red-contrib-condition-monitoring** — Vibration analysis & predictive maintenance
 - **node-red-contrib-nats-suite** — NATS messaging with JetStream support
@@ -77,6 +77,7 @@ The site showcases 8 open-source npm packages (the canonical list lives in `data
 - **node-red-contrib-opcua-suite** — OPC-UA industrial data exchange
 - **node-red-contrib-i3x** — i3x open manufacturing API integration
 - **node-red-contrib-iolink-suite** — IO-Link masters & IODD decoding
+- **node-red-contrib-ros2-suite** — ROS 2 topics, services, actions & TF over rosbridge
 
 It also carries [NATS Explorer](https://github.com/blanpa/nats-explorer), which
 is not an npm package: a NATS management tool and message explorer in Go and

@@ -54,8 +54,9 @@
      Most projects here are a Node-RED package on npm whose repository is
      named after it, so `npm:` alone answers every question. A project that is
      none of those says so in its front matter — `repo`, `language`,
-     `platform`, and `license` as an SPDX id. Without those overrides this
-     block called the IO-Link suite MIT and NATS Explorer JavaScript. */}}
+     `platform`, and `license` as an SPDX id. The licence defaults to
+     Apache-2.0, which is what every suite on npm is published under; without
+     the overrides this block called NATS Explorer JavaScript on Node-RED. */}}
 {{- $repo := "" -}}
 {{- with .Params.npm -}}{{- $repo = printf "https://github.com/blanpa/%s" . -}}{{- end -}}
 {{- with .Params.repo -}}{{- $repo = printf "https://github.com/%s" . -}}{{- end -}}
@@ -70,7 +71,7 @@
   "codeRepository" $repo
   "programmingLanguage" (.Params.language | default "JavaScript")
   "runtimePlatform" (.Params.platform | default "Node-RED")
-  "license" (printf "https://spdx.org/licenses/%s.html" (.Params.license | default "MIT"))
+  "license" (printf "https://spdx.org/licenses/%s.html" (.Params.license | default "Apache-2.0"))
   "author" (dict "@type" "Person" "name" $author.name "url" .Site.BaseURL)
 -}}
 {{- with $img -}}{{- $software = merge $software (dict "image" .) -}}{{- end -}}

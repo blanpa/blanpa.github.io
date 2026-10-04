@@ -47,6 +47,7 @@ KNOWN_PORTS = {
     8222: "NATS monitoring",
     8883: "MQTT over TLS",
     9001: "Mosquitto WebSocket / Portainer agent",
+    9090: "rosbridge WebSocket",
     9092: "Kafka",
     9443: "Portainer",
     44818: "EtherNet/IP explicit messaging",

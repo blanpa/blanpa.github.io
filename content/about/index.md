@@ -4,7 +4,7 @@ description: "IIoT Software Developer with an Industrial Engineering background 
 layout: "simple"
 # Without a date these pages ship no <lastmod> in the sitemap, so crawlers
 # have nothing to judge freshness by. Bump it when the page is rewritten.
-date: 2026-03-05
+date: 2026-10-04
 ---
 
 <div class="about-hero">
@@ -94,6 +94,7 @@ date: 2026-03-05
       <span class="tech-arch__node node--edge">Allen-Bradley</span>
       <span class="tech-arch__node node--edge">Modbus</span>
       <span class="tech-arch__node node--edge">IO-Link</span>
+      <span class="tech-arch__node node--edge">ROS 2</span>
       <span class="tech-arch__node node--edge">CompuLab</span>
     </div>
   </div>
@@ -141,7 +142,7 @@ date: 2026-03-05
 
 I maintain several open-source Node-RED packages for industrial IoT on [npm](https://www.npmjs.com/~blanpa), and [NATS Explorer](/projects/nats-explorer/) — a management tool and message explorer for NATS — as a desktop app and a container image:
 
-<p class="section-note">Private open-source work, unrelated to my employment. Built in my own time. The Node-RED packages are MIT, the IO-Link suite Apache-2.0, NATS Explorer AGPL-3.0.</p>
+<p class="section-note">Private open-source work, unrelated to my employment. Built in my own time. The Node-RED packages are Apache-2.0, NATS Explorer AGPL-3.0.</p>
 
 {{< npm-stats >}}
 
@@ -156,6 +157,7 @@ I maintain several open-source Node-RED packages for industrial IoT on [npm](htt
 {{< github repo="blanpa/node-red-contrib-opcua-suite" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-i3x" showThumbnail=false >}}
 {{< github repo="blanpa/node-red-contrib-iolink-suite" showThumbnail=false >}}
+{{< github repo="blanpa/node-red-contrib-ros2-suite" showThumbnail=false >}}
 {{< github repo="blanpa/nats-explorer" showThumbnail=false >}}
 </div>
 

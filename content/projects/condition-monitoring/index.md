@@ -78,4 +78,4 @@ Run trained models directly in Node-RED without cloud roundtrips:
 - **405 unit tests** covering all nodes and edge cases
 - State persistence across Node-RED restarts
 - Dynamic runtime configuration via message objects
-- MIT licensed, production-ready
+- Apache-2.0 licensed, production-ready
