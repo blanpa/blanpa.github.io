@@ -104,6 +104,8 @@ Helper scripts for authoring (all need Python 3; none are part of the build):
 
 npm download counts shown on the site are baked into `data/npm_stats.yml` by the deploy workflow (daily cron); the committed values are just a local-dev fallback baseline.
 
+`/status/` is an unlisted working page (no menu entry, noindex, not in the sitemap or search): open issues and pull requests across all public repos, live from the GitHub search API in the browser (`assets/js/repo-status.js`), plus the flows.nodered.org ratings. The library sends no CORS headers, so the ratings are baked into `data/nodered_ratings.yml` by the same daily deploy.
+
 Diagrams are authored as ` ```mermaid ` fenced blocks and rendered to static SVG at build time:
 
 ```bash

@@ -1,0 +1,131 @@
+{{ define "main" }}
+  {{/* Repo status — a working page for the site's author, reachable at
+       /status/ but listed nowhere (see content/status/index.md).
+
+       Two halves with two sources. The issues and pull requests are live:
+       assets/js/repo-status.js asks the GitHub search API from the browser,
+       which allows it (CORS) and needs no token for public repos. The
+       Node-RED ratings are baked: flows.nodered.org sends no CORS headers,
+       so the deploy workflow fetches them daily into data/nodered_ratings.yml
+       and they are rendered here at build time. */}}
+  {{ $ratings := site.Data.nodered_ratings.packages | default dict }}
+
+  <article class="repo-status" data-github-user="blanpa">
+    <header class="repo-status__header">
+      <h1 class="repo-status__title">{{ .Title }}</h1>
+      <p class="repo-status__lede">
+        Open issues and pull requests across my public repositories, and how the
+        packages are rated in the Node-RED library. “New” means since you last
+        pressed <em>Mark all as seen</em> in this browser.
+      </p>
+      <div class="repo-status__actions">
+        <button type="button" class="rs-btn" data-rs-refresh>Refresh</button>
+        <button type="button" class="rs-btn rs-btn--primary" data-rs-seen>Mark all as seen</button>
+      </div>
+      <p class="repo-status__meta" data-rs-meta aria-live="polite">Loading from GitHub…</p>
+    </header>
+
+    {{/* Weighted by votes, so one 5-star vote on a new package does not
+         count as much as seven on an established one. */}}
+    {{ $votes := 0 }}
+    {{ $points := 0.0 }}
+    {{ range $ratings }}
+      {{ if .count }}
+        {{ $votes = add $votes .count }}
+        {{ $points = add $points (mul (float .score) .count) }}
+      {{ end }}
+    {{ end }}
+
+    <section class="rs-tiles" aria-label="Summary">
+      <div class="rs-tile rs-tile--accent">
+        <span class="rs-tile__value" data-rs-count="new">–</span>
+        <span class="rs-tile__label">New or updated since last visit</span>
+      </div>
+      <div class="rs-tile">
+        <span class="rs-tile__value" data-rs-count="issue">–</span>
+        <span class="rs-tile__label">Open issues</span>
+      </div>
+      <div class="rs-tile">
+        <span class="rs-tile__value" data-rs-count="pr">–</span>
+        <span class="rs-tile__label">Open pull requests</span>
+      </div>
+      <div class="rs-tile">
+        <span class="rs-tile__value">
+          {{- if gt $votes 0 }}{{ lang.FormatNumber 1 (div $points $votes) }}<span class="rs-tile__unit"> / 5</span>{{ else }}–{{ end -}}
+        </span>
+        <span class="rs-tile__label">Node-RED rating, {{ $votes }} vote{{ if ne $votes 1 }}s{{ end }}</span>
+      </div>
+    </section>
+
+    <section class="rs-section" aria-labelledby="rs-activity">
+      <h2 id="rs-activity" class="rs-section__title">Issues &amp; pull requests</h2>
+
+      <div class="rs-filters">
+        <div class="rs-segmented" role="group" aria-label="Type">
+          <button type="button" data-rs-type="all" aria-pressed="true">All</button>
+          <button type="button" data-rs-type="issue" aria-pressed="false">Issues</button>
+          <button type="button" data-rs-type="pr" aria-pressed="false">Pull requests</button>
+        </div>
+        <label class="rs-check">
+          <input type="checkbox" data-rs-hide-bots checked>
+          Hide bots <span class="rs-check__count" data-rs-bot-count></span>
+        </label>
+      </div>
+      <div class="rs-repos" role="group" aria-label="Repository" data-rs-repos></div>
+
+      <ol class="rs-list" data-rs-list></ol>
+      <noscript>
+        <p class="rs-empty">This list is loaded from the GitHub API and needs JavaScript.</p>
+      </noscript>
+    </section>
+
+    <section class="rs-section" aria-labelledby="rs-ratings">
+      <h2 id="rs-ratings" class="rs-section__title">Node-RED library ratings</h2>
+      <div class="rs-table">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Package</th>
+              <th scope="col">Rating</th>
+              <th scope="col" class="rs-num">Votes</th>
+              <th scope="col" class="rs-num">Installs / week</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range site.Data.npm_packages }}
+              {{ $r := index $ratings .pkg | default dict }}
+              <tr data-rs-rating-pkg="{{ .pkg }}" data-rs-rating-count="{{ $r.count | default 0 }}">
+                <td>
+                  <a href="https://flows.nodered.org/node/{{ .pkg }}" target="_blank" rel="noopener">{{ strings.TrimPrefix "node-red-contrib-" .pkg }}</a>
+                  <span class="rs-badge rs-badge--new" data-rs-rating-badge hidden></span>
+                </td>
+                <td>
+                  {{- with $r.score }}
+                    <span class="rs-stars" style="--rs-fill: {{ mul (div (float .) 5) 100 }}%" role="img" aria-label="{{ lang.FormatNumber 1 . }} out of 5 stars">
+                      <span class="rs-stars__track" aria-hidden="true">★★★★★</span>
+                      <span class="rs-stars__fill" aria-hidden="true">★★★★★</span>
+                    </span>
+                    <span class="rs-score">{{ lang.FormatNumber 1 . }}</span>
+                  {{- else }}
+                    <span class="rs-muted">not rated yet</span>
+                  {{- end -}}
+                </td>
+                <td class="rs-num">{{ $r.count | default 0 }}</td>
+                <td class="rs-num">{{ if isset $r "downloads_week" }}{{ lang.FormatNumber 0 $r.downloads_week }}{{ else }}<span class="rs-muted">–</span>{{ end }}</td>
+              </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+      <p class="rs-footnote">
+        From flows.nodered.org{{ with site.Data.nodered_ratings.updated }}, as of {{ . }}{{ end }}.
+        Refreshed by the daily deploy; the library cannot be asked from the browser.
+      </p>
+    </section>
+  </article>
+
+  {{ with resources.Get "js/repo-status.js" }}
+    {{ $js := . | minify | fingerprint }}
+    <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+  {{ end }}
+{{ end }}

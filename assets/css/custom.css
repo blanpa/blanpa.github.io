@@ -50,6 +50,7 @@
      TABLE OF CONTENTS
      FOCUS
      THEME FURNITURE
+     REPO STATUS
    ============================================== */
 
 /* ==============================================
@@ -3287,4 +3288,311 @@ textarea:focus-visible {
   margin-top: 1rem;
   border-radius: var(--radius);
   overflow: hidden;
+}
+
+/* ==============================================
+   REPO STATUS — /status/, the author's working page
+
+   Built from the same parts as everything else: hairline boxes on
+   --canvas-subtle, one amber for the one thing that wants attention.
+   Here that thing is "new": the tile counting it, the badge on a row and
+   the rule down its left edge. "Updated" is the same signal, quieter.
+   ============================================== */
+.repo-status {
+  max-width: 64rem;
+}
+.repo-status__title {
+  margin: 0 0 0.5rem;
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  color: var(--fg);
+}
+.repo-status__lede {
+  margin: 0 0 1rem;
+  max-width: 44rem;
+  color: var(--fg-muted);
+}
+.repo-status__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.repo-status__meta {
+  margin: 0.75rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+}
+
+.rs-btn {
+  padding: 0.375rem 0.875rem;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius);
+  background: var(--btn-bg);
+  color: var(--fg);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+.rs-btn:hover { background: var(--btn-hover-bg); }
+.rs-btn:disabled { opacity: 0.6; cursor: progress; }
+.rs-btn--primary {
+  border-color: var(--btn-primary-border);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+}
+.rs-btn--primary:hover { background: var(--btn-primary-hover-bg); }
+
+.rs-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0 2rem;
+}
+.rs-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
+}
+.rs-tile--accent { border-color: var(--accent-muted); }
+.rs-tile__value {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+.rs-tile--accent .rs-tile__value { color: var(--accent-fg); }
+.rs-tile__unit {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--fg-muted);
+}
+.rs-tile__label {
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+}
+
+.rs-section { margin: 0 0 2.5rem; }
+.rs-section__title {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-muted);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.rs-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.rs-segmented {
+  display: inline-flex;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.rs-segmented button {
+  padding: 0.3rem 0.75rem;
+  border: 0;
+  background: var(--btn-bg);
+  color: var(--fg-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.rs-segmented button + button { border-left: 1px solid var(--btn-border); }
+.rs-segmented button[aria-pressed="true"] {
+  background: var(--canvas);
+  color: var(--fg);
+  font-weight: 600;
+}
+.rs-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.rs-check input { accent-color: var(--accent-emphasis); }
+
+.rs-repos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+}
+.rs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.2rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+.rs-chip:hover { border-color: var(--border-strong-c); color: var(--fg); }
+.rs-chip[aria-pressed="true"] {
+  border-color: var(--accent-muted);
+  background: var(--accent-subtle);
+  color: var(--fg);
+}
+.rs-chip__count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.rs-chip__dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--accent-fg);
+}
+
+.rs-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.rs-list:empty { display: none; }
+.rs-item {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid transparent;
+  background: var(--canvas);
+}
+.rs-item + .rs-item { border-top: 1px solid var(--border-muted); }
+.rs-item--new { border-left-color: var(--accent-fg); background: var(--accent-subtle); }
+.rs-item--updated { border-left-color: var(--accent-muted); }
+.rs-item__icon { flex: none; padding-top: 0.2rem; }
+.rs-item__icon svg { width: 1rem; height: 1rem; fill: currentColor; }
+.rs-item__icon--issue { color: var(--success-fg); }
+.rs-item__icon--pr { color: var(--fg-muted); }
+.rs-item__body { min-width: 0; flex: 1; }
+.rs-item__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+}
+.rs-item__title {
+  margin-right: 0.25rem;
+  font-weight: 600;
+  color: var(--fg) !important;
+  text-decoration: none !important;
+  overflow-wrap: anywhere;
+}
+.rs-item__title:hover { color: var(--accent-fg) !important; }
+.rs-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin-top: 0.25rem;
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+}
+.rs-item__repo {
+  font-family: var(--font-mono);
+  color: var(--fg);
+}
+
+.rs-badge,
+.rs-label {
+  display: inline-block;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+.rs-badge--new {
+  border-color: transparent;
+  background: var(--accent-emphasis);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.rs-badge--updated {
+  border-color: var(--accent-muted);
+  color: var(--accent-fg);
+}
+.rs-badge[hidden] { display: none; }
+
+.rs-empty {
+  margin: 0;
+  padding: 1.25rem 1rem;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.rs-table {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.rs-table table {
+  /* A global rule makes tables display:block (for scrolling); this one
+     scrolls in its frame instead, so it can stay a table and fill it. */
+  display: table;
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.rs-table th {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--canvas-subtle);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-align: left;
+  color: var(--fg-muted);
+}
+.rs-table td {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--border-muted);
+  color: var(--fg);
+  white-space: nowrap;
+}
+.rs-table tbody tr:first-child td { border-top: 0; }
+.rs-table .rs-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.rs-stars {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.375rem;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  vertical-align: -0.05em;
+}
+.rs-stars__track { color: var(--border-strong-c); }
+.rs-stars__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--rs-fill, 0%);
+  overflow: hidden;
+  color: var(--accent-fg);
+}
+.rs-score { font-variant-numeric: tabular-nums; font-weight: 600; }
+.rs-muted { color: var(--fg-subtle); }
+.rs-footnote {
+  margin: 0.5rem 0 0;
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
 }
