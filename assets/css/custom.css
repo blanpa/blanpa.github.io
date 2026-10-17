@@ -8,6 +8,9 @@
      TYPOGRAPHY
      DESIGN TOKENS
      HOMEPAGE HERO
+     HERO SHOT
+     SECTION HEADS
+     STAT BAND
      SUPPORT BUTTON
      GET IN TOUCH
      CONTACT MODAL
@@ -22,9 +25,10 @@
      GITHUB REPO GRID
      SERIES CALLOUT IN ARTICLES
      PROJECT PAGE HERO
+     SCREENSHOTS
      PROJECT GRID
      BLOG FEATURED
-     BLOG FEED
+     POST ROWS
      ABOUT & WORK PAGE
      SKILLS
      TIMELINE
@@ -54,26 +58,43 @@
    ============================================== */
 
 /* ==============================================
-   TYPOGRAPHY — the platform stack, no webfont
+   TYPOGRAPHY — one display face over the platform stacks
 
-   Everything is set in the OS UI face: no webfont, no display serif, no
-   second register for headings. That is why the pages paint instantly —
-   the only bytes on the wire are the ones the OS already has. Headings
-   are separated from body copy by weight and size alone.
+   Body copy is the OS UI face and code the OS mono, so a page of prose
+   still paints with no font bytes on the wire. The one webfont is the
+   display face: Barlow Condensed, a DIN-shaped grotesk in two weights,
+   for headlines, section heads and the big figures — the register that
+   makes the site recognisable, and the one that stayed invisible while
+   headings were the body face in bold. Self-hosted from static/fonts
+   (OFL, licence alongside), ~22 KB a cut, preloaded in extend-head.html.
 
-   Code is the platform mono. Its colours are not the theme's; see CODE
-   BLOCKS, which replaces chroma's generated palette with this one's.
+   Code colours are not the theme's; see CODE BLOCKS, which replaces
+   chroma's generated palette with this one's.
    ============================================== */
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/barlow-condensed-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/barlow-condensed-700.woff2") format("woff2");
+}
 
 /* ==============================================
-   DESIGN TOKENS — Graphite & Signal Amber
+   DESIGN TOKENS — Graphite & Signal Blue
 
-   The palette is built for the subject: graphite for the machine, amber
-   for the signal. Surfaces are quiet greys — a near-black graphite in
-   dark mode, warm paper in light — and exactly one colour is allowed to
-   be loud. That colour is amber, the shop-floor signal lamp, and it does
-   every job an accent does here: links, the current nav item, the one
-   primary button, focus rings.
+   The palette is built for the subject: graphite for the machine, one
+   clear blue for the signal. Surfaces are quiet greys — a near-black
+   graphite in dark mode, warm paper in light — and exactly one colour is
+   allowed to be loud. That colour is the blue, and it does every job an
+   accent does here: links, the current nav item, the one primary button,
+   focus rings.
 
    Roles, not hues, are what the components below ask for: canvas /
    border / fg / accent, dark first and light overridden underneath.
@@ -85,8 +106,8 @@
    them at the roles moves the whole site in one place.
 
    Contrast, measured, all AA or better:
-     dark   fg 14.3:1   fg-muted 6.7:1   accent 9.4:1
-     light  fg 16.7:1   fg-muted 7.0:1   accent 5.2:1
+     dark   fg 14.3:1   fg-muted 6.7:1   accent 6.9:1
+     light  fg 16.7:1   fg-muted 7.0:1   accent 6.7:1
    ============================================== */
 :root {
   /* Surfaces — graphite. --canvas is the ground the page and the code
@@ -104,29 +125,29 @@
   --fg-muted: #9ba0a8;
   --fg-subtle: #767c85;
 
-  /* Amber is the whole accent budget: link, nav underline, primary
-     button, focus ring. On a dark ground it can be bright (#f0b429,
-     9.4:1); the emphasis step is the fill behind dark ink. */
-  --accent-fg: #f0b429;
-  --accent-emphasis: #d99a1a;
-  --accent-subtle: rgba(240, 180, 41, 0.12);
-  --accent-muted: rgba(240, 180, 41, 0.4);
+  /* The blue is the whole accent budget: link, nav underline, primary
+     button, focus ring. On a dark ground it can be light (#60a5fa,
+     6.9:1); the emphasis step is the fill behind dark ink. */
+  --accent-fg: #60a5fa;
+  --accent-emphasis: #3b82f6;
+  --accent-subtle: rgba(96, 165, 250, 0.12);
+  --accent-muted: rgba(96, 165, 250, 0.4);
 
   --btn-bg: #23262c;
   --btn-hover-bg: #2c3038;
   --btn-border: #3a3f48;
   /* The primary button is the accent itself, with dark ink on it — on a
-     graphite page a filled amber rectangle is unmistakably the one
+     graphite page a filled blue rectangle is unmistakably the one
      action, and it needs no second colour to say so. */
-  --btn-primary-bg: #f0b429;
-  --btn-primary-hover-bg: #f5c451;
+  --btn-primary-bg: #60a5fa;
+  --btn-primary-hover-bg: #7fb5fb;
   --btn-primary-border: rgba(0, 0, 0, 0.2);
-  --btn-primary-fg: #1a1509;
+  --btn-primary-fg: #0e1013;
 
-  --nav-underline: #f0b429;
-  /* Semantic only — form status lines. Teal rather than a signal green,
-     so success never competes with the accent. */
-  --success-fg: #4db6a0;
+  --nav-underline: #60a5fa;
+  /* Semantic only — form status lines. A muted green, so success never
+     competes with the accent. */
+  --success-fg: #5cc98a;
   --danger-fg: #e5534b;
   /* Inline code and other quiet fills: a translucent grey, so it works on
      canvas and on canvas-subtle alike. */
@@ -139,9 +160,10 @@
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
-  /* Kept: ~30 rules ask for the display face by name. There is no display
-     face, so it resolves to the same stack as everything else. */
-  --font-display: var(--font-sans);
+  /* The display face, with the condensed faces most systems already have
+     standing in until it arrives, so the swap moves nothing much. */
+  --font-display: "Barlow Condensed", "Roboto Condensed", "Arial Narrow",
+    "Helvetica Neue", var(--font-sans);
 
   /* Type scale: 16px body, 14px for secondary text, 12px for metadata.
      Nothing between the steps. */
@@ -152,7 +174,13 @@
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
   --text-3xl: 2rem;
-  --text-display: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  --text-4xl: 2.75rem;
+  /* Page titles and the hero: the condensed face wants to be big. The hero
+     headline is sized by its own column (a container query; see HOMEPAGE
+     HERO), so it is as large as the column allows at every width rather
+     than as large as the viewport suggests. */
+  --text-page: clamp(2.6rem, 2rem + 3vw, 4rem);
+  --text-display: clamp(2.75rem, 18cqw, 6.6rem);
 
   /* Geometry. 6px on boxes, buttons, inputs and code blocks alike; only
      labels and avatars are rounder. */
@@ -163,11 +191,11 @@
 
   /* Aliases — the ink-and-paper vocabulary the components below speak. */
   --accent: var(--accent-fg);
-  --accent-rgb: 240 180 41;
-  /* The ink that goes *on* the accent. Dark mode fills with bright amber,
-     so it is near-black; light mode fills with burnt amber, so it is
-     white. Anything painting text on --accent-emphasis must use this. */
-  --accent-ink: #1a1509;
+  --accent-rgb: 96 165 250;
+  /* The ink that goes *on* the accent. Dark mode fills with the light
+     blue, so it is near-black; light mode fills with the deep blue, so it
+     is white. Anything painting text on --accent-emphasis must use this. */
+  --accent-ink: #0e1013;
   --accent-on-light: var(--accent-fg); /* legacy alias, kept: 28 call sites */
   --paper: var(--canvas);
   --paper-raised: var(--canvas-subtle);
@@ -183,7 +211,7 @@
 }
 
 :root:not(.dark) {
-  /* Warm paper rather than a blue-white: it sits under the same amber
+  /* Warm paper rather than a blue-white: it sits under the same blue
      without either one turning grey. */
   --canvas: #ffffff;
   --canvas-subtle: #f7f6f4;
@@ -198,24 +226,24 @@
   --fg-muted: #5c5952;
   --fg-subtle: #7a766e;
 
-  /* Bright amber cannot carry text on white, so light mode uses the
-     burnt step: #a35b00 is 5.2:1 on the canvas and 4.8:1 on the subtle
+  /* The light blue cannot carry text on white, so light mode uses the
+     deep step: #1d4ed8 is 6.7:1 on the canvas and 6.2:1 on the subtle
      grey. Same hue, same signal, legible ground. */
-  --accent-fg: #a35b00;
-  --accent-emphasis: #8f4f00;
-  --accent-subtle: #fdf3dc;
-  --accent-muted: rgba(163, 91, 0, 0.35);
+  --accent-fg: #1d4ed8;
+  --accent-emphasis: #1e40af;
+  --accent-subtle: #e3ecfd;
+  --accent-muted: rgba(29, 78, 216, 0.35);
 
   --btn-bg: #f7f6f4;
   --btn-hover-bg: #efece7;
   --btn-border: #ddd8d0;
-  --btn-primary-bg: #a35b00;
-  --btn-primary-hover-bg: #8f4f00;
+  --btn-primary-bg: #1d4ed8;
+  --btn-primary-hover-bg: #1e40af;
   --btn-primary-border: rgba(28, 30, 34, 0.15);
   --btn-primary-fg: #ffffff;
 
-  --nav-underline: #d9871f;
-  --success-fg: #0f6f5c;
+  --nav-underline: #3b82f6;
+  --success-fg: #1a7f4b;
   --danger-fg: #b4262a;
   --neutral-muted: rgba(184, 177, 166, 0.25);
   --overlay-shadow: 0 8px 24px rgba(28, 30, 34, 0.2);
@@ -223,7 +251,7 @@
      control, which is what makes a button look seated rather than drawn. */
   --shadow-sm: 0 1px 0 rgba(28, 30, 34, 0.04);
 
-  --accent-rgb: 163 91 0;
+  --accent-rgb: 29 78 216;
   --accent-ink: #ffffff;
   --surface-hover: rgba(184, 177, 166, 0.22);
 }
@@ -237,15 +265,23 @@ body[class] {
   line-height: 1.5;
 }
 
-/* Headings are the same face as the text, separated by weight and size
-   alone — there is no heading face and no negative tracking. */
-h1, h2, h3, h4, h5, h6 {
+/* Headings are the display face, which separates them from the text by
+   shape, not only by weight. Condensed letters read a size smaller than
+   their box, so every level is set one step larger than the body face
+   was; h4 down stay in the body face, as they are run-in labels. */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.1;
+}
+h4, h5, h6 {
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: normal;
   line-height: 1.25;
 }
-h1 { font-size: var(--text-3xl); }
+h1 { font-size: var(--text-4xl); line-height: 1.02; }
 
 /* Machine text only. Everything that used to be here — section labels,
    stat captions, tag chips, dates — is ordinary prose and now reads as
@@ -260,42 +296,83 @@ code, kbd, pre, samp {
 }
 
 /* ==============================================
-   HOMEPAGE HERO — two columns: copy + portrait
+   HOMEPAGE HERO — the headline and a screenshot
+
+   Two columns: the headline, set in the display face at the largest size
+   on the site, and a screenshot of real software beside it (HERO SHOT,
+   below). The portrait that used to fill the right column is now a small
+   identity mark above the headline: who is saying this, not what the
+   page is about.
    ============================================== */
-/* Copy and actions left, portrait right. The old centred profile card put
-   the name first and pushed the proof band and the contact button to the
-   bottom edge of the viewport; this puts the offer, the evidence and the
-   way to get in touch in the first screen. */
+/* Two breakpoints serve the whole site: 960px, where every two-column
+   layout becomes one, and 600px, where rows and cards reflow for a phone.
+   Everything in between is handled by fluid sizes, not by more
+   breakpoints. */
 .home-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   align-items: center;
-  gap: 3.5rem;
-  padding: 1rem 0 2.5rem;
+  gap: 3rem;
+  padding: 1.5rem 0 2.5rem;
+}
+/* The headline's column is a container, so the headline is sized by the
+   room it actually has (--text-display, in cqw) at every width. */
+.home-hero__text {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.home-hero__who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.4rem;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+}
+.home-hero__who img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--canvas-subtle);
+}
+.home-hero__who strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+.home-hero__role::before {
+  content: "— ";
+  color: var(--fg-subtle);
 }
 
 .home-hero__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-size: var(--text-display);
   font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  line-height: 0.94;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+/* The one coloured word: content marks it with <em>. */
+.home-hero__title em {
+  font-style: normal;
+  color: var(--accent-fg);
 }
 
 .home-hero__lede {
-  margin: 1.15rem 0 0;
-  max-width: 34rem;
+  margin: 1.4rem 0 0;
+  max-width: 32rem;
   font-size: var(--text-lg);
-  line-height: 1.65;
-  opacity: 0.85;
+  line-height: 1.6;
+  color: var(--fg-muted);
 }
 .home-hero__lede strong {
-  color: var(--accent);
-  font-weight: 700;
-}
-:root:not(.dark) .home-hero__lede strong {
-  color: var(--accent-on-light);
+  color: var(--fg);
+  font-weight: 600;
 }
 
 .home-hero__actions {
@@ -327,43 +404,135 @@ code, kbd, pre, samp {
   margin-top: 1.6rem;
   font-size: 1.4rem;
   opacity: 0.65;
-}@media (hover: hover) {
-
+}
+@media (hover: hover) {
   .home-hero__links:hover {
     opacity: 1;
   }
 }
 
-.home-hero__portrait {
-  justify-self: center;
-}
-.home-hero__portrait img {
-  width: min(15rem, 45vw);
-  height: auto;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1px solid var(--border-soft);
-  background: var(--surface);
+.home-hero__panel {
+  min-width: 0;
 }
 
-/* Phones: the headline leads, the portrait becomes a small identity marker
-   above it rather than a full-width block pushing everything down. */
-@media (max-width: 820px) {
+/* Tablet and down: one column, the screenshot under the headline at full
+   width. */
+@media (max-width: 960px) {
   .home-hero {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
-    padding-top: 0.5rem;
+    gap: 2rem;
+    padding-top: 0.75rem;
   }
-  .home-hero__portrait {
-    order: -1;
-    justify-self: start;
-  }
-  .home-hero__portrait img {
-    width: 5.5rem;
-  }
+}
+@media (max-width: 600px) {
   .home-hero__lede {
     font-size: var(--text-base);
   }
+}
+
+/* ==============================================
+   HERO SHOT — a screenshot, in a plate
+
+   The picture beside the headline is a screenshot of real software (see
+   layouts/partials/home/custom.html for which), framed the way the covers
+   are: one hairline, the card grey behind it. It links to the project.
+   The caption underneath says what it is, in words, because a screenshot
+   without one is decoration.
+   ============================================== */
+.hero-shot {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.hero-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
+}
+.hero-shot__caption {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+}
+@media (hover: hover) {
+  .hero-shot:hover img {
+    border-color: var(--border-strong-c);
+  }
+  .hero-shot:hover .hero-shot__caption {
+    color: var(--fg);
+  }
+}
+
+/* ==============================================
+   SECTION HEADS
+
+   layouts/partials/section-head.html. The title in the display face over
+   a rule, an optional link flush right. The rule is what separates the
+   sections; nothing else on the head is decoration.
+   ============================================== */
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 3rem 0 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.sec-head__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sec-head__link {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  color: var(--accent-fg);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .sec-head__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+}
+
+/* The head of a list page: a count, the title at page size, a lede. */
+.page-head {
+  margin: 0.5rem 0 1rem;
+}
+.page-head__index {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+}
+.page-head__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-page);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+.page-head__lede {
+  margin: 0.9rem 0 0;
+  max-width: 40rem;
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+.page-head .rss-subscribe {
+  margin-top: 0.9rem;
 }
 
 .home-prose {
@@ -393,25 +562,63 @@ code, kbd, pre, samp {
   color: var(--accent-on-light);
 }
 
-/* Evidence strip under the hero: a rule, then the numbers and the protocols
-   the site is actually about. Left-aligned to sit with the hero copy rather
-   than floating centred beneath it. */
-/* The proof line — a sentence, not a dashboard. The two figures are
-   emphasised by weight and tabular numerals only; colouring them accent
-   turned them into the loudest thing on the page. */
-.home-proof {
-  max-width: 46rem;
-  margin: 0 0 3.5rem;
-  padding-top: 1.6rem;
-  border-top: 1px solid var(--rule);
-  font-size: var(--text-base);
-  line-height: 1.6;
-  color: var(--ink-soft);
+/* ==============================================
+   STAT BAND — the numbers under the hero
+
+   layouts/partials/home-stats.html. Four figures between two rules,
+   separated by hairlines, each a big display numeral over a plain label.
+   The figures are the proof the hero makes a claim on, so they are the
+   one place numbers are allowed to be large; the labels are sentences,
+   not dashboard captions.
+   ============================================== */
+.stat-band {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 1.5rem 0 1rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
-.home-proof__num {
-  font-weight: 650;
-  color: var(--ink);
+.stat {
+  padding: 1.1rem 1.25rem;
+  border-left: 1px solid var(--border);
+}
+.stat:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.stat__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 1.6rem + 2vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+.stat__num small {
+  font-size: 0.5em;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+.stat__label {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+@media (max-width: 960px) {
+  .stat-band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .stat:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .stat:nth-child(n + 3) {
+    border-top: 1px solid var(--border-muted);
+  }
 }
 
 /* ==============================================
@@ -622,7 +829,7 @@ code, kbd, pre, samp {
   box-shadow: 0 0 0 3px var(--accent-muted);
 }
 :root:not(.dark) .contact-dialog .form-group select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a35b00' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231d4ed8' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-color: var(--canvas-subtle);
   background-repeat: no-repeat;
   background-position: right 1rem center;
@@ -672,9 +879,6 @@ code, kbd, pre, samp {
 }
 
 @media (max-width: 768px) {
-  .home-proof {
-    gap: 1rem 1.75rem;
-  }
   .contact-dialog__inner {
     padding: 1.25rem;
   }
@@ -695,19 +899,8 @@ code, kbd, pre, samp {
   margin: 0 0 2.5rem;
   text-align: left;
 }
-/* The section label. Was mono, uppercase, letterspaced and accent-coloured
-   — the "kicker" treatment applied to every heading on the site until it
-   stopped signalling anything. It is a small heading, so it is set as one. */
-.home-featured__kicker {
-  display: block;
-  margin-bottom: 0.6rem;
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 600;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink);
-}
+/* Headed by a numbered section head (SECTION HEADS), which also carries
+   the "all projects" link. */
 .home-featured .project-featured {
   margin: 0.5rem 0 0.75rem;
 }
@@ -785,7 +978,7 @@ code, kbd, pre, samp {
    ============================================== */
 .project-featured {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   gap: 0;
   overflow: hidden;
   text-decoration: none;
@@ -819,15 +1012,15 @@ code, kbd, pre, samp {
 }
 
 .project-featured__content {
-  padding: 1.5rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+/* The kind of thing it is, as a quiet line of metadata. */
 .project-featured__badge {
   display: inline-block;
   width: fit-content;
-  margin-bottom: 0.6rem;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -837,27 +1030,28 @@ code, kbd, pre, samp {
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--ink-faint);
+  color: var(--fg-muted);
 }
 .project-featured__content h2 {
-  font-size: var(--text-xl);
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.25;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.6rem);
+  font-weight: 700;
+  margin: 0.6rem 0 0.6rem;
+  line-height: 1;
 }
 .project-featured__content p {
   margin: 0;
-  opacity: 0.7;
   line-height: 1.6;
-  font-size: 0.95rem;
+  font-size: var(--text-base);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .project-featured {
     grid-template-columns: 1fr;
   }
   .project-featured__img {
-    min-height: 200px;
+    min-height: 0;
+    aspect-ratio: 1200 / 640;
   }
   .project-featured__content {
     padding: 1.5rem;
@@ -1308,6 +1502,41 @@ main details > summary[class*="bg-primary-"] {
 }
 
 /* ==============================================
+   SCREENSHOTS — figures in the page
+
+   layouts/shortcodes/screenshot.html. A screenshot sits in the text where
+   it belongs, framed like the covers, with a caption that says what it
+   shows; it links to the full-size original. Figures, not a gallery strip.
+   ============================================== */
+.article-content .shot {
+  margin: 1.75rem 0 2rem;
+}
+.article-content .shot a {
+  display: block;
+}
+.article-content .shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--canvas-subtle);
+  transition: border-color 0.15s ease;
+}
+@media (hover: hover) {
+  .article-content .shot a:hover img {
+    border-color: var(--border-strong-c);
+  }
+}
+.article-content .shot figcaption {
+  margin-top: 0.6rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* ==============================================
    PROJECT GRID — remaining projects
    ============================================== */
 .project-grid {
@@ -1319,7 +1548,7 @@ main details > summary[class*="bg-primary-"] {
 @media (max-width: 1024px) {
   .project-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .project-grid { grid-template-columns: 1fr; }
 }
 
@@ -1342,8 +1571,9 @@ main details > summary[class*="bg-primary-"] {
 
 .project-card__img {
   position: relative;
-  height: 180px;
+  aspect-ratio: 1200 / 640;
   overflow: hidden;
+  border-bottom: 1px solid var(--border-muted);
 }
 .project-card__img img {
   position: absolute;
@@ -1360,10 +1590,11 @@ main details > summary[class*="bg-primary-"] {
   flex-direction: column;
 }
 .project-card__content h3 {
-  font-size: var(--text-base);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
   font-weight: 600;
   margin: 0 0 0.4rem 0;
-  line-height: 1.3;
+  line-height: 1.05;
 }
 .project-card__content p {
   margin: 0;
@@ -1378,7 +1609,7 @@ main details > summary[class*="bg-primary-"] {
    ============================================== */
 .blog-featured {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   gap: 0;
   overflow: hidden;
   text-decoration: none;
@@ -1414,32 +1645,24 @@ main details > summary[class*="bg-primary-"] {
   flex-direction: column;
   justify-content: center;
 }
-.blog-featured__badge {
-  display: inline-block;
-  width: fit-content;
-  margin-bottom: 0.6rem;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  font-family: inherit;
+/* Date and reading time. */
+.blog-featured__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  margin-bottom: 0.7rem;
   font-size: var(--text-sm);
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink-faint);
+  color: var(--fg-muted);
 }
 .blog-featured__date {
-  font-size: var(--text-xs);
-  font-weight: 400;
-  color: var(--fg-muted);
-  margin-bottom: 0.6rem;
+  color: var(--fg);
 }
 .blog-featured__content h2 {
-  font-size: var(--text-xl);
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.25;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.6rem);
+  font-weight: 700;
+  margin: 0 0 0.6rem 0;
+  line-height: 1;
 }
 .blog-featured__content p {
   margin: 0;
@@ -1448,129 +1671,135 @@ main details > summary[class*="bg-primary-"] {
   font-size: 0.92rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .blog-featured {
     grid-template-columns: 1fr;
   }
   .blog-featured__img {
-    min-height: 200px;
+    min-height: 0;
+    aspect-ratio: 1200 / 640;
   }
   .blog-featured__content {
     padding: 1.5rem;
   }
-  .blog-featured__content h2 {
-    font-size: 1.25rem;
-  }
 }
 
 /* ==============================================
-   BLOG FEED — chronological post list
+   POST ROWS — the article list, as a list
+
+   layouts/partials/post-row.html, on the blog index and the homepage.
+   Was a column of boxed cards, each the same box as every other panel on
+   the site. Now rows between rules: a column with the date and the
+   reading time, the title in the display face, the cover at the right.
+   The only thing that moves on hover is the title's colour.
    ============================================== */
-.blog-feed {
+.post-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+  border-top: 1px solid var(--border);
 }
 
-.blog-feed-item {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
+.post-row {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) 11rem;
+  grid-template-areas: "meta body img";
+  align-items: center;
+  gap: 1.75rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border-muted);
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--canvas-subtle);
-  transition: border-color 0.15s ease;
 }
-@media (hover: hover) {
-  .blog-feed-item:hover {
-    border-color: var(--accent-fg);
-  }
-}
+.post-row__meta { grid-area: meta; }
+.post-row__body { grid-area: body; }
+.post-row__img { grid-area: img; }
 
-.blog-feed-item__img {
-  flex-shrink: 0;
-  width: 100px;
-  height: 100px;
-  border: 1px solid var(--border-muted);
-  border-radius: var(--radius);
-  overflow: hidden;
-  position: relative;
-}
-.blog-feed-item__img img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.blog-feed-item__body {
-  flex: 1;
-  min-width: 0;
+.post-row__meta {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 0.15rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--fg-muted);
 }
-
-.blog-feed-item__meta {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.3rem;
+.post-row__meta time {
+  color: var(--fg);
 }
-.blog-feed-item__meta time {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-:root:not(.dark) .blog-feed-item__meta time {
-  color: var(--accent);
-}
-.blog-feed-item__series {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  padding: 0 0.55rem;
-  border-radius: var(--radius-pill);
-  background: var(--accent-subtle);
+.post-row__series {
   color: var(--accent-fg);
-  border: 1px solid transparent;
 }
 
-.blog-feed-item__body h3 {
-  font-size: var(--text-base);
+.post-row__body h3 {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
   font-weight: 600;
-  margin: 0 0 0.25rem 0;
-  line-height: 1.3;
+  line-height: 1.05;
+  transition: color 0.15s ease;
 }
-.blog-feed-item__body p {
+.post-row__body p {
   margin: 0;
-  opacity: 0.55;
-  font-size: 0.85rem;
-  line-height: 1.45;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--fg-muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.blog-feed-item__body .project-tags {
+.post-row__body .project-tags {
   margin-top: 0.5rem;
 }
 
-@media (max-width: 640px) {
-  .blog-feed-item {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.25rem;
+/* The cover is a dark plate; in light mode the hairline gives it an edge. */
+.post-row__img {
+  aspect-ratio: 1200 / 640;
+  overflow: hidden;
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-sm);
+  background: var(--canvas-subtle);
+}
+.post-row__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (hover: hover) {
+  .post-row:hover .post-row__body h3 {
+    color: var(--accent-fg);
   }
-  .blog-feed-item__img {
-    width: 100%;
-    height: 160px;
-    border-radius: var(--radius);
+}
+
+/* Tablet: the date moves above the title so the text keeps its width; the
+   cover stays at the right. Phone: one column, the cover first. */
+@media (max-width: 960px) {
+  .post-row {
+    grid-template-columns: minmax(0, 1fr) 10rem;
+    grid-template-areas:
+      "meta img"
+      "body img";
+    gap: 0.4rem 1.5rem;
+    align-items: start;
+  }
+  .post-row__meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.9rem;
+  }
+  .post-row__img {
+    align-self: center;
+  }
+}
+@media (max-width: 600px) {
+  .post-row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "img"
+      "meta"
+      "body";
+    gap: 0.6rem;
   }
 }
 
@@ -2156,9 +2385,9 @@ a.skill-chip { color: inherit; }
   color: var(--accent-on-light) !important;
 }
 
-/* Links in prose. One accent in both themes, and it is the signal amber:
-   #a35b00 measures 5.2:1 on white and #f0b429 9.4:1 on #17191d —
-   both AA at body size, which is why GitHub picked that pair. */
+/* Links in prose. One accent in both themes, and it is the signal blue:
+   #1d4ed8 measures 6.7:1 on white and #60a5fa 6.9:1 on #17191d —
+   both AA at body size. */
 .article-content p a,
 .article-content li a,
 .article-content td a,
@@ -2188,31 +2417,12 @@ a.skill-chip { color: inherit; }
 .project-featured__content p,
 .project-card__content p,
 .blog-featured__content p,
-.blog-feed-item__body p,
+.post-row__body p,
 .service-card p,
 .process-step p,
 .about-hero__text {
   opacity: 1;
   color: var(--fg-muted);
-}
-
-/* Blog feed: 2-column grid on larger screens */
-@media (min-width: 768px) {
-  .blog-feed {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  .blog-feed-item {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.25rem;
-  }
-  .blog-feed-item__img {
-    width: 100%;
-    height: 160px;
-    border-radius: var(--radius);
-  }
 }
 
 /* Tag chip count: better contrast */
@@ -2688,9 +2898,6 @@ body::after { content: none; }
 .case-result__label,
 .case-stack__label,
 .case-card__sector,
-.blog-feed-item__meta time,
-.blog-feed-item__series,
-.blog-featured__date,
 .timeline-date,
 .npm-stats-table thead th,
 .tech-arch__label,
@@ -2774,6 +2981,16 @@ a[href*="/tags/"]:not(.tag-cloud__chip) ~ a[href*="/tags/"]:not(.tag-cloud__chip
 .main-menu button {
   color: var(--fg);
   font-size: var(--text-sm);
+}
+/* The wordmark: the site name in the display face, uppercase and tracked,
+   and nothing else. */
+.main-menu > a[href="/"] {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
 }
 @media (hover: hover) {
   .main-menu a:hover,
@@ -2879,9 +3096,11 @@ a.skill-chip,
   padding-bottom: 0.3em;
   border-bottom: 1px solid var(--border-muted);
 }
-.article-content h1 { font-size: 2em; }
-.article-content h2 { font-size: 1.5em; }
-.article-content h3 { font-size: 1.25em; }
+/* A step larger than github-markdown-css: the display face is condensed,
+   and reads a size smaller than its box. */
+.article-content h1 { font-size: 2.25em; }
+.article-content h2 { font-size: 1.85em; }
+.article-content h3 { font-size: 1.45em; }
 .article-content h4 { font-size: 1em; }
 .article-content h5 { font-size: 0.875em; }
 .article-content h6 { font-size: 0.85em; color: var(--fg-muted); }
@@ -2956,7 +3175,7 @@ a.skill-chip,
    `--style=github` / `--style=github-dark`, which put a green on every
    YAML key and a blue on every string. On a page with this much code
    that is not a detail — it is the palette, and it was neither this
-   one's greys nor its amber.
+   one's greys nor its blue.
 
    The replacement below keeps chroma's structure (six roles, one hue
    each, so code stays scannable) and moves the hues into the site's
@@ -3294,7 +3513,7 @@ textarea:focus-visible {
    REPO STATUS — /status/, the author's working page
 
    Built from the same parts as everything else: hairline boxes on
-   --canvas-subtle, one amber for the one thing that wants attention.
+   --canvas-subtle, one blue for the one thing that wants attention.
    Here that thing is "new": the tile counting it, the badge on a row and
    the rule down its left edge. "Updated" is the same signal, quieter.
    ============================================== */

@@ -94,13 +94,13 @@ def palette(canvas, subtle, border, border_strong, fg, fg_muted,
 PALETTE = palette(
     canvas="#ffffff", subtle="#f7f6f4", border="#ddd8d0",
     border_strong="#b8b1a6", fg="#1c1e22", fg_muted="#5c5952",
-    accent="#a35b00", accent_subtle="#fdf3dc",
+    accent="#1d4ed8", accent_subtle="#e3ecfd",
 )
 
 PALETTE_DARK = palette(
     canvas="#17191d", subtle="#1e2126", border="#33373f",
     border_strong="#4a4f59", fg="#e9e7e3", fg_muted="#9ba0a8",
-    accent="#f0b429", accent_subtle="#3a2c0c",
+    accent="#60a5fa", accent_subtle="#172a4a",
 )
 
 VARIANTS = {

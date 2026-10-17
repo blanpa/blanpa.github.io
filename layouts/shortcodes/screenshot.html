@@ -1,0 +1,20 @@
+{{- /* A screenshot from the page bundle, as a figure with a caption:
+
+         {{< screenshot src="subjects-dark.webp" caption="What it shows" >}}
+
+       The image is served at up to 1600px wide and links to the original
+       in the bundle. A missing file fails the build, so a typo cannot ship
+       as an empty frame. Params: src, caption, alt (defaults to caption). */ -}}
+{{- $src := .Get "src" -}}
+{{- $img := .Page.Resources.GetMatch $src -}}
+{{- if not $img }}{{ errorf "screenshot %q not found in the bundle of %s" $src .Page.File.Path }}{{ end -}}
+{{- $w := $img.Resize "1600x webp q86" -}}
+<figure class="shot">
+  <a href="{{ $img.RelPermalink }}" target="_blank" rel="noopener">
+    <img class="nozoom" src="{{ $w.RelPermalink }}" width="{{ $w.Width }}" height="{{ $w.Height }}"
+         alt="{{ .Get "alt" | default (.Get "caption") }}" loading="lazy" decoding="async">
+  </a>
+  {{- with .Get "caption" }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>

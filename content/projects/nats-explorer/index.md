@@ -35,6 +35,8 @@ docker run -p 3002:3002 ghcr.io/blanpa/nats-explorer:latest
 
 The UI comes up on port 3002; the connection dialog takes the NATS URL and the credentials.
 
+{{< screenshot src="connections-dark.webp" caption="Several NATS servers in the connection switcher." >}}
+
 ## Architecture
 
 A Go backend holds the NATS connections and does the work that does not belong in a browser tab — subscribing, counting, keeping the tree, recording the history, evaluating the alert rules. The React client asks for what is on screen over HTTP and receives deltas over one WebSocket. The desktop build is the same server with the same bundle in a native window.
@@ -75,6 +77,8 @@ The tree is the part that has to survive a real namespace, so it is kept on the 
 - **Feed budgets** — at most 50 msg/s per subject and 2 000 msg/s per tab; within that total the first message of a subject each second wins over repeats, so a wide branch stays fresh instead of one chatty subject starving it. Over-budget messages are counted, not lost — the history still has them.
 - **Subtree aggregates** — count, rate and child count roll up the path of every message and refresh on a tick, so a branch shows what is happening under it while it is closed.
 
+{{< screenshot src="subjects-dark.webp" caption="The subject tree, with the history, the value chart and the payload of one subject." >}}
+
 ## JetStream, KV and Object Store
 
 - **Streams** — create, edit, purge and delete; page backwards from the newest sequence; live tail; consumers managed per stream, and paused with a deadline the server keeps
@@ -82,9 +86,15 @@ The tree is the part that has to survive a real namespace, so it is kept on the 
 - **Object Store** — drag and drop in, download out, delete objects and stores
 - **Domains** — a connection can target a JetStream domain or API prefix, so a leaf node reaches the hub's JetStream and back, and each pane can switch domains as you go
 
+{{< screenshot src="jetstream-light.webp" caption="A stream with its limits, configuration and placement — in the light theme." >}}
+
+{{< screenshot src="kv-dark.webp" caption="A Key-Value bucket: a key, its value and its revisions." >}}
+
 ## Requests
 
 Postman-style request templates in the sidebar: create, edit, duplicate, run, import and export as JSON. A request can be repeated up to 10 000 times across parallel senders with `{{i}}`, `{{ts}}`, `{{uuid}}` and `{{rand:1-100}}` substituted per send, and the result is throughput plus latency percentiles and a histogram of the replies. The publish drawer under a subject uses the same templates, so a one-off publish and a load test are the same object.
+
+{{< screenshot src="requests-dark.webp" caption="A repeated request: throughput, latency percentiles and the histogram of the replies." >}}
 
 ## History, Search and Filters
 
@@ -122,9 +132,13 @@ The derived schema can be **pinned as the expected one**. From then on every mes
 
 Rules watch a subject pattern either for an expression that holds or for a subject that has fallen silent past its `staleAfter`, with severities, an optional webhook, and a dry run against the recorded messages before you arm one. They are evaluated on the backend's record hook — throttled to one evaluation per second and subject, with the per-subject state in a sharded map — so they keep working with no browser open.
 
+{{< screenshot src="alerts-dark.webp" caption="Alerts: what is firing, the rules behind it and the log." >}}
+
 ## Monitoring and Cluster
 
 Messages and bytes per second in and out, connections, subscriptions, CPU and JetStream API rates over time, plus routes and leaf nodes with their traffic. With system-account (`$SYS`) credentials on the connection the cluster module adds every node with its version, uptime, CPU, memory and JetStream usage, the JetStream meta cluster with its leader, peers, lag and offline members, and the placement of each stream with its leader and replicas. Without those credentials it shows the connected node and says so, rather than pretending the cluster is one server.
+
+{{< screenshot src="monitoring-dark.webp" caption="Server monitoring, with the throughput history." >}}
 
 ## Security
 

@@ -11,13 +11,16 @@
     {{ end }}
   {{ end }}
 
-  <header>
+  {{ $allPages := .Pages.ByDate.Reverse }}
+
+  <header class="page-head">
     {{ if .Params.showBreadcrumbs | default (site.Params.list.showBreadcrumbs | default false) }}
       {{ partial "breadcrumbs.html" . }}
     {{ end }}
-    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    <span class="page-head__index">{{ len $allPages }} articles</span>
+    <h1 class="page-head__title">{{ .Title }}</h1>
     {{ with .Description }}
-      <p class="mt-2 text-lg text-neutral-500 dark:text-neutral-400">{{ . }}</p>
+      <p class="page-head__lede">{{ . }}</p>
     {{ end }}
     {{ with .OutputFormats.Get "rss" }}
       <a class="rss-subscribe" href="{{ .RelPermalink }}" title="Subscribe via RSS">
@@ -26,8 +29,6 @@
       </a>
     {{ end }}
   </header>
-
-  {{ $allPages := .Pages.ByDate.Reverse }}
 
   {{/* Tag filter chips */}}
   {{ $tagMap := dict }}
@@ -69,6 +70,7 @@
       {{/* No own image → fall back to the generated branded card. */}}
       {{ if not $featuredURL }}{{ $featuredURL = partial "og-image.html" . }}{{ end }}
 
+      {{ partial "section-head.html" (dict "title" "Latest") }}
       <a href="{{ .RelPermalink }}" class="blog-featured" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
         {{ with $featuredURL }}
           <div class="blog-featured__img">
@@ -76,8 +78,10 @@
           </div>
         {{ end }}
         <div class="blog-featured__content">
-          <span class="blog-featured__badge">Latest</span>
-          <time class="blog-featured__date">{{ .Date.Format "January 2, 2006" }}</time>
+          <div class="blog-featured__meta">
+            <time class="blog-featured__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" }}</time>
+            <span>{{ .ReadingTime }} min read</span>
+          </div>
           <h2>{{ .Title }}</h2>
           <p>{{ .Description }}</p>
           {{ with .Params.tags }}
@@ -93,36 +97,10 @@
 
     {{/* Rest — chronological list */}}
     {{ if gt (len $rest) 0 }}
-      <div class="blog-feed">
+      {{ partial "section-head.html" (dict "title" "All articles") }}
+      <div class="post-list blog-feed">
         {{ range $rest }}
-          {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 600) }}
-          {{/* No own image → fall back to the generated branded card. */}}
-          {{ if not $featuredURL }}{{ $featuredURL = partial "og-image.html" . }}{{ end }}
-
-          <a href="{{ .RelPermalink }}" class="blog-feed-item" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
-            {{ with $featuredURL }}
-              <div class="blog-feed-item__img">
-                <img class="nozoom" src="{{ . }}" loading="lazy" decoding="async" alt="">
-              </div>
-            {{ end }}
-            <div class="blog-feed-item__body">
-              <div class="blog-feed-item__meta">
-                <time>{{ .Date.Format "Jan 2, 2006" }}</time>
-                {{ with .Params.series }}
-                  <span class="blog-feed-item__series">{{ index . 0 }}</span>
-                {{ end }}
-              </div>
-              <h3>{{ .Title }}</h3>
-              <p>{{ .Description }}</p>
-              {{ with .Params.tags }}
-                <div class="project-tags">
-                  {{ range first 3 . }}
-                    <span class="project-tag">{{ . }}</span>
-                  {{ end }}
-                </div>
-              {{ end }}
-            </div>
-          </a>
+          {{ partial "post-row.html" . }}
         {{ end }}
       </div>
     {{ end }}

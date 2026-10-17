@@ -40,7 +40,7 @@ PROVIDER = os.environ.get("HF_PROVIDER", "fal-ai")
 STYLES = {
     "paper": (
         "fine ink drawing on a warm light grey ground (#f7f6f4), "
-        "near-black graphite linework with a single burnt-amber accent (#a35b00), "
+        "near-black graphite linework with a single deep-blue accent (#1d4ed8), "
         "technical etching with engraved crosshatch shading, hairline rules, "
         "restrained editorial illustration for a printed journal, matte and flat, "
         "generous empty ground around the subject, "
@@ -49,7 +49,7 @@ STYLES = {
     ),
     "ink": (
         "fine chalk drawing on a near-black graphite ground (#17191d), "
-        "pale grey linework with a single signal-amber accent (#f0b429), "
+        "pale grey linework with a single light-blue accent (#60a5fa), "
         "technical etching with engraved crosshatch shading, hairline rules, "
         "restrained editorial illustration, matte and flat, "
         "generous empty ground around the subject, "

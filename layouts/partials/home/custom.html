@@ -2,20 +2,31 @@
 
        Replaces Blowfish's "profile" layout, which opened with a portrait, a
        name and a headline — an identity card. A visitor deciding whether to
-       hire someone wants the opposite order: what gets solved, what proves it,
-       how to get in touch. So the hero is two columns (copy and actions left,
-       portrait right), the proof band sits directly under it, and the strongest
-       project follows before the article list.
+       hire someone wants the opposite order: what gets solved, what proves
+       it, how to get in touch. So the hero is the headline with a real
+       screenshot beside it, the numbers follow as a band, then the strongest
+       project and the latest articles.
 
        The copy lives in content/_index.md under `hero:` so it stays editable
        without touching the template. */ -}}
 
 {{- $hero := .Params.hero | default dict -}}
-{{- $disableImageOptimization := .Site.Params.disableImageOptimization | default false -}}
 
 <article class="home">
   <section class="home-hero">
     <div class="home-hero__text">
+      <p class="home-hero__who">
+        {{- with .Site.Params.Author.image }}
+          {{- with resources.Get . }}
+            {{- $avatar := . -}}
+            {{- if ne .MediaType.SubType "svg" }}{{ $avatar = .Fill "96x96 q90" }}{{ end }}
+        <img class="nozoom" src="{{ $avatar.RelPermalink }}" width="32" height="32" alt="" decoding="async">
+          {{- end }}
+        {{- end }}
+        <strong>{{ .Site.Params.Author.name }}</strong>
+        <span class="home-hero__role">{{ $hero.kicker | default .Site.Params.Author.headline }}</span>
+      </p>
+
       <h1 class="home-hero__title">
         {{ $hero.title | default (.Site.Params.Author.name | default .Site.Title) | markdownify }}
       </h1>
@@ -38,28 +49,18 @@
       <div class="home-hero__links">{{ partialCached "author-links.html" . }}</div>
     </div>
 
-    {{- with .Site.Params.Author.image }}
-      {{- $image := "" -}}
-      {{- if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") -}}
-        {{- $image = resources.GetRemote . -}}
-      {{- else -}}
-        {{- $image = resources.Get . -}}
-      {{- end -}}
-      {{- with $image }}
-        {{- $rendered := . -}}
-        {{- if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) -}}
-          {{- $rendered = .Fill (print "480x480 q" ($.Site.Params.Author.imagequality | default "96")) -}}
-        {{- end }}
-        <div class="home-hero__portrait">
-          <img
-            class="nozoom"
-            src="{{ $rendered.RelPermalink }}"
-            width="240" height="240"
-            alt="{{ $.Site.Params.Author.name | default `Author` }}"
-            fetchpriority="high"
-            decoding="async">
-        </div>
-      {{- end }}
+    {{- /* The picture is a screenshot of real software, not an illustration
+         of the tagline: NATS Explorer's subject tree with the history and
+         value chart of one subject — shop-floor signals, as data. The file
+         is docs/screenshots/subjects-dark.png from that repo, at 1920px. */}}
+    {{- with resources.Get "img/hero-nats-explorer.webp" }}
+    {{- $shot := .Resize "1200x webp q88" }}
+    <a class="hero-shot" href="{{ (site.GetPage "/projects/nats-explorer").RelPermalink }}">
+      <img src="{{ $shot.RelPermalink }}" width="{{ $shot.Width }}" height="{{ $shot.Height }}"
+           alt="NATS Explorer: the subject tree, with the history and the value chart of one subject"
+           fetchpriority="high" decoding="async" class="nozoom">
+      <span class="hero-shot__caption">NATS Explorer — the subject namespace as a live tree</span>
+    </a>
     {{- end }}
   </section>
 
@@ -70,10 +71,20 @@
   {{- end }}
 
   {{ partial "home-featured-project.html" . }}
-</article>
 
-{{- if .Site.Params.homepage.showRecent }}
-<section class="home-recent">
-  {{ partial "recent-articles/main.html" . }}
-</section>
-{{- end }}
+  {{- if .Site.Params.homepage.showRecent }}
+  {{- $n := .Site.Params.homepage.showRecentItems | default 5 }}
+  {{- $posts := where site.RegularPages "Section" "blog" }}
+  <section class="home-recent">
+    {{ partial "section-head.html" (dict
+        "title" "Recent articles"
+        "url" (site.GetPage "/blog").RelPermalink
+        "label" "All articles") }}
+    <div class="post-list">
+      {{- range first $n $posts.ByDate.Reverse }}
+      {{ partial "post-row.html" . }}
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+</article>

@@ -1,15 +1,40 @@
-{{- /* The proof line. Was a four-column stat band with count-up animation
-       and a row of protocol pills — the dashboard idiom, on a page that is
-       not a dashboard. The same four facts read better as one sentence a
-       person could have written, so that is what this is now.
-
-       The npm total is still baked in at build time from data/npm_stats.yml
-       (refreshed by the deploy workflow), so the number is real on first
-       paint with no client-side fetch. */ -}}
+{{- /* The numbers, as a band under the hero: downloads, packages, the
+       Node-RED library rating and the article count. Every figure is baked
+       in at build time — npm from data/npm_stats.yml, the rating from
+       data/nodered_ratings.yml (both refreshed by the deploy workflow), the
+       article count from the content — so they are real on first paint with
+       no client-side fetch. */ -}}
 {{- $total := site.Data.npm_stats.total_last_month | default 0 -}}
 {{- $count := len site.Data.npm_packages -}}
-<p class="home-proof">
-  <span class="home-proof__num">{{ lang.FormatNumber 0 $total }}</span> npm downloads a month
-  across <span class="home-proof__num">{{ $count }}</span> open-source packages,
-  speaking OPC-UA, Siemens S7, Allen-Bradley CIP, NATS and Kafka.
-</p>
+{{- $articles := len (where site.RegularPages "Section" "blog") -}}
+
+{{- /* Weighted by votes, so one 5-star vote on a new package does not
+       count as much as seven on an established one. */ -}}
+{{- $votes := 0 }}{{ $points := 0.0 }}
+{{- range site.Data.nodered_ratings.packages | default dict }}
+  {{- if .count }}
+    {{- $votes = add $votes .count }}
+    {{- $points = add $points (mul (float .score) .count) }}
+  {{- end }}
+{{- end }}
+
+<section class="stat-band" aria-label="In numbers">
+  <div class="stat">
+    <span class="stat__num">{{ lang.FormatNumber 0 $total }}</span>
+    <span class="stat__label">npm downloads a month</span>
+  </div>
+  <div class="stat">
+    <span class="stat__num">{{ $count }}</span>
+    <span class="stat__label">open-source packages</span>
+  </div>
+  {{- if gt $votes 0 }}
+  <div class="stat">
+    <span class="stat__num">{{ lang.FormatNumber 1 (div $points $votes) }}<small>/5</small></span>
+    <span class="stat__label">Node-RED library rating, {{ $votes }} votes</span>
+  </div>
+  {{- end }}
+  <div class="stat">
+    <span class="stat__num">{{ $articles }}</span>
+    <span class="stat__label">articles on industrial protocols</span>
+  </div>
+</section>

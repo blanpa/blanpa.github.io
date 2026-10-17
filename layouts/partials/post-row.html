@@ -1,0 +1,30 @@
+{{- /* One article in a list: date and reading time in a mono column, title
+       and description, the cover at the right. Rows are separated by rules,
+       not boxed — the blog index and the homepage both use this, so the
+       two agree. Param: the article Page. */ -}}
+{{- $img := partial "card-image.html" (dict "page" . "width" 600) -}}
+{{- /* No own image → fall back to the generated branded card. */ -}}
+{{- if not $img }}{{ $img = partial "og-image.html" . }}{{ end -}}
+<a href="{{ .RelPermalink }}" class="post-row" data-tags="{{ delimit (apply .Params.tags "urlize" ".") "," }}">
+  <div class="post-row__meta">
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" }}</time>
+    <span>{{ .ReadingTime }} min read</span>
+    {{- with .Params.series }}
+    <span class="post-row__series">{{ index . 0 }}</span>
+    {{- end }}
+  </div>
+  <div class="post-row__body">
+    <h3>{{ .Title }}</h3>
+    <p>{{ .Description }}</p>
+    {{- with .Params.tags }}
+    <div class="project-tags">
+      {{- range first 3 . }}<span class="project-tag">{{ . }}</span>{{ end -}}
+    </div>
+    {{- end }}
+  </div>
+  {{- with $img }}
+  <div class="post-row__img">
+    <img class="nozoom" src="{{ . }}" loading="lazy" decoding="async" alt="">
+  </div>
+  {{- end }}
+</a>

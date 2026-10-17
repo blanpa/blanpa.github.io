@@ -10,26 +10,38 @@ under AGPL-3.0.
 ## Tech Stack
 
 - [Hugo](https://gohugo.io/) with the [Blowfish](https://blowfish.page/) theme
-- Graphite greys and a signal amber — see [Design](#design)
+- Graphite greys and a signal blue — see [Design](#design)
 - Deployed via GitHub Actions to [GitHub Pages](https://blanpa.github.io)
 
 ## Design
 
-The palette is built for the subject: graphite for the machine, amber for the
-signal. Surfaces are quiet, and exactly one colour is allowed to be loud.
-Concretely:
+The palette is built for the subject: graphite for the machine, one clear
+blue for the signal. Surfaces are quiet, and exactly one colour is allowed to
+be loud. Concretely:
 
 - **Colour.** Roles rather than hues, declared once in the `DESIGN TOKENS`
   block of `assets/css/custom.css`: `--canvas` / `--canvas-subtle` /
   `--canvas-inset`, `--border`, `--fg` / `--fg-muted`, `--accent-fg`. Dark is
-  `#17191d` graphite, light is white over warm `#f7f6f4` paper, and the amber
-  (`#f0b429` on dark, the burnt `#a35b00` on light) does every accent job
+  `#17191d` graphite, light is white over warm `#f7f6f4` paper, and the blue
+  (`#60a5fa` on dark, the deep `#1d4ed8` on light) does every accent job
   there is: links, the current nav item, the one primary button, focus rings.
   Every pairing is WCAG AA or better. The ink-and-paper names the components
   were written against (`--paper`, `--ink`, `--rule`) are kept as aliases onto
   those roles.
-- **Type.** The platform UI stack for everything and the platform mono for
-  code. No webfont is loaded at all.
+- **Type.** One display face over the platform stacks: Barlow Condensed
+  (OFL, self-hosted from `static/fonts/`, two weights, ~22 KB each) for
+  headlines, section heads and the big figures, uppercase where it is large.
+  Body copy is the platform UI stack and code the platform mono; mono is
+  used only where the content is machine text (versions, download counts,
+  code), never as a label style.
+- **Rhythm.** Sections are a title over a rule
+  (`layouts/partials/section-head.html`), the article list is rows between
+  rules rather than boxes (`post-row.html`), and the homepage opens with
+  the headline beside a screenshot of real software, not an illustration of
+  the tagline. No motion anywhere.
+- **Screenshots.** Where a project has them, they are in the page as
+  figures with captions (`{{</* screenshot */>}}`, from the page bundle),
+  placed in the section they belong to rather than in a gallery strip.
 - **Shape.** One hairline border, 6px corners, a `--canvas-subtle` fill; no
   shadows, no lifts on hover, no translucency. Labels and topic tags are the
   only pills.
@@ -44,6 +56,9 @@ Concretely:
   per theme.
 - **Covers and diagrams.** Both are drawn from the same values; see
   `tools/draw-covers.py` and the palette in `tools/render-diagrams.py`.
+  A cover is a plate: graphite ground, graph paper, light ink, and the one
+  accented element lit with a halo — the same plate in both themes, so in
+  light mode it sits in its card like a screen.
 
 ## Local Development
 

@@ -1,0 +1,9 @@
+{{- /* A section head: the title in the display face over a rule, with an
+       optional link flush right. Params: title, id (optional), url + label
+       (optional). */ -}}
+<header class="sec-head">
+  <h2 class="sec-head__title"{{ with .id }} id="{{ . }}"{{ end }}>{{ .title }}</h2>
+  {{- with .url }}
+  <a class="sec-head__link" href="{{ . }}">{{ $.label }}</a>
+  {{- end }}
+</header>

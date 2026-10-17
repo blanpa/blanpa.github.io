@@ -11,13 +11,14 @@
     {{ end }}
   {{ end }}
 
-  <header>
+  <header class="page-head">
     {{ if .Params.showBreadcrumbs | default (site.Params.list.showBreadcrumbs | default false) }}
       {{ partial "breadcrumbs.html" . }}
     {{ end }}
-    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    <span class="page-head__index">{{ len .Pages }} projects</span>
+    <h1 class="page-head__title">{{ .Title }}</h1>
     {{ with .Description }}
-      <p class="mt-2 text-lg text-neutral-500 dark:text-neutral-400">{{ . }}</p>
+      <p class="page-head__lede">{{ . }}</p>
     {{ end }}
   </header>
 
@@ -27,6 +28,7 @@
   {{/* Featured Project */}}
   {{ range first 1 $pages }}
     {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 900) }}
+    {{ partial "section-head.html" (dict "title" "Featured") }}
 
     <a href="{{ .RelPermalink }}" class="project-featured">
       {{ with $featuredURL }}
@@ -36,7 +38,9 @@
       {{ end }}
       <div class="project-featured__content">
         <div class="project-card__meta">
-          <span class="project-featured__badge">Featured Project</span>
+          <span class="project-featured__badge">
+            {{- with .Params.npm }}npm package{{ else }}{{ .Params.language | default "Open source" }}{{ end -}}
+          </span>
           {{ partial "npm-downloads.html" . }}
         </div>
         <h2>{{ .Title }}</h2>
@@ -54,11 +58,12 @@
 
   {{/* Project Grid */}}
   {{ if gt (len $rest) 0 }}
+    {{ partial "section-head.html" (dict "title" "All projects") }}
     <section class="project-grid">
-      {{ range $rest }}
-        {{ $featuredURL := partial "card-image.html" (dict "page" . "width" 600) }}
+      {{ range $p := $rest }}
+        {{ $featuredURL := partial "card-image.html" (dict "page" $p "width" 600) }}
 
-        <a href="{{ .RelPermalink }}" class="project-card">
+        <a href="{{ $p.RelPermalink }}" class="project-card">
           {{ with $featuredURL }}
             <div class="project-card__img">
               <img class="nozoom" src="{{ . }}" loading="lazy" decoding="async" alt="">
@@ -66,11 +71,11 @@
           {{ end }}
           <div class="project-card__content">
             <div class="project-card__meta">
-              <h3>{{ .Title }}</h3>
-              {{ partial "npm-downloads.html" . }}
+              <h3>{{ $p.Title }}</h3>
+              {{ partial "npm-downloads.html" $p }}
             </div>
-            <p>{{ .Description }}</p>
-            {{ with .Params.tags }}
+            <p>{{ $p.Description }}</p>
+            {{ with $p.Params.tags }}
               <div class="project-tags">
                 {{ range . }}
                   <span class="project-tag">{{ . }}</span>

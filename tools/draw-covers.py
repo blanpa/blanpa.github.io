@@ -30,6 +30,7 @@ import hashlib
 import io
 import math
 import os
+import re
 import sys
 
 import cairosvg
@@ -38,22 +39,32 @@ from PIL import Image
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W, H = 1200, 640
 
-# assets/css/custom.css :root — the light theme's values. The ground is
-# canvas.subtle rather than pure white, so in light mode a cover
-# is the same grey as the card it sits in and has no edge of its own; on the
-# dark theme it reads as a printed plate, the same relationship a figure has
-# to a page.
-PAPER = "#f7f6f4"
-INK = "#1c1e22"
-INK_SOFT = "#5c5952"
-INK_FAINT = "#8d887f"
-RULE = "#ddd8d0"
-RULE_STRONG = "#b8b1a6"
-ACCENT = "#a35b00"
+# assets/css/custom.css :root — the dark theme's values. A cover is a plate:
+# graphite ground, light ink, and the accent as a lit signal with a halo. On
+# the dark theme the ground is the card's own grey, so the plate has no edge
+# of its own; on the light theme it sits in the card like a screen, and the
+# card draws the hairline around it. The names kept their ink-and-paper
+# sense (PAPER is the ground, INK the drawing) because every motif speaks
+# them.
+PAPER = "#1e2126"
+INK = "#e9e7e3"
+INK_SOFT = "#b4b9c1"
+INK_FAINT = "#6b7079"
+RULE = "#2a2e35"
+RULE_STRONG = "#4a4f59"
+ACCENT = "#60a5fa"
 
-HAIR = 1.5   # --rule weight: the hairline everything is built from
-LINE = 2.4   # structural edges
-BOLD = 3.2   # the one accented element
+# Graph paper under every drawing: a cell of the site's grid.
+GRID = 24
+
+HAIR = 1.8   # --rule weight: the hairline everything is built from
+LINE = 2.8   # structural edges
+BOLD = 4.0   # the one accented element
+
+# The halo behind the accented element: the same strokes again, wide and
+# faint, under everything. cairosvg has no Gaussian blur, so the glow is
+# built from two rings rather than a filter.
+HALO = ((18, 0.09), (8, 0.16))
 
 # The motif sits inside the intersection of every crop the site applies. Three
 # consumers use object-fit: cover on these, and each is strict on a different
@@ -74,6 +85,7 @@ BOX = (186, 168, 828, 304)  # x, y, w, h
 class Canvas:
     def __init__(self, slug):
         self.parts = []
+        self.halos = []
         # Stable per-slug jitter. Perfect regularity reads as clip-art; a few
         # tenths of drift reads as drawn. Seeded from the slug so it is the
         # same drift on every machine and every rerun.
@@ -96,6 +108,18 @@ class Canvas:
         return (self.rand() - 0.5) * 2 * amount
 
     def add(self, markup):
+        # Anything stroked in the accent is lit: it gets the HALO rings
+        # behind it. Collected apart from the drawing so every halo sits
+        # under every stroke, not only under its own.
+        if f'stroke="{ACCENT}"' in markup:
+            for width, opacity in HALO:
+                halo = re.sub(r'stroke-width="[\d.]+"', f'stroke-width="{width}"',
+                              markup, count=1)
+                halo = halo.replace('/>', f' fill="none" opacity="{opacity}"/>', 1) \
+                    if 'fill=' not in halo else \
+                    re.sub(r'fill="[^"]*"', 'fill="none"', halo, count=1) \
+                      .replace('/>', f' opacity="{opacity}"/>', 1)
+                self.halos.append(halo)
         self.parts.append(markup)
 
     def line(self, x1, y1, x2, y2, stroke=INK_SOFT, width=HAIR, dash=None):
@@ -130,11 +154,20 @@ class Canvas:
                 self.line(x, y + i * gap, x + length, y + i * gap, stroke, width)
 
     def render(self):
+        halos = "\n  ".join(self.halos)
         body = "\n  ".join(self.parts)
         return (
             f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
             f'viewBox="0 0 {W} {H}">\n'
+            f'  <defs>\n'
+            f'    <pattern id="grid" width="{GRID}" height="{GRID}" '
+            f'patternUnits="userSpaceOnUse">'
+            f'<path d="M {GRID} 0 L 0 0 0 {GRID}" fill="none" '
+            f'stroke="{RULE}" stroke-width="1"/></pattern>\n'
+            f'  </defs>\n'
             f'  <rect width="{W}" height="{H}" fill="{PAPER}"/>\n'
+            f'  <rect width="{W}" height="{H}" fill="url(#grid)"/>\n'
+            f'  {halos}\n'
             f'  {body}\n'
             f'</svg>\n'
         )
