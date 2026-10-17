@@ -7,8 +7,10 @@ commit said so and left them alone because they are content.
 
 This replaces the model with a ruler. Every cover is a schematic of what its
 page is actually about — a bus with drops, a partitioned log, the Purdue
-layers — drawn from the same four colours :root declares, at the same hairline
-weight and near-square corners as the rest of the site. Nothing is sampled,
+layers — drawn in one grey and one blue from :root, at the same hairline
+weight and near-square corners as the rest of the site, on no ground of its
+own: the frame is transparent, the card it sits in supplies the paper, and so
+the same file fits the light theme and the dark one. Nothing is sampled,
 nothing is invented: the same slug produces the same drawing on every machine,
 so a cover can be regenerated years from now without a token, a credit balance
 or a provider that still exists.
@@ -39,27 +41,50 @@ from PIL import Image
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W, H = 1200, 640
 
-# assets/css/custom.css :root — the dark theme's values. A cover is a plate:
-# graphite ground, light ink, and the accent as a lit signal with a halo. On
-# the dark theme the ground is the card's own grey, so the plate has no edge
-# of its own; on the light theme it sits in the card like a screen, and the
-# card draws the hairline around it. The names kept their ink-and-paper
-# sense (PAPER is the ground, INK the drawing) because every motif speaks
-# them.
-PAPER = "#1e2126"
-INK = "#e9e7e3"
-INK_SOFT = "#b4b9c1"
-INK_FAINT = "#6b7079"
-RULE = "#2a2e35"
-RULE_STRONG = "#4a4f59"
-ACCENT = "#60a5fa"
+# assets/css/custom.css :root. A cover used to be a plate — graphite ground,
+# light ink — and in the light theme that plate sat in its card like a
+# switched-off screen. Now the frame is transparent and the card supplies the
+# ground, so one file is a chalk drawing on graphite in the dark theme and a
+# pencil drawing on paper in the light one.
+#
+# That rules out light ink and dark ink alike. What is left is the one grey
+# that reads on both grounds, and the site already has it: --fg-subtle of the
+# dark theme, #767c85. Its luminance (0.20) is the geometric midpoint between
+# the two card greys (#1e2126 and #f7f6f4), so it has ~3.9:1 against each —
+# as much as any single opaque colour can have against both at once. Every
+# other tone is that grey at an opacity: opacity blends toward whichever
+# ground is underneath, so the hierarchy holds in both themes without a
+# second file. (cairosvg reads rgba(); it ignores the alpha of #rrggbbaa.)
+# The accent is --accent-emphasis, the blue between the two themes' accents.
+# The names kept their ink-and-paper sense (INK is the drawing) because every
+# motif speaks them; what used to be PAPER is now whatever the cover lies on.
+INK = "#767c85"
+INK_SOFT = "rgba(118, 124, 133, 0.8)"
+INK_FAINT = "rgba(118, 124, 133, 0.6)"
+RULE_STRONG = "rgba(118, 124, 133, 0.42)"
+RULE = "rgba(118, 124, 133, 0.17)"
+ACCENT = "#3b82f6"
+ACCENT_TINT = "rgba(59, 130, 246, 0.14)"  # the interior of a lit panel
+
+# The social cards keep the plate. They are shown off-site — LinkedIn, Slack,
+# a chat preview — with nothing of the site's theme around them, so their
+# ground has to travel with the picture: the dark theme's tokens, which is
+# what every cover was drawn in before.
+PLATE = "#1e2126"
+PLATE_INK = "#e9e7e3"
+PLATE_INK_SOFT = "#b4b9c1"
+PLATE_RULE_STRONG = "#4a4f59"
+PLATE_ACCENT = "#60a5fa"
 
 # Graph paper under every drawing: a cell of the site's grid.
 GRID = 24
 
-HAIR = 1.8   # --rule weight: the hairline everything is built from
-LINE = 2.8   # structural edges
-BOLD = 4.0   # the one accented element
+# A shade heavier than the plate version had: a mid grey has less contrast
+# to spend than light-on-dark did, and at card size it is the weight that
+# carries a line, not its tone.
+HAIR = 2.0   # --rule weight: the hairline everything is built from
+LINE = 3.2   # structural edges
+BOLD = 4.4   # the one accented element
 
 # The halo behind the accented element: the same strokes again, wide and
 # faint, under everything. cairosvg has no Gaussian blur, so the glow is
@@ -83,9 +108,10 @@ BOX = (186, 168, 828, 304)  # x, y, w, h
 # ----------------------------------------------------------------- primitives
 
 class Canvas:
-    def __init__(self, slug):
+    def __init__(self, slug, accent=ACCENT):
         self.parts = []
         self.halos = []
+        self.accent = accent
         # Stable per-slug jitter. Perfect regularity reads as clip-art; a few
         # tenths of drift reads as drawn. Seeded from the slug so it is the
         # same drift on every machine and every rerun.
@@ -111,7 +137,7 @@ class Canvas:
         # Anything stroked in the accent is lit: it gets the HALO rings
         # behind it. Collected apart from the drawing so every halo sits
         # under every stroke, not only under its own.
-        if f'stroke="{ACCENT}"' in markup:
+        if f'stroke="{self.accent}"' in markup:
             for width, opacity in HALO:
                 halo = re.sub(r'stroke-width="[\d.]+"', f'stroke-width="{width}"',
                               markup, count=1)
@@ -127,11 +153,18 @@ class Canvas:
         self.add(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
                  f'stroke="{stroke}" stroke-width="{width}"{d}/>')
 
-    def rect(self, x, y, w, h, stroke=INK_SOFT, width=HAIR, fill="none", r=3):
+    def rect(self, x, y, w, h, stroke=INK_SOFT, width=HAIR, fill=None, r=3):
+        # A box edged in the accent is a lit panel: its interior takes the
+        # tint unless the motif says otherwise. Everything else is open —
+        # there is no ground colour to paint, only the card showing through.
+        if fill is None:
+            fill = ACCENT_TINT if stroke == self.accent else "none"
         self.add(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
                  f'rx="{r}" fill="{fill}" stroke="{stroke}" stroke-width="{width}"/>')
 
-    def dot(self, x, y, r=4.5, stroke=INK, width=HAIR, fill=PAPER):
+    def dot(self, x, y, r=4.5, stroke=INK, width=HAIR, fill=None):
+        if fill is None:
+            fill = ACCENT_TINT if stroke == self.accent else "none"
         self.add(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" '
                  f'fill="{fill}" stroke="{stroke}" stroke-width="{width}"/>')
 
@@ -165,7 +198,6 @@ class Canvas:
             f'<path d="M {GRID} 0 L 0 0 0 {GRID}" fill="none" '
             f'stroke="{RULE}" stroke-width="1"/></pattern>\n'
             f'  </defs>\n'
-            f'  <rect width="{W}" height="{H}" fill="{PAPER}"/>\n'
             f'  <rect width="{W}" height="{H}" fill="url(#grid)"/>\n'
             f'  {halos}\n'
             f'  {body}\n'
@@ -217,7 +249,8 @@ def m_bus(c, drops=5, accent_index=2, registers=True):
         hit = i == accent_index
         c.line(dx, ys, dx, ys + 52, ACCENT if hit else RULE_STRONG,
                LINE if hit else HAIR)
-        c.dot(dx, ys, 5, ACCENT if hit else INK, BOLD if hit else HAIR)
+        c.dot(dx, ys, 5, ACCENT if hit else INK, BOLD if hit else HAIR,
+              fill=ACCENT if hit else INK)
         device(c, dx - 46, ys + 52, 92, 96, rows=2, accent=hit)
     if registers:
         # The register map the bus exists to carry: a row of 16 cells.
@@ -236,13 +269,17 @@ def m_hub(c, leaves=7, ring=True):
     for i in range(leaves):
         a = -math.pi / 2 + i * (2 * math.pi / leaves) + c.jitter(0.04)
         lx, ly = cx + r * math.cos(a), cy + r * 0.62 * math.sin(a)
-        c.line(cx, cy, lx, ly, RULE_STRONG, HAIR)
+        # From the hub's edge, not its centre: the box no longer paints
+        # over the part of a spoke that would run under it.
+        dx, dy = lx - cx, ly - cy
+        t = min(62 / abs(dx) if dx else 9e9, 34 / abs(dy) if dy else 9e9)
+        c.line(cx + dx * t, cy + dy * t, lx, ly, RULE_STRONG, HAIR)
         c.rect(lx - 34, ly - 20, 68, 40, INK_SOFT, HAIR)
     if ring:
         c.add(f'<ellipse cx="{cx}" cy="{cy}" rx="{r + 46}" ry="{r * 0.62 + 34}" '
               f'fill="none" stroke="{RULE}" stroke-width="{HAIR}" '
               f'stroke-dasharray="4 7"/>')
-    c.rect(cx - 62, cy - 34, 124, 68, ACCENT, BOLD, fill=PAPER)
+    c.rect(cx - 62, cy - 34, 124, 68, ACCENT, BOLD)
     c.line(cx - 62, cy - 12, cx + 62, cy - 12, ACCENT, HAIR)
     c.ticks(cx - 44, cy + 2, 5, 22, 14, ACCENT, HAIR)
 
@@ -395,10 +432,10 @@ def m_plot(c, traces=1, anomaly=True, drift=0.16, seed_phase=0.0):
                    width=LINE if lead else HAIR)
         if anomaly and lead:
             px, py = pts[int(n * 0.78)]
-            c.dot(px, py, 8, ACCENT, BOLD)
+            c.dot(px, py, 8, ACCENT, BOLD, fill=ACCENT)
     if not anomaly:
         # No fault to point at, so the accent marks the limit being approached.
-        c.dot(x + w * 0.93, ty, 8, ACCENT, BOLD)
+        c.dot(x + w * 0.93, ty, 8, ACCENT, BOLD, fill=ACCENT)
 
 
 def m_rack(c, slots=7, accent_slot=1):
@@ -575,7 +612,7 @@ def m_gateway(c):
         c.rect(x, sy, 96, 52, INK_SOFT, HAIR)
         link(c, x + 96, sy + 26, x + w * 0.42, y + h / 2, RULE_STRONG, HAIR)
     gx = x + w * 0.42
-    c.rect(gx, y + h / 2 - 60, 150, 120, ACCENT, BOLD, fill=PAPER)
+    c.rect(gx, y + h / 2 - 60, 150, 120, ACCENT, BOLD)
     c.line(gx, y + h / 2 - 34, gx + 150, y + h / 2 - 34, ACCENT, HAIR)
     c.ticks(gx + 20, y + h / 2 - 16, 5, 26, 16, ACCENT, HAIR)
     c.line(gx + 150, y + h / 2, x + w - 172, y + h / 2, INK, LINE, dash="8 6")
@@ -589,7 +626,7 @@ def m_api(c, clients=4, consumers=6, shape_offset=0):
     """Heterogeneous machines behind one interface."""
     x, y, w, h = BOX
     by = y + h * 0.52
-    c.rect(x, by, w, 68, ACCENT, BOLD, fill=PAPER)
+    c.rect(x, by, w, 68, ACCENT, BOLD)
     for i in range(9):
         c.line(x + 40 + i * ((w - 80) / 8), by, x + 40 + i * ((w - 80) / 8),
                by + 68, ACCENT, HAIR)
@@ -638,10 +675,12 @@ def m_secure_link(c, blocks=4, sink="chart"):
     else:
         for k in range(4):
             c.rect(rx + 22, cy - 48 + k * 38, 206, 28, INK_FAINT, HAIR)
-    # The channel, and the seal on it.
-    c.line(x + 224, cy, rx, cy, ACCENT, BOLD)
+    # The channel, in two runs either side of the seal — the seal no longer
+    # paints over the part that would run under it.
     mx = (x + 224 + rx) / 2
-    c.rect(mx - 40, cy - 36, 80, 72, ACCENT, BOLD, fill=PAPER)
+    c.line(x + 224, cy, mx - 40, cy, ACCENT, BOLD)
+    c.line(mx + 40, cy, rx, cy, ACCENT, BOLD)
+    c.rect(mx - 40, cy - 36, 80, 72, ACCENT, BOLD)
     c.path(f"M {mx - 16:.1f} {cy - 8:.1f} L {mx - 16:.1f} {cy - 22:.1f} "
            f"A 16 16 0 0 1 {mx + 16:.1f} {cy - 22:.1f} L {mx + 16:.1f} {cy - 8:.1f}",
            ACCENT, LINE)
@@ -668,7 +707,7 @@ def m_ports(c, ports=8, accent_port=2):
         px = mx + step * (i + 1)
         hit = i == accent_port
         edge = ACCENT if hit else INK_SOFT
-        c.rect(px - 8, y + mh - 12, 16, 12, edge, BOLD if hit else HAIR, fill=PAPER, r=2)
+        c.rect(px - 8, y + mh - 12, 16, 12, edge, BOLD if hit else HAIR, r=2)
         c.line(px, y + mh, px, sy, ACCENT if hit else RULE_STRONG,
                LINE if hit else HAIR)
         # A cylinder sensor: a body with a rounded sensing face, an M12 nut on top.
@@ -676,7 +715,7 @@ def m_ports(c, ports=8, accent_port=2):
         c.rect(bx - 14, sy, 28, 12, edge, HAIR, r=2)
         c.path(f"M {bx - 20:.1f} {sy + 12:.1f} L {bx - 20:.1f} {sy + 66:.1f} "
                f"A 20 20 0 0 0 {bx + 20:.1f} {sy + 66:.1f} L {bx + 20:.1f} {sy + 12:.1f} Z",
-               edge, BOLD if hit else LINE)
+               edge, BOLD if hit else LINE, fill=ACCENT_TINT if hit else "none")
         c.line(bx - 12, sy + 30, bx + 12, sy + 30,
                ACCENT if hit else INK_FAINT, HAIR)
         c.line(bx - 12, sy + 44, bx + 12, sy + 44,
@@ -783,7 +822,7 @@ def m_robot(c, rays=15):
         ux, uy = (dx and 12, dy and -12)
         c.path(f"M {tx + px:.1f} {ty + py:.1f} L {tx + ux:.1f} {ty + uy:.1f} "
                f"L {tx - px:.1f} {ty - py:.1f} Z", INK, HAIR, fill=INK)
-    c.dot(ox, oy, 4, INK, HAIR)
+    c.dot(ox, oy, 4, INK, HAIR, fill=INK)
     # The robot, heading up and to the right.
     rx, ry, rr = x + w * 0.60, y + h * 0.56, 34
     heading = -0.52
@@ -881,39 +920,41 @@ COVERS = {
 # come from the same palette as everything else.
 
 OG_W, OG_H = 1200, 630
+PLATE_HAIR, PLATE_LINE = 1.8, 2.8  # the weights the plate was drawn at
 
 
 def og_canvas(with_brand=True):
     """The light canvas, an accent rule where the mint bar used to be, and a
     schematic in the right third — the same vocabulary as the covers, held
     back to a rule weight so an overlaid title always wins."""
-    c = Canvas("og")
+    c = Canvas("og", accent=PLATE_ACCENT)
     c.parts = []
 
     # The mark: a short accent rule, top left, where the mint bar sat.
-    c.add(f'<rect x="80" y="86" width="88" height="5" rx="2" fill="{ACCENT}"/>')
+    c.add(f'<rect x="80" y="86" width="88" height="5" rx="2" fill="{PLATE_ACCENT}"/>')
 
     # A bus with drops, echoing the covers, kept faint. It sits in the top
     # right band and stops above y=170: og-image.html writes up to four title
     # lines of 64px starting at y=185, and at 24 characters a line reaches
     # roughly x=920, so anywhere lower on this side would be written over.
     bx, by = 706, 58
-    c.line(bx, by, bx + 414, by, RULE_STRONG, LINE)
+    c.line(bx, by, bx + 414, by, PLATE_RULE_STRONG, PLATE_LINE)
     for x in (bx, bx + 414):
-        c.line(x, by - 11, x, by + 11, RULE_STRONG, LINE)
+        c.line(x, by - 11, x, by + 11, PLATE_RULE_STRONG, PLATE_LINE)
     for i in range(4):
         dx = bx + 72 + i * 90
         hit = i == 1
-        c.line(dx, by, dx, by + 26, ACCENT if hit else RULE_STRONG,
-               LINE if hit else HAIR)
+        c.line(dx, by, dx, by + 26, PLATE_ACCENT if hit else PLATE_RULE_STRONG,
+               PLATE_LINE if hit else PLATE_HAIR)
         c.rect(dx - 32, by + 26, 64, 62,
-               ACCENT if hit else RULE_STRONG, LINE if hit else HAIR)
-        c.line(dx - 32, by + 42, dx + 32, by + 42, RULE_STRONG, HAIR)
+               PLATE_ACCENT if hit else PLATE_RULE_STRONG,
+               PLATE_LINE if hit else PLATE_HAIR, fill="none")
+        c.line(dx - 32, by + 42, dx + 32, by + 42, PLATE_RULE_STRONG, PLATE_HAIR)
 
     body = "\n  ".join(c.parts)
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{OG_W}" height="{OG_H}" '
            f'viewBox="0 0 {OG_W} {OG_H}">\n'
-           f'  <rect width="{OG_W}" height="{OG_H}" fill="{PAPER}"/>\n'
+           f'  <rect width="{OG_W}" height="{OG_H}" fill="{PLATE}"/>\n'
            f'  {body}\n</svg>\n')
     png = cairosvg.svg2png(bytestring=svg.encode(),
                            output_width=OG_W, output_height=OG_H)
@@ -924,7 +965,7 @@ def write_og():
     from PIL import ImageDraw, ImageFont
     font_path = os.path.join(REPO_ROOT, "assets", "fonts", "og-title.ttf")
 
-    def brand(img, size=30, fill=INK_SOFT):
+    def brand(img, size=30, fill=PLATE_INK_SOFT):
         d = ImageDraw.Draw(img)
         f = ImageFont.truetype(font_path, size)
         t = "blanpa.github.io"
@@ -940,10 +981,10 @@ def write_og():
     card = og_canvas()
     d = ImageDraw.Draw(card)
     d.text((80, 128), "IIoT Software Developer",
-           font=ImageFont.truetype(font_path, 30), fill=ACCENT)
-    d.text((80, 186), "blanpa", font=ImageFont.truetype(font_path, 92), fill=INK)
+           font=ImageFont.truetype(font_path, 30), fill=PLATE_ACCENT)
+    d.text((80, 186), "blanpa", font=ImageFont.truetype(font_path, 92), fill=PLATE_INK)
     d.text((80, 320), "Node-RED  ·  OPC-UA  ·  NATS  ·  Edge Computing",
-           font=ImageFont.truetype(font_path, 28), fill=INK_SOFT)
+           font=ImageFont.truetype(font_path, 28), fill=PLATE_INK_SOFT)
     brand(card)
     card.save(os.path.join(REPO_ROOT, "assets", "img", "og-default.png"))
     print("  assets/img/og-base.png, assets/img/og-default.png")
@@ -963,7 +1004,9 @@ def write(section, slug, keep_svg=False):
         return False
     png = cairosvg.svg2png(bytestring=svg.encode(), output_width=W, output_height=H)
     out = os.path.join(folder, "featured.webp")
-    Image.open(io.BytesIO(png)).convert("RGB").save(
+    # RGBA: the alpha channel is the whole point. Lossy WebP carries one, and
+    # every consumer (Hugo's resize, every browser since 2020) keeps it.
+    Image.open(io.BytesIO(png)).convert("RGBA").save(
         out, "WEBP", quality=88, method=6)
     if keep_svg:
         with open(os.path.join(folder, "cover.svg"), "w") as fh:

@@ -34,9 +34,11 @@ PROVIDER = os.environ.get("HF_PROVIDER", "fal-ai")
 #
 # "paper" matches the light theme, "ink" the dark one — and defaultAppearance
 # is dark, so whichever is picked is a bright or heavy block in the other.
-# There is no third option that suits both: a mid-grey suits neither. The
-# committed covers are drawn by tools/draw-covers.py, which needs no model and
-# no token; this is the alternative, and it has to speak the same palette.
+# A render has no third option that suits both: it always comes with a
+# ground. The committed covers are drawn by tools/draw-covers.py, which needs
+# no model and no token and gets out of it by having no ground at all — a
+# transparent sheet the card shows through. This is the alternative, and it
+# has to speak the same palette.
 STYLES = {
     "paper": (
         "fine ink drawing on a warm light grey ground (#f7f6f4), "

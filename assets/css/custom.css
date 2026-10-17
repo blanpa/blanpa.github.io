@@ -1415,21 +1415,20 @@ main details > summary[class*="bg-primary-"] {
 }
 
 /* ==============================================
-   PROJECT PAGE HERO
+   ARTICLE HERO — the cover, framed
    ============================================== */
-/* Project pages use Blowfish's thumbAndBackground hero, which drops the
-   artwork into a band of fixed height and crops it with object-fit: cover.
-   The illustrations are 1200x640 and the band is 1024x288, so 55% of every
-   image was sliced away — diagrams ended mid-box. `contain` shows the whole
-   picture; the frame keeps it from floating in the page. */
-#main-content > article > .rounded-md:has(> img.object-cover) {
+/* Blowfish's basic hero (articles and projects alike) is a bare band: a
+   div of fixed height with the cover cropped into it by object-fit: cover,
+   and no edge of its own. The covers are transparent — tools/draw-covers.py
+   draws them on no ground, so one file fits both themes — which makes the
+   band the thing that supplies their ground: the same canvas-subtle and
+   hairline every card gives them. The crop stays; the drawings keep their
+   motif inside the band's slice on purpose (BOX in draw-covers.py). */
+#main-content > article > .overflow-hidden:has(> img.object-cover) {
+  margin-top: 1rem;
   background: var(--canvas-subtle);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 0.75rem;
-}
-#main-content > article > .rounded-md > img.object-cover {
-  object-fit: contain;
 }
 
 /* Download count on a project card. The number is already baked into
@@ -1751,7 +1750,8 @@ main details > summary[class*="bg-primary-"] {
   margin-top: 0.5rem;
 }
 
-/* The cover is a dark plate; in light mode the hairline gives it an edge. */
+/* The cover is transparent: the row's own grey is its ground and the
+   hairline its edge, in both themes. */
 .post-row__img {
   aspect-ratio: 1200 / 640;
   overflow: hidden;
@@ -3493,20 +3493,6 @@ textarea:focus-visible {
   --tw-prose-invert-pre-bg: var(--canvas-subtle);
   --tw-prose-invert-th-borders: var(--border);
   --tw-prose-invert-td-borders: var(--border-muted);
-}
-
-/* ==============================================
-   ARTICLE HERO — the cover, framed
-
-   With the header now 64px the cover ran straight into the bar, and a
-   full-bleed image is the one element on the site with no edge of its
-   own. It gets the Box treatment the diagrams and cards already have.
-   ============================================== */
-#main-content > article > .rounded-md:has(> img),
-.single_hero_basic {
-  margin-top: 1rem;
-  border-radius: var(--radius);
-  overflow: hidden;
 }
 
 /* ==============================================

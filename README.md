@@ -56,9 +56,12 @@ be loud. Concretely:
   per theme.
 - **Covers and diagrams.** Both are drawn from the same values; see
   `tools/draw-covers.py` and the palette in `tools/render-diagrams.py`.
-  A cover is a plate: graphite ground, graph paper, light ink, and the one
-  accented element lit with a halo — the same plate in both themes, so in
-  light mode it sits in its card like a screen.
+  A cover is a transparent sheet: graph paper, one mid grey for the ink at
+  five opacities, and the one accented element lit with a halo. It has no
+  ground of its own — the card it sits in supplies that — so the same file
+  is chalk on graphite in the dark theme and pencil on paper in the light
+  one. The social cards keep the graphite plate, because they are shown
+  where no theme is around them.
 
 ## Local Development
 
