@@ -2,6 +2,7 @@
 title: "Modbus in Node-RED — The 47-Year-Old Protocol Everyone Still Uses"
 tags: ["IIoT", "Modbus", "Node-RED", "PLC"]
 description: "A practical guide to reading and writing Modbus TCP and RTU devices from Node-RED — register maps, data type decoding, byte ordering, and the gotchas that waste afternoons."
+draft: true
 date: 2026-07-11
 series: ["IIoT"]
 series_order: 18

@@ -22,8 +22,18 @@ CONTENT = REPO / "content"
 
 MD_LINK = re.compile(r"\]\((/[^)\s]*)\)")
 
-# Sections that exist as a page but not as a content directory.
-VIRTUAL = {"/tags", "/series", "/blog", "/projects", "/"}
+# Pages that exist without a content file of their own: the taxonomies and the
+# homepage. Sections are resolved through their _index.md below, so a section
+# that is hidden as a draft (the blog, currently) is a broken link like any
+# other draft.
+VIRTUAL = {"/tags", "/series", "/"}
+
+DRAFT = re.compile(r"^draft:\s*true\s*$", re.M)
+
+
+def _published(path: Path) -> bool:
+    """A content file that is a draft is not built, so a link to it 404s."""
+    return path.is_file() and not DRAFT.search(path.read_text(encoding="utf-8"))
 
 
 def _resolves(target: str) -> bool:
@@ -31,9 +41,9 @@ def _resolves(target: str) -> bool:
     if not path or path in VIRTUAL or f"/{path.strip('/')}" in VIRTUAL:
         return True
     candidate = CONTENT / path.lstrip("/")
-    if (candidate / "index.md").exists() or candidate.with_suffix(".md").exists():
+    if _published(candidate / "index.md") or _published(candidate.with_suffix(".md")):
         return True
-    if (candidate / "_index.md").exists():
+    if _published(candidate / "_index.md"):
         return True
     # Static assets (favicons, cv.pdf, images).
     if (REPO / "static" / path.lstrip("/")).exists():

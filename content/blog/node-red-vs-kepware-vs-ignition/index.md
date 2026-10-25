@@ -2,6 +2,7 @@
 title: "Node-RED vs Kepware vs Ignition — IIoT Platforms Compared"
 tags: ["IIoT", "Node-RED", "OPC-UA"]
 description: "An honest comparison of three popular IIoT platforms — open-source flexibility vs enterprise features vs SCADA power."
+draft: true
 date: 2026-04-04
 series: ["IIoT"]
 series_order: 7

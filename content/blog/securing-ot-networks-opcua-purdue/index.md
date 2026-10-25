@@ -2,6 +2,7 @@
 title: "Securing OT Networks — The Purdue Model, OPC-UA Encryption & Segmentation"
 tags: ["IIoT", "Security", "OPC-UA", "Networking", "PLC"]
 description: "A practical OT security primer for IIoT developers — the Purdue model, network segmentation, securing OPC-UA and MQTT, and the realities of patching a 20-year-old PLC."
+draft: true
 date: 2026-07-18
 series: ["IIoT"]
 series_order: 19

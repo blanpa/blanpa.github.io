@@ -18,7 +18,12 @@
   {{- end }}
 {{- end }}
 
-<section class="stat-band" aria-label="In numbers">
+{{- /* Tiles that would read 0 are left out, and the band is told how many
+       it has so the grid does not keep an empty column for a missing one. */ -}}
+{{- $tiles := 2 }}
+{{- if gt $votes 0 }}{{ $tiles = add $tiles 1 }}{{ end }}
+{{- if gt $articles 0 }}{{ $tiles = add $tiles 1 }}{{ end }}
+<section class="stat-band stat-band--{{ $tiles }}" aria-label="In numbers">
   <div class="stat">
     <span class="stat__num">{{ lang.FormatNumber 0 $total }}</span>
     <span class="stat__label">npm downloads a month</span>
@@ -33,8 +38,10 @@
     <span class="stat__label">Node-RED library rating, {{ $votes }} votes</span>
   </div>
   {{- end }}
+  {{- if gt $articles 0 }}
   <div class="stat">
     <span class="stat__num">{{ $articles }}</span>
     <span class="stat__label">articles on industrial protocols</span>
   </div>
+  {{- end }}
 </section>

@@ -1,17 +1,20 @@
 {{- /* llms.txt — https://llmstxt.org/ conventions: a title, a one-line
        summary, then linked sections an assistant can follow. Generated from
-       the content so it cannot drift out of date. */ -}}
+       the content so it cannot drift out of date: the Articles section and
+       the sentences about it only appear while the blog is published. */ -}}
+{{- $articles := where site.RegularPages "Section" "blog" -}}
 # {{ site.Title }} — {{ site.Params.author.headline }}
 
-> {{ site.Params.author.bio }} This site publishes technical articles on
+> {{ site.Params.author.bio }} This site {{ if $articles }}publishes technical articles on
 > industrial protocols and edge computing, plus the open-source Node-RED
-> packages behind them. Author: {{ site.Params.author.name }}.
-
+> packages behind them{{ else }}documents the open-source Node-RED packages
+> and tools behind that work{{ end }}. Author: {{ site.Params.author.name }}.
+{{ with $articles }}
 ## Articles
-{{ range where site.RegularPages "Section" "blog" }}
+{{ range . }}
 - [{{ .Title }}]({{ .Permalink }}): {{ .Description }}
 {{- end }}
-
+{{ end }}
 ## Projects
 {{ range (where site.RegularPages "Section" "projects").ByWeight }}
 - [{{ .Title }}]({{ .Permalink }}){{ with .Params.npm }} (npm: {{ . }}){{ end }}: {{ .Description }}
@@ -25,6 +28,8 @@
 {{- end }}
 
 ## Notes
+{{- if $articles }}
 - Full text of every article is available as HTML at the URLs above.
+{{- end }}
 - Machine-readable index of all pages: {{ site.BaseURL }}index.json
 - Feed: {{ site.BaseURL }}index.xml

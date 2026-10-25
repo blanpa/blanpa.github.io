@@ -2,6 +2,7 @@
 title: "REST vs OPC-UA vs GraphQL for Manufacturing Data"
 tags: ["IIoT", "OPC-UA", "REST API"]
 description: "Choosing the right API paradigm for industrial data access — practical comparison with manufacturing examples."
+draft: true
 date: 2026-04-11
 series: ["IIoT"]
 series_order: 8

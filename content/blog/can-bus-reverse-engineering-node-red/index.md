@@ -2,6 +2,7 @@
 title: "CAN Bus Reverse Engineering with Node-RED and Raspberry Pi"
 tags: ["IIoT", "CAN Bus", "Node-RED", "Raspberry Pi", "Python"]
 description: "How to sniff, decode, and integrate CAN bus data from industrial machines using a Raspberry Pi and Node-RED."
+draft: true
 date: 2026-05-02
 series: ["IIoT"]
 series_order: 11

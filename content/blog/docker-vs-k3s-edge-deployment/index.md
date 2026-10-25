@@ -2,6 +2,7 @@
 title: "Docker vs K3s on the Shop Floor — Edge Deployment Strategies"
 tags: ["IIoT", "Docker", "Kubernetes"]
 description: "When to use plain Docker and when to deploy K3s for industrial edge computing — with practical deployment examples."
+draft: true
 date: 2026-04-18
 series: ["IIoT"]
 series_order: 9

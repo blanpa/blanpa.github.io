@@ -2,6 +2,7 @@
 title: "Lessons Learned: Publishing 7 npm Packages for Industrial IoT"
 tags: ["Node-RED", "JavaScript", "IIoT"]
 description: "What I learned building and maintaining open-source Node-RED packages — from first commit to thousands of downloads."
+draft: true
 date: 2026-05-23
 series: ["IIoT"]
 series_order: 14

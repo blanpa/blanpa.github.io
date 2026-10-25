@@ -103,6 +103,20 @@ TypeScript, shipped as a desktop app, a server binary and a container image. A
 project like that declares `repo:`, `language:`, `platform:` and `license:` in
 its front matter, where the suites need only `npm:`.
 
+## Blog
+
+`content/blog/` is hidden rather than deleted: the 17 posts and the section
+index carry `draft: true`, so production builds (which do not pass
+`--buildDrafts`) leave `/blog/` out of the site, the sitemap, the search index
+and `llms.txt`. The menu entry, `mainSections` and the homepage's recent-article
+list are switched off with it, the About page's skill chips are plain chips
+instead of links into posts, and the "articles" tile of the homepage's stat
+band hides itself while there are none. `docker compose up` serves drafts, so
+the posts are still there to read and edit locally. The content tests treat a
+link to a draft as broken, so a published page cannot point into the hidden
+section by accident. To publish again, drop the draft flags and restore those
+four switches — `git log --grep "Publish the blog"` shows the last time.
+
 ## Case Studies
 
 `content/case-studies/` is scaffolded but unpublished — the section index and

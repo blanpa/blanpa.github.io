@@ -163,4 +163,4 @@ A time range plus the server snapshot exports as one zip, and opens again in any
 
 NATS Explorer is [AGPL-3.0-or-later](https://spdx.org/licenses/AGPL-3.0-or-later.html) rather than Apache-2.0 like the Node-RED suites: it is an application people run for others, and the licence is what keeps a hosted, modified copy's source available to the people using it. Self-hosting, modifying and using it commercially are all fine.
 
-For the Node-RED side of the same protocol — nodes for publishing, subscribing, JetStream and the KV store inside a flow — see the [NATS Messaging Suite](/projects/nats-suite/), and [NATS as an edge-to-cloud pipeline](/blog/nats-edge-to-cloud-pipeline/) for what the two are usually doing together.
+For the Node-RED side of the same protocol — nodes for publishing, subscribing, JetStream and the KV store inside a flow — see the [NATS Messaging Suite](/projects/nats-suite/). The two are usually in use together: the suite moves the data, the explorer shows it.
