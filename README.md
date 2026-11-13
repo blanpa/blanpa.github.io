@@ -136,7 +136,7 @@ Helper scripts for authoring (all need Python 3; none are part of the build):
 
 npm download counts shown on the site are baked into `data/npm_stats.yml` by the deploy workflow (daily cron); the committed values are just a local-dev fallback baseline.
 
-`/status/` is an unlisted working page (no menu entry, noindex, not in the sitemap or search): open issues and pull requests across all public repos, live from the GitHub search API in the browser (`assets/js/repo-status.js`), plus the flows.nodered.org ratings. The library sends no CORS headers, so the ratings are baked into `data/nodered_ratings.yml` by the same daily deploy.
+`/status/` is an unlisted working page (no menu entry, noindex, not in the sitemap or search): open issues and pull requests across all public repos, live from the GitHub search API in the browser (`assets/js/repo-status.js`), plus who starred and forked them and the flows.nodered.org ratings. Those two are baked by the same daily deploy: stars and forks into `data/github_repos.json` by `tools/fetch-github-stars.py` (listing them takes a request per repo, more than a browser without a token may spend), the ratings into `data/nodered_ratings.yml` (the library sends no CORS headers).
 
 Diagrams are authored as ` ```mermaid ` fenced blocks and rendered to static SVG at build time:
 

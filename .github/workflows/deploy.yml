@@ -167,6 +167,16 @@ jobs:
           print(f"Node-RED ratings: {sum(1 for p in pkgs if p in things)} of {len(pkgs)} packages listed")
           PYEOF
 
+      # Bake who starred and who forked the public repos into
+      # data/github_repos.json for the /status/ page. Listing them takes a
+      # request per repository, more than a browser without a token may spend;
+      # the workflow's own token is enough to read public repos. If GitHub
+      # does not answer, the committed file stays as it is.
+      - name: Refresh GitHub stars and forks
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/fetch-github-stars.py
+
       - name: Build with Hugo
         env:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache

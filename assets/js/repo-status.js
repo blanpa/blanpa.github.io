@@ -9,7 +9,9 @@
    "New" is relative to a timestamp in localStorage, set only by the
    "Mark all as seen" button, so reloading the page never swallows a badge.
    The same button records each package's Node-RED vote count, so a new
-   rating shows up the same way. Storage can be unavailable (private mode,
+   rating shows up the same way. Stars and forks are server-rendered with
+   their timestamps and marked against the same moment.
+   Storage can be unavailable (private mode,
    blocked site data); everything then still works, with the last 7 days
    standing in for "since last visit". */
 (function () {
@@ -190,7 +192,40 @@
     if (note) parts.push(note);
     els.meta.textContent = parts.join(" ");
 
+    renderPeople();
     renderRatings();
+  }
+
+  /* Stars and forks are server-rendered, newest first, each with the moment
+     it happened. What is left to do here is mark the ones since the last
+     "seen": the name, the row it sits in, and the tile above. */
+  function renderPeople() {
+    var t = since();
+    var fresh = { star: 0, fork: 0 };
+    root.querySelectorAll("[data-rs-repo]").forEach(function (repo) {
+      var here = { star: 0, fork: 0 };
+      repo.querySelectorAll("[data-rs-at]").forEach(function (p) {
+        var isNew = new Date(p.getAttribute("data-rs-at")) > t;
+        p.classList.toggle("rs-person--new", isNew);
+        if (isNew) here[p.getAttribute("data-rs-kind")]++;
+      });
+      fresh.star += here.star;
+      fresh.fork += here.fork;
+
+      var parts = [];
+      if (here.star) parts.push("+" + here.star + " star" + (here.star === 1 ? "" : "s"));
+      if (here.fork) parts.push("+" + here.fork + " fork" + (here.fork === 1 ? "" : "s"));
+      var badge = repo.querySelector("[data-rs-repo-badge]");
+      badge.hidden = !parts.length;
+      badge.textContent = parts.join(", ");
+      repo.classList.toggle("rs-item--new", parts.length > 0);
+    });
+    Object.keys(fresh).forEach(function (k) {
+      var node = root.querySelector('[data-rs-fresh="' + k + '"]');
+      if (!node) return;
+      node.hidden = !fresh[k];
+      node.textContent = fresh[k] ? "+" + fresh[k] + " new" : "";
+    });
   }
 
   function renderRepos(pool) {

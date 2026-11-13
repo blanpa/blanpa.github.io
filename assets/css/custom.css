@@ -3553,11 +3553,19 @@ textarea:focus-visible {
 }
 .rs-btn--primary:hover { background: var(--btn-primary-hover-bg); }
 
+/* Six tiles, in rows that always come out even: 6, 3 + 3, 2 + 2 + 2.
+   auto-fit would leave one alone on a second row at full width. */
 .rs-tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.75rem;
   margin: 1.5rem 0 2rem;
+}
+@media (max-width: 960px) {
+  .rs-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .rs-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .rs-tile {
   display: flex;
@@ -3581,6 +3589,13 @@ textarea:focus-visible {
   font-weight: 400;
   color: var(--fg-muted);
 }
+.rs-tile__delta {
+  margin-left: 0.375rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent-fg);
+}
+.rs-tile__delta[hidden] { display: none; }
 .rs-tile__label {
   font-size: var(--text-xs);
   color: var(--fg-muted);
@@ -3748,6 +3763,84 @@ textarea:focus-visible {
   padding: 1.25rem 1rem;
   color: var(--fg-muted);
   text-align: center;
+}
+
+/* Stars and forks: a row per repository, the people underneath. The row is
+   an .rs-item, so a new star marks it the way a new issue marks its own. */
+.rs-repo { display: block; }
+.rs-repo__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.625rem;
+}
+.rs-repo__name {
+  font-weight: 600;
+  color: var(--fg) !important;
+  text-decoration: none !important;
+  overflow-wrap: anywhere;
+}
+.rs-repo__name:hover { color: var(--accent-fg) !important; }
+.rs-repo__counts {
+  display: inline-flex;
+  gap: 0.875rem;
+  margin-left: auto;
+}
+.rs-repo__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted) !important;
+  text-decoration: none !important;
+}
+.rs-repo__count:hover { color: var(--accent-fg) !important; }
+.rs-repo__count svg { width: 0.875rem; height: 0.875rem; fill: currentColor; }
+.rs-people {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+  margin: 0.5rem 0 0;
+  font-size: var(--text-sm);
+}
+.rs-people dt {
+  margin: 0;
+  font-weight: 400;
+  color: var(--fg-muted);
+}
+.rs-people dd { margin: 0; }
+.rs-people ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* One person to a line, the name in a column of fixed width so the dates
+   line up down the whole section, not just within one repository. */
+.rs-person {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0 0.75rem;
+  margin: 0;
+  padding: 0.0625rem 0;
+}
+.rs-person a { overflow-wrap: anywhere; }
+.rs-person a {
+  color: var(--fg) !important;
+  text-decoration: none !important;
+}
+.rs-person a:hover { color: var(--accent-fg) !important; text-decoration: underline !important; }
+.rs-person__when {
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+}
+.rs-person--new a { font-weight: 600; color: var(--accent-fg) !important; }
+@media (max-width: 600px) {
+  .rs-people { grid-template-columns: minmax(0, 1fr); gap: 0.125rem; }
+  .rs-people dd + dt { margin-top: 0.375rem; }
+  .rs-person { grid-template-columns: 9.5rem minmax(0, 1fr); }
 }
 
 .rs-table {

@@ -2,21 +2,26 @@
   {{/* Repo status — a working page for the site's author, reachable at
        /status/ but listed nowhere (see content/status/index.md).
 
-       Two halves with two sources. The issues and pull requests are live:
-       assets/js/repo-status.js asks the GitHub search API from the browser,
-       which allows it (CORS) and needs no token for public repos. The
-       Node-RED ratings are baked: flows.nodered.org sends no CORS headers,
-       so the deploy workflow fetches them daily into data/nodered_ratings.yml
-       and they are rendered here at build time. */}}
+       Three parts with two kinds of source. The issues and pull requests are
+       live: assets/js/repo-status.js asks the GitHub search API from the
+       browser, which allows it (CORS) and needs no token for public repos.
+       The other two are baked by the daily deploy and rendered here at build
+       time. Stars and forks, because listing who gave them takes a request
+       per repository and the browser gets 60 an hour
+       (tools/fetch-github-stars.py, data/github_repos.json). The Node-RED
+       ratings, because flows.nodered.org sends no CORS headers
+       (data/nodered_ratings.yml). */}}
+  {{ $user := "blanpa" }}
   {{ $ratings := site.Data.nodered_ratings.packages | default dict }}
+  {{ $gh := site.Data.github_repos | default dict }}
 
-  <article class="repo-status" data-github-user="blanpa">
+  <article class="repo-status" data-github-user="{{ $user }}">
     <header class="repo-status__header">
       <h1 class="repo-status__title">{{ .Title }}</h1>
       <p class="repo-status__lede">
-        Open issues and pull requests across my public repositories, and how the
-        packages are rated in the Node-RED library. “New” means since you last
-        pressed <em>Mark all as seen</em> in this browser.
+        Open issues and pull requests across my public repositories, who starred
+        and forked them, and how the packages are rated in the Node-RED library.
+        “New” means since you last pressed <em>Mark all as seen</em> in this browser.
       </p>
       <div class="repo-status__actions">
         <button type="button" class="rs-btn" data-rs-refresh>Refresh</button>
@@ -51,6 +56,20 @@
       </div>
       <div class="rs-tile">
         <span class="rs-tile__value">
+          {{- $gh.stars | default "–" -}}
+          <span class="rs-tile__delta" data-rs-fresh="star" hidden></span>
+        </span>
+        <span class="rs-tile__label">GitHub stars</span>
+      </div>
+      <div class="rs-tile">
+        <span class="rs-tile__value">
+          {{- $gh.forks | default "–" -}}
+          <span class="rs-tile__delta" data-rs-fresh="fork" hidden></span>
+        </span>
+        <span class="rs-tile__label">Forks</span>
+      </div>
+      <div class="rs-tile">
+        <span class="rs-tile__value">
           {{- if gt $votes 0 }}{{ lang.FormatNumber 1 (div $points $votes) }}<span class="rs-tile__unit"> / 5</span>{{ else }}–{{ end -}}
         </span>
         <span class="rs-tile__label">Node-RED rating, {{ $votes }} vote{{ if ne $votes 1 }}s{{ end }}</span>
@@ -77,6 +96,78 @@
       <noscript>
         <p class="rs-empty">This list is loaded from the GitHub API and needs JavaScript.</p>
       </noscript>
+    </section>
+
+    {{/* One row per repository, the people underneath, one to a line and
+         newest first. Every
+         name carries its timestamp so the script can mark the ones that
+         arrived since the last "seen"; without JavaScript the list is simply
+         complete and unmarked. */}}
+    <section class="rs-section" aria-labelledby="rs-stars">
+      <h2 id="rs-stars" class="rs-section__title">Stars &amp; forks</h2>
+      {{ with $gh.repos }}
+        <ol class="rs-list">
+          {{ range . }}
+            {{ $repo := printf "https://github.com/%s/%s" $user .name }}
+            <li class="rs-item rs-repo" data-rs-repo>
+              <div class="rs-repo__head">
+                <a class="rs-repo__name" href="{{ $repo }}" target="_blank" rel="noopener">{{ strings.TrimPrefix "node-red-contrib-" .name }}</a>
+                <span class="rs-badge rs-badge--new" data-rs-repo-badge hidden></span>
+                <span class="rs-repo__counts">
+                  <a class="rs-repo__count" href="{{ $repo }}/stargazers" target="_blank" rel="noopener" aria-label="{{ .stars }} star{{ if ne .stars 1 }}s{{ end }}">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                    {{- .stars -}}
+                  </a>
+                  <a class="rs-repo__count" href="{{ $repo }}/forks" target="_blank" rel="noopener" aria-label="{{ .forks }} fork{{ if ne .forks 1 }}s{{ end }}">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>
+                    {{- .forks -}}
+                  </a>
+                </span>
+              </div>
+              <dl class="rs-people">
+                {{ with .stargazers }}
+                  <dt>Starred by</dt>
+                  <dd>
+                    <ul>
+                      {{ range . }}
+                        <li class="rs-person" data-rs-at="{{ .at }}" data-rs-kind="star">
+                          <a href="https://github.com/{{ .login }}" target="_blank" rel="noopener">{{ .login }}</a>
+                          <span class="rs-person__when"><time datetime="{{ .at }}">{{ time.AsTime .at | time.Format "2 Jan 2006" }}</time></span>
+                        </li>
+                      {{ end }}
+                    </ul>
+                  </dd>
+                {{ end }}
+                {{ with .forked_by }}
+                  <dt>Forked by</dt>
+                  <dd>
+                    <ul>
+                      {{ range . }}
+                        <li class="rs-person" data-rs-at="{{ .at }}" data-rs-kind="fork">
+                          <a href="https://github.com/{{ .repo }}" target="_blank" rel="noopener">{{ .login }}</a>
+                          <span class="rs-person__when">
+                            <time datetime="{{ .at }}">{{ time.AsTime .at | time.Format "2 Jan 2006" }}</time>
+                            {{- with .pushed }}, last push {{ time.AsTime . | time.Format "2 Jan 2006" }}{{ end -}}
+                          </span>
+                        </li>
+                      {{ end }}
+                    </ul>
+                  </dd>
+                {{ end }}
+              </dl>
+            </li>
+          {{ end }}
+        </ol>
+        <p class="rs-footnote">
+          From the GitHub API{{ with $gh.updated }}, as of {{ . }}{{ end }}.
+          Refreshed by the daily deploy, so <em>Refresh</em> does not reach it.
+          A fork's name links to the fork; “last push” appears once it has
+          commits of its own or has been synced. Repositories without a star
+          or fork are left out.
+        </p>
+      {{ else }}
+        <p class="rs-empty">No stars or forks on record yet.</p>
+      {{ end }}
     </section>
 
     <section class="rs-section" aria-labelledby="rs-ratings">
