@@ -98,6 +98,90 @@
       </noscript>
     </section>
 
+    {{/* The same stars and forks, turned around: counted per person across
+         all repositories instead of listed per repository. Logins are
+         case-insensitive at GitHub, and so is Hugo's merge, hence the
+         lower-cased key with the login as written kept beside it. */}}
+    {{ $tally := dict }}
+    {{ range $gh.repos }}
+      {{ range .stargazers }}
+        {{ $key := lower .login }}
+        {{ $p := index $tally $key | default (dict "login" .login "stars" 0 "forks" 0) }}
+        {{ $tally = merge $tally (dict $key (merge $p (dict "stars" (add $p.stars 1)))) }}
+      {{ end }}
+      {{ range .forked_by }}
+        {{ $key := lower .login }}
+        {{ $p := index $tally $key | default (dict "login" .login "stars" 0 "forks" 0) }}
+        {{ $tally = merge $tally (dict $key (merge $p (dict "forks" (add $p.forks 1)))) }}
+      {{ end }}
+    {{ end }}
+    {{/* sort takes one key, so the order is spelled into one: highest total
+         first, names alphabetical within a total. */}}
+    {{ $people := slice }}
+    {{ range $key, $p := $tally }}
+      {{ $total := add $p.stars $p.forks }}
+      {{ $people = $people | append (merge $p (dict "total" $total "order" (printf "%06d %s" (sub 999999 $total) $key))) }}
+    {{ end }}
+    {{ $people = sort $people "order" }}
+    {{/* Most people leave exactly one star. They are not a ranking, so they
+         fold away under the table — unless nobody has more than one. */}}
+    {{ $ranked := where $people "total" "gt" 1 }}
+    {{ $once := where $people "total" 1 }}
+    {{ if not $ranked }}
+      {{ $ranked = $people }}
+      {{ $once = slice }}
+    {{ end }}
+
+    {{ with $ranked }}
+      <section class="rs-section" aria-labelledby="rs-ranking">
+        <h2 id="rs-ranking" class="rs-section__title">Who starred &amp; forked most</h2>
+        <div class="rs-table rs-table--rank">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col" class="rs-rank">#</th>
+                <th scope="col">Who</th>
+                <th scope="col" class="rs-num">Stars</th>
+                <th scope="col" class="rs-num">Forks</th>
+                <th scope="col" class="rs-num">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{ $rank := 0 }}
+              {{ $last := -1 }}
+              {{ range $i, $p := . }}
+                {{ if ne $p.total $last }}
+                  {{ $rank = add $i 1 }}
+                  {{ $last = $p.total }}
+                {{ end }}
+                <tr>
+                  <td class="rs-rank">{{ $rank }}</td>
+                  <td class="rs-who"><a href="https://github.com/{{ $p.login }}" target="_blank" rel="noopener">{{ $p.login }}</a></td>
+                  <td class="rs-num">{{ if $p.stars }}{{ $p.stars }}{{ else }}<span class="rs-muted">–</span>{{ end }}</td>
+                  <td class="rs-num">{{ if $p.forks }}{{ $p.forks }}{{ else }}<span class="rs-muted">–</span>{{ end }}</td>
+                  <td class="rs-num rs-total">{{ $p.total }}</td>
+                </tr>
+              {{ end }}
+            </tbody>
+          </table>
+        </div>
+        {{ with $once }}
+          <details class="rs-more">
+            <summary>{{ len . }} more with one star or fork each</summary>
+            <ul>
+              {{ range . }}
+                <li><a href="https://github.com/{{ .login }}" target="_blank" rel="noopener">{{ .login }}</a>{{ if .forks }} <span class="rs-muted">(fork)</span>{{ end }}</li>
+              {{ end }}
+            </ul>
+          </details>
+        {{ end }}
+        <p class="rs-footnote">
+          Stars and forks added up across all repositories, from the lists
+          below. Equal totals share a rank.
+        </p>
+      </section>
+    {{ end }}
+
     {{/* One row per repository, the people underneath, one to a line and
          newest first. Every
          name carries its timestamp so the script can mark the ones that

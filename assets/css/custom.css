@@ -3893,6 +3893,45 @@ textarea:focus-visible {
   overflow: hidden;
   color: var(--accent-fg);
 }
+/* The ranking: the rank keeps to itself in a narrow column, the total is
+   the figure the row is sorted by and the only bold one. On a phone the
+   cells give up padding and a long name may wrap, so the total — the point
+   of the table — never ends up behind a sideways scroll. */
+.rs-table--rank .rs-rank {
+  width: 1%;
+  padding-right: 0.25rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+}
+.rs-table--rank .rs-num { width: 5.5rem; }
+.rs-table--rank .rs-total { font-weight: 600; }
+.rs-table--rank .rs-who {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .rs-table--rank th,
+  .rs-table--rank td { padding-left: 0.625rem; padding-right: 0.625rem; }
+  .rs-table--rank .rs-num { width: 1%; }
+}
+.rs-more {
+  margin-top: 0.5rem;
+  font-size: var(--text-sm);
+}
+.rs-more summary {
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.rs-more summary:hover { color: var(--fg); }
+.rs-more ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem 1rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.rs-more li { margin: 0; }
 .rs-score { font-variant-numeric: tabular-nums; font-weight: 600; }
 .rs-muted { color: var(--fg-subtle); }
 .rs-footnote {
